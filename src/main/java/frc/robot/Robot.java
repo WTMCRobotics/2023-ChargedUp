@@ -110,7 +110,48 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
- 
+
+
+
+
+    //These values can be anywhere from -1 to 1
+    //The left joystick values will determine the direction that the robot will strafe (crabwalk), these values will not rotate the robot
+    double leftXboxJoystickY = xboxController.getLeftY();
+    double leftXboxJoystickX = xboxController.getLeftX(); //* 1.1 we might need to multiply by a bit more than one, if we want to counteract imperpefect strafing
+    //This value dictates how much the robot should rotate, higher value = more rotation
+    double turnAmount = xboxController.getRightX();
+
+    //This value determines how fast we should strafe, it is gotten by doing the pythagoras theorem
+     /*                                                      . - Left Joystick Y value
+     * The length of this line determins the strafe speed - /|
+     *                                                    /  |
+     *                         Left Joystick X value - ./____|. - Joystick center (0,0)     
+     */
+    //Unused for now, needs testing to implement
+    double magnitude = Math.sqrt((Math.pow(leftXboxJoystickX, 2)) + (Math.pow(leftXboxJoystickY, 2)));
+
+
+    /*
+    The scale factor is the number we need to divide everything thing by to ensure all of our values are less than 1 while keeping the same ratio.
+    For example, say we had motor powers of 0.9, 1.0, 1.1, and 1.2. The top 3 values would all be the same, as motor power can only go up 1.
+    The scale factor factor makes sure that the values all keep the same ratio (in this example: 9:10:11:12).
+    It does this by making the largest value equal to 1, and scaling the other values down proportionally
+    */
+    double scaleDownFactor = Math.max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount), 1);
+    //to appease Colin:
+    //double scaleFactorNeededToMultipleyeverythingByToEnsureThatEveryhingIsLessThanOneWhileStillMaintainingProportionalToEachOther = Math.max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount), 1);
+    double frontLeftPower = (leftXboxJoystickY + leftXboxJoystickX + turnAmount) / scaleDownFactor;
+    double backLeftPower = (leftXboxJoystickY - leftXboxJoystickX + turnAmount) / scaleDownFactor;
+    double frontRightPower = -((leftXboxJoystickY - leftXboxJoystickX - turnAmount) / scaleDownFactor);
+    double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) / scaleDownFactor);
+
+    frontLeft.set(frontLeftPower);
+    backLeft.set(backLeftPower);
+    frontRight.set(frontRightPower);
+    backRight.set(backRightPower);
+    
+
+    /*Self written code using math from website, doesn't really work 
     //Code written using math from https://seamonsters-2605.github.io/archive/mecanum/
     double XboxLeftStickY = xboxController.getLeftY();
     double XboxLeftStickX = xboxController.getLeftX();
@@ -121,7 +162,7 @@ public class Robot extends TimedRobot {
     //This will determine how fast we should strafe in that direction using the Pythagorean theorem
     double magnitude = Math.sqrt((Math.pow(XboxLeftStickX, 2)) + (Math.pow(XboxLeftStickY, 2)));
 
-    //TODO: Explain this, figure out what it does later.
+    //TOD: Explain this, figure out what it does later.
     //Basically a scale factor for the motor power, to make sure all values are under 100
     double thingToDivideBy = Math.max((Math.abs(XboxLeftStickX) + Math.abs(XboxLeftStickY) + Math.abs(turnAmount)), 1);
 
@@ -132,28 +173,6 @@ public class Robot extends TimedRobot {
     double backRightPower = (Math.sin(direction+(1/4)*(Math.PI)) * magnitude + turnAmount) / thingToDivideBy;
    //Reversing the motor as it is needed for math
     double frontLeftPower = -backLeftPower;
-
-    frontLeft.set(frontLeftPower);
-    backLeft.set(backLeftPower);
-    frontRight.set(frontRightPower);
-    backRight.set(backRightPower);
-
-
-
-
-    /* CODE COPIED FROM INTERNET: (and changed to work with wpilib)
-    double y = xboxController.getLeftY(); // Remember, this is reversed!
-    double x = xboxController.getLeftX() * 1.1; // Counteract imperfect strafing
-    double rx = xboxController.getRightX();
-
-    // Denominator is the largest motor power (absolute value) or 1
-    // This ensures all the powers maintain the same ratio, but only when
-    // at least one is out of the range [-1, 1]
-    double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-    double frontLeftPower = (y + x + rx) / denominator;
-    double backLeftPower = (y - x + rx) / denominator;
-    double frontRightPower = -((y - x - rx) / denominator);
-    double backRightPower = -((y + x - rx) / denominator);
 
     frontLeft.set(frontLeftPower);
     backLeft.set(backLeftPower);
