@@ -4,13 +4,12 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.motor.*;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -18,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
+  public double circumference = 1;
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
@@ -42,12 +42,16 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
 
-    frontLeft = new Talon(0); //Assuming the motors are talons, if not, switch to Spark
-    frontRight = new Talon(1);
-    backLeft = new Talon(2);
-    backRight = new Talon(3);
+    frontLeft = MotorControllerFactory.create(this, 30, MotorController.Type.Talon); //Assuming the motors are talons, if not, switch to Spark
+    frontRight = MotorControllerFactory.create(this, 29, MotorController.Type.Talon);
+    backLeft = MotorControllerFactory.create(this, 22, MotorController.Type.Talon);
+    backRight = MotorControllerFactory.create(this, 32, MotorController.Type.Talon);
     xboxController = new XboxController(0);
 
+    frontLeft.setBrakeMode(true);
+    frontRight.setBrakeMode(true);
+    backLeft.setBrakeMode(true);
+    backRight.setBrakeMode(true);
 
     //This is needed for the mecanum math
     //backRight.setInverted(true);
@@ -161,10 +165,10 @@ public class Robot extends TimedRobot {
     double backRightPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_RIGHT_MOTOR_ID);
     double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_LEFT_MOTOR_ID);
 
-    frontLeft.set(frontLeftPower);
-    backLeft.set(backLeftPower);
-    frontRight.set(frontRightPower);
-    backRight.set(backRightPower);
+    frontLeft.setPercentOutput(frontLeftPower);
+    backLeft.setPercentOutput(backLeftPower);
+    frontRight.setPercentOutput(frontRightPower);
+    backRight.setPercentOutput(backRightPower);
     
 
     /*Self written code using math from website, doesn't really work 
