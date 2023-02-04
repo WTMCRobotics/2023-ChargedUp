@@ -103,9 +103,14 @@ public class Robot extends TimedRobot {
     }
   }
 
+  public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor) {
+    return (x + y + turnAmount) / scaleDownFactor;
+  }
+
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {}
+
 
   /** This function is called periodically during operator control. */
   @Override
