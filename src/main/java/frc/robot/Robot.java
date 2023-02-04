@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -104,7 +103,18 @@ public class Robot extends TimedRobot {
   }
 
   public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor, int motorId) {
-    return (x + y + turnAmount) / scaleDownFactor;
+    switch (motorId) {
+      case Constants.FRONT_LEFT_MOTOR_ID:
+        return (y + x + turnAmount) / scaleDownFactor;
+      case Constants.FRONT_RIGHT_MOTOR_ID:
+        return -(y - x - turnAmount) / scaleDownFactor;
+      case Constants.BACK_RIGHT_MOTOR_ID:
+        return -((y + x - turnAmount) / scaleDownFactor);
+      case Constants.BACK_LEFT_MOTOR_ID:
+        return (y - x + turnAmount) / scaleDownFactor;
+      default:
+        return 0;
+    }
   }
 
   /** This function is called once when teleop is enabled. */
@@ -115,10 +125,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
-
-
-
     //These values can be anywhere from -1 to 1
     //The left joystick values will determine the direction that the robot will strafe (crabwalk), these values will not rotate the robot
     double leftXboxJoystickY = xboxController.getLeftY();
@@ -145,10 +151,15 @@ public class Robot extends TimedRobot {
     double scaleDownFactor = Math.max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount), 1);
     //to appease Colin:
     //double scaleFactorNeededToMultipleyeverythingByToEnsureThatEveryhingIsLessThanOneWhileStillMaintainingProportionalToEachOther = Math.max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount), 1);
-    double frontLeftPower = (leftXboxJoystickY + leftXboxJoystickX + turnAmount) / scaleDownFactor;
-    double backLeftPower = (leftXboxJoystickY - leftXboxJoystickX + turnAmount) / scaleDownFactor;
-    double frontRightPower = -((leftXboxJoystickY - leftXboxJoystickX - turnAmount) / scaleDownFactor);
-    double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) / scaleDownFactor);
+    // double frontLeftPower = (leftXboxJoystickY + leftXboxJoystickX + turnAmount) / scaleDownFactor;
+    // double backLeftPower = (leftXboxJoystickY - leftXboxJoystickX + turnAmount) / scaleDownFactor;
+    // double frontRightPower = -((leftXboxJoystickY - leftXboxJoystickX - turnAmount) / scaleDownFactor);
+    // double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) / scaleDownFactor);
+    
+    double frontLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_LEFT_MOTOR_ID);
+    double frontRightPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_RIGHT_MOTOR_ID);
+    double backRightPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_RIGHT_MOTOR_ID);
+    double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_LEFT_MOTOR_ID);
 
     frontLeft.set(frontLeftPower);
     backLeft.set(backLeftPower);
