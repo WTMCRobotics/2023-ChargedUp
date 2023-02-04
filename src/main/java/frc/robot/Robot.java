@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor) {
+  public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor, int motorId) {
     return (x + y + turnAmount) / scaleDownFactor;
   }
 
