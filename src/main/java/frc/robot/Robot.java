@@ -30,6 +30,8 @@ public class Robot extends TimedRobot {
   private XboxController xboxController;
   private Vision robotVision;
 
+  private boolean slowMode = false;
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -107,6 +109,10 @@ public class Robot extends TimedRobot {
   }
 
   public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor, int motorId) {
+    if (slowMode) {
+      //If slow mode is enabled, increase the scale factor by 2, which will make it twice as slow
+      scaleDownFactor *= 4;
+    }
     switch (motorId) {
       case Constants.FRONT_LEFT_MOTOR_ID:
         return (y + x + turnAmount) / scaleDownFactor;
@@ -135,6 +141,11 @@ public class Robot extends TimedRobot {
     double leftXboxJoystickX = xboxController.getLeftX(); //* 1.1 we might need to multiply by a bit more than one, if we want to counteract imperpefect strafing
     //This value dictates how much the robot should rotate, higher value = more rotation
     double turnAmount = xboxController.getRightX();
+    //System.out.println("Right bumber is "+xboxController.getRightTriggerAxis());
+
+    if (xboxController.getAButtonPressed()) {
+      slowMode = !slowMode;
+    }
 
     //This value determines how fast we should strafe, it is gotten by doing the pythagoras theorem
      /*                                                      . - Left Joystick Y value
