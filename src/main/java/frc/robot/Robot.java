@@ -117,9 +117,9 @@ public class Robot extends TimedRobot {
       case Constants.FRONT_LEFT_MOTOR_ID:
         return (y + x + turnAmount) / scaleDownFactor;
       case Constants.FRONT_RIGHT_MOTOR_ID:
-        return -(y - x - turnAmount) / scaleDownFactor;
+        return (y - x - turnAmount) / scaleDownFactor;
       case Constants.BACK_RIGHT_MOTOR_ID:
-        return -((y + x - turnAmount) / scaleDownFactor);
+        return ((y + x - turnAmount) / scaleDownFactor);
       case Constants.BACK_LEFT_MOTOR_ID:
         return (y - x + turnAmount) / scaleDownFactor;
       default:
@@ -171,10 +171,10 @@ public class Robot extends TimedRobot {
     // double frontRightPower = -((leftXboxJoystickY - leftXboxJoystickX - turnAmount) / scaleDownFactor);
     // double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) / scaleDownFactor);
     
-    double frontLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_LEFT_MOTOR_ID);
+    double frontLeftPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_LEFT_MOTOR_ID);
     double frontRightPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_RIGHT_MOTOR_ID);
     double backRightPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_RIGHT_MOTOR_ID);
-    double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_LEFT_MOTOR_ID);
+    double backLeftPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_LEFT_MOTOR_ID);
 
     frontLeft.setPercentOutput(frontLeftPower);
     backLeft.setPercentOutput(backLeftPower);
