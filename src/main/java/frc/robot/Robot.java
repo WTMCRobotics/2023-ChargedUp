@@ -55,6 +55,12 @@ public class Robot extends TimedRobot {
     backLeft.setBrakeMode(true);
     backRight.setBrakeMode(true);
 
+    frontLeft.setInverted(true);
+    frontRight.setInverted(true);
+    backLeft.setInverted(true);
+    backRight.setInverted(true);
+
+
     //This is needed for the mecanum math
     //backRight.setInverted(true);
     //frontRight.setInverted(true);
@@ -171,11 +177,11 @@ public class Robot extends TimedRobot {
     // double frontRightPower = -((leftXboxJoystickY - leftXboxJoystickX - turnAmount) / scaleDownFactor);
     // double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) / scaleDownFactor);
     
-    double frontLeftPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_LEFT_MOTOR_ID);
-    double frontRightPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_RIGHT_MOTOR_ID);
-    double backRightPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_RIGHT_MOTOR_ID);
-    double backLeftPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_LEFT_MOTOR_ID);
-
+    double frontLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_LEFT_MOTOR_ID);
+    double frontRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_RIGHT_MOTOR_ID);
+    double backRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_RIGHT_MOTOR_ID);
+    double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_LEFT_MOTOR_ID);
+    
     frontLeft.setPercentOutput(frontLeftPower);
     backLeft.setPercentOutput(backLeftPower);
     frontRight.setPercentOutput(frontRightPower);
