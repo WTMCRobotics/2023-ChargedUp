@@ -114,9 +114,9 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor, int motorId) {
-    if (slowMode) {
-      //If slow mode is enabled, increase the scale factor by 2, which will make it twice as slow
+  public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor, boolean slowModeEnabled, int motorId) {
+    if (slowModeEnabled) {
+      //If slow mode is enabled, increase the scale factor by 4, which will make it frice as slow
       scaleDownFactor *= 4;
     }
     switch (motorId) {
@@ -177,10 +177,10 @@ public class Robot extends TimedRobot {
     // double frontRightPower = -((leftXboxJoystickY - leftXboxJoystickX - turnAmount) / scaleDownFactor);
     // double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) / scaleDownFactor);
     
-    double frontLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_LEFT_MOTOR_ID);
-    double frontRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_RIGHT_MOTOR_ID);
-    double backRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_RIGHT_MOTOR_ID);
-    double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_LEFT_MOTOR_ID);
+    double frontLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
+    double frontRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
+    double backRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
+    double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
     
     frontLeft.setPercentOutput(frontLeftPower);
     backLeft.setPercentOutput(backLeftPower);
