@@ -1,5 +1,5 @@
 /**
- *  Class that organizes gains used when assigning values to slots
+ * Class that organizes gains used when assigning values to slots
  */
 package frc.robot;
 
@@ -10,8 +10,8 @@ public class Gains {
 	public final double F;
 	public final int IZONE;
 	public final double PEAK_OUTPUT;
-	
-	public Gains(double p, double i, double d, double f, int izone, double peakOutput){
+
+	public Gains(double p, double i, double d, double f, int izone, double peakOutput) {
 		P = p;
 		I = i;
 		D = d;
