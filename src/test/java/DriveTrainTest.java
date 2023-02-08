@@ -33,33 +33,37 @@ public class DriveTrainTest {
 
         @Test
         void getFrontLeftMotorPowerTest() {
-            double frontLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
+            double frontLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
 
             assertEquals(1, frontLeftMotorPower);
         }
-        
+
         @Test
-        void getFrontRightMotorPowerTest(){
-            double frontRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
+        void getFrontRightMotorPowerTest() {
+            double frontRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
 
             assertEquals(1, frontRightMotorPower);
         }
-        
+
         @Test
-        void getBackLeftMotorPowerTest(){
-            double backLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
-            
+        void getBackLeftMotorPowerTest() {
+            double backLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
+
             assertEquals(1, backLeftMotorPower);
         }
 
         @Test
-        void getBackRightMotorPowerTest(){
-            double backRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
-            
+        void getBackRightMotorPowerTest() {
+            double backRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
+
             assertEquals(1, backRightMotorPower);
         }
     }
-    
+
     @Nested
     class BackwardTest {
         double joystickY;
@@ -79,29 +83,33 @@ public class DriveTrainTest {
 
         @Test
         void getFrontLeftMotorPowerTest() {
-            double frontLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
+            double frontLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
 
             assertEquals(-1, frontLeftMotorPower);
         }
-        
+
         @Test
-        void getFrontRightMotorPowerTest(){
-            double frontRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
+        void getFrontRightMotorPowerTest() {
+            double frontRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
 
             assertEquals(-1, frontRightMotorPower);
         }
-        
+
         @Test
-        void getBackLeftMotorPowerTest(){
-            double backLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
-            
+        void getBackLeftMotorPowerTest() {
+            double backLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
+
             assertEquals(-1, backLeftMotorPower);
         }
 
         @Test
-        void getBackRightMotorPowerTest(){
-            double backRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
-            
+        void getBackRightMotorPowerTest() {
+            double backRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
+
             assertEquals(-1, backRightMotorPower);
         }
     }
@@ -125,29 +133,33 @@ public class DriveTrainTest {
 
         @Test
         void getFrontLeftMotorPowerTest() {
-            double frontLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
+            double frontLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
 
             assertEquals(-1, frontLeftMotorPower);
         }
-        
+
         @Test
-        void getFrontRightMotorPowerTest(){
-            double frontRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
+        void getFrontRightMotorPowerTest() {
+            double frontRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
 
             assertEquals(1, frontRightMotorPower);
         }
-        
+
         @Test
-        void getBackLeftMotorPowerTest(){
-            double backLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
-            
+        void getBackLeftMotorPowerTest() {
+            double backLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
+
             assertEquals(1, backLeftMotorPower);
         }
 
         @Test
-        void getBackRightMotorPowerTest(){
-            double backRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
-            
+        void getBackRightMotorPowerTest() {
+            double backRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
+
             assertEquals(-1, backRightMotorPower);
         }
     }
@@ -171,29 +183,33 @@ public class DriveTrainTest {
 
         @Test
         void getFrontLeftMotorPowerTest() {
-            double frontLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
+            double frontLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
 
             assertEquals(1, frontLeftMotorPower);
         }
-        
+
         @Test
-        void getFrontRightMotorPowerTest(){
-            double frontRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
+        void getFrontRightMotorPowerTest() {
+            double frontRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
 
             assertEquals(-1, frontRightMotorPower);
         }
-        
+
         @Test
-        void getBackLeftMotorPowerTest(){
-            double backLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
-            
+        void getBackLeftMotorPowerTest() {
+            double backLeftMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
+
             assertEquals(-1, backLeftMotorPower);
         }
 
         @Test
-        void getBackRightMotorPowerTest(){
-            double backRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
-            
+        void getBackRightMotorPowerTest() {
+            double backRightMotorPower = robot.getMotorPower(joystickX, joystickY, turnAmount,
+                    scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
+
             assertEquals(1, backRightMotorPower);
         }
     }
@@ -207,23 +223,25 @@ public class DriveTrainTest {
         @BeforeEach
         void setup() {
             JOYSTICK_DEADZONE = .02;
-           joyStickX = 0.015;
-           joyStickY = -.0125;
-           turnAmount = 1;
+            joyStickX = 0.015;
+            joyStickY = -.0125;
+            turnAmount = 1;
         }
 
         @Test
         void joyStickXTest() {
             assertEquals(robot.setToZeroIfInDeadzone(joyStickX, JOYSTICK_DEADZONE), 0);
         }
+
         @Test
         void joyStickYTest() {
             assertEquals(robot.setToZeroIfInDeadzone(joyStickY, JOYSTICK_DEADZONE), 0);
         }
-         @Test
+
+        @Test
         void turnAmountTest() {
             assertEquals(robot.setToZeroIfInDeadzone(turnAmount, JOYSTICK_DEADZONE), turnAmount);
         }
-        
+
     }
- }
+}
