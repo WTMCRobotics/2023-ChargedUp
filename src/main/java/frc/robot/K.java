@@ -87,10 +87,12 @@ public final class K {
     public static final Gains PRACTICE_ROBOT_GAINS = new Gains(0.2, 0.00035, 1.5, 0.2, 0, 1.0);
     public static final Gains COMPETITION_ROBOT_GAINS = new Gains(0.35, 0.00001, 100, 0.2, 0, 1.0);
     public static final Gains PRACTICE_ROTATION_GAINS = new Gains(0.004, 0.003, 0.001, 0.0, 0, 0.0);
-    public static final Gains COMPETITION_ROTATION_GAINS = new Gains(0.06, 0.003, 0.001, 0.0, 0, 0.0);
+    public static final Gains COMPETITION_ROTATION_GAINS =
+            new Gains(0.06, 0.003, 0.001, 0.0, 0, 0.0);
     public static final Gains TURRET_ROTATION_GAINS = new Gains(0.002, 0, 0, 0, 0, 1.0);
     public static final Gains TURRET_HOOD_GAINS = new Gains(3, 0.005, 0.003, 0, 0, 1);
-    public static final Constraints ROTATIONAL_GAIN_CONSTRAINTS = new Constraints(Double.POSITIVE_INFINITY, 20); // m/s and m/s^2
+    public static final Constraints ROTATIONAL_GAIN_CONSTRAINTS =
+            new Constraints(Double.POSITIVE_INFINITY, 20); // m/s and m/s^2
 
     // ##########################################
     // intake and popper related constants and variables
@@ -112,23 +114,36 @@ public final class K {
     // the speed of the lift motor. Accepts values between 0 and 1.
     public static final double LIFT_SPEED = 0.75;
 
-    public static final int INTAKE_COUNTER_COUNT_TIME = 3; // the number of cycles that a ball interrupts the sensor for when passing
-    public static final int POPPER_COUNTER_JAM_TIME = 20; // the number of cycles that constitutes a popper jam
+    /** the number of cycles that a ball interrupts the sensor for when passing */
+    public static final int INTAKE_COUNTER_COUNT_TIME = 3;
+    /** the number of cycles that constitutes a popper jam */
+    public static final int POPPER_COUNTER_JAM_TIME = 20;
 
     public static final double TURRET_ROTATION_ANGLE = 9.33;
     public static final double TURRET_ROTATION_SPEED = 0.5;
 
     // Controller button IDs
-    public static final int START = 7; // the mapping of the start button on a xbox controller
-    public static final int SELECT = 8; // the mapping of the select button on a xbox controller
-    public static final int A_BUTTON = 1; // the mapping of the A button on a xbox controller
-    public static final int B_BUTTON = 2; // the mapping of the A button on a xbox controller
-    public static final int X_BUTTON = 3; // the mapping of the A button on a xbox controller
-    public static final int Y_BUTTON = 4; // the mapping of the A button on a xbox controller
-    public static final int R_STICK = 10; // the mapping of the right shoulder on a xbox controller
-    public static final int L_STICK = 9; // the mapping of the left shoulder on a xbox controller
-    public static final int R_SHOULDER = 6; // the mapping of the right shoulder on a xbox controller
-    public static final int L_SHOULDER = 5; // the mapping of the left shoulder on a xbox controller
+
+    /** the mapping of the start button on a xbox controller */
+    public static final int START = 7;
+    /** the mapping of the select button on a xbox controller */
+    public static final int SELECT = 8;
+    /** the mapping of the A button on a xbox controller */
+    public static final int A_BUTTON = 1;
+    /** the mapping of the A button on a xbox controller */
+    public static final int B_BUTTON = 2;
+    /** the mapping of the A button on a xbox controller */
+    public static final int X_BUTTON = 3;
+    /** the mapping of the A button on a xbox controller */
+    public static final int Y_BUTTON = 4;
+    /** the mapping of the right shoulder on a xbox controller */
+    public static final int R_STICK = 10;
+    /** the mapping of the left shoulder on a xbox controller */
+    public static final int L_STICK = 9;
+    /** the mapping of the right shoulder on a xbox controller */
+    public static final int R_SHOULDER = 6;
+    /** the mapping of the left shoulder on a xbox controller */
+    public static final int L_SHOULDER = 5;
 
     // ##########################################
     // Pneumatics related constants
