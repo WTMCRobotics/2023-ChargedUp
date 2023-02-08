@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
   private Vision robotVision;
 
   private boolean slowMode = false;
-
+  private double JOYSTICK_DEADZONE = .02;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -114,9 +114,9 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor, int motorId) {
-    if (slowMode) {
-      //If slow mode is enabled, increase the scale factor by 2, which will make it twice as slow
+  public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor, boolean slowModeEnabled, int motorId) {
+    if (slowModeEnabled) {
+      //If slow mode is enabled, increase the scale factor by 4, which will make it frice as slow
       scaleDownFactor *= 4;
     }
     switch (motorId) {
@@ -144,9 +144,14 @@ public class Robot extends TimedRobot {
     //These values can be anywhere from -1 to 1
     //The left joystick values will determine the direction that the robot will strafe (crabwalk), these values will not rotate the robot
     double leftXboxJoystickY = xboxController.getLeftY();
-    double leftXboxJoystickX = xboxController.getLeftX(); //* 1.1 we might need to multiply by a bit more than one, if we want to counteract imperpefect strafing
+    leftXboxJoystickY = setToZeroIfInDeadzone(leftXboxJoystickY, JOYSTICK_DEADZONE);
+
+    double leftXboxJoystickX = -xboxController.getLeftX(); //* 1.1 we might need to multiply by a bit more than one, if we want to counteract imperpefect strafing
+    leftXboxJoystickX = setToZeroIfInDeadzone(leftXboxJoystickX, JOYSTICK_DEADZONE);
+
     //This value dictates how much the robot should rotate, higher value = more rotation
-    double turnAmount = xboxController.getRightX();
+    double turnAmount = -xboxController.getRightX();
+    turnAmount = setToZeroIfInDeadzone(turnAmount, JOYSTICK_DEADZONE);
     //System.out.println("Right bumber is "+xboxController.getRightTriggerAxis());
 
     if (xboxController.getAButtonPressed()) {
@@ -177,10 +182,10 @@ public class Robot extends TimedRobot {
     // double frontRightPower = -((leftXboxJoystickY - leftXboxJoystickX - turnAmount) / scaleDownFactor);
     // double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) / scaleDownFactor);
     
-    double frontLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_LEFT_MOTOR_ID);
-    double frontRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.FRONT_RIGHT_MOTOR_ID);
-    double backRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_RIGHT_MOTOR_ID);
-    double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, Constants.BACK_LEFT_MOTOR_ID);
+    double frontLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
+    double frontRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
+    double backRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
+    double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
     
     frontLeft.setPercentOutput(frontLeftPower);
     backLeft.setPercentOutput(backLeftPower);
@@ -219,6 +224,12 @@ public class Robot extends TimedRobot {
     
   }
 
+  public double setToZeroIfInDeadzone(double value, double joystickDeadzone) {
+    if (Math.abs(value) < JOYSTICK_DEADZONE) {
+      return 0;
+    }
+    return value;
+  }
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {}
