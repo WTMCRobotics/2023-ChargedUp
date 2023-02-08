@@ -43,8 +43,8 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-
-    frontLeft = MotorControllerFactory.create(this, 30, MotorController.Type.Talon); //Assuming the motors are talons, if not, switch to Spark
+    // Assuming the motors are talons, if not, switch to Spark
+    frontLeft = MotorControllerFactory.create(this, 30, MotorController.Type.Talon);
     frontRight = MotorControllerFactory.create(this, 29, MotorController.Type.Talon);
     backLeft = MotorControllerFactory.create(this, 22, MotorController.Type.Talon);
     backRight = MotorControllerFactory.create(this, 32, MotorController.Type.Talon);
@@ -61,13 +61,13 @@ public class Robot extends TimedRobot {
     backRight.setInverted(true);
 
 
-    //This is needed for the mecanum math
-    //backRight.setInverted(true);
-    //frontRight.setInverted(true);
+    // This is needed for the mecanum math
+    // backRight.setInverted(true);
+    // frontRight.setInverted(true);
 
     robotVision = new Vision();
     robotVision.start();
-    //robotVision.stop(); //This should stop the vision system
+    // robotVision.stop(); //This should stop the vision system
 
   }
 
@@ -77,8 +77,9 @@ public class Robot extends TimedRobot {
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard
+   * integrated updating.
    */
   @Override
   public void robotPeriodic() {}
@@ -89,7 +90,8 @@ public class Robot extends TimedRobot {
    * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
    * uncomment the getString line to get the auto name from the text box below the Gyro
    *
-   * <p>You can add additional auto modes by adding additional comparisons to the switch structure
+   * <p>
+   * You can add additional auto modes by adding additional comparisons to the switch structure
    * below with additional strings. If using the SendableChooser make sure to add them to the
    * chooser code above as well.
    */
@@ -114,9 +116,10 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor, boolean slowModeEnabled, int motorId) {
+  public double getMotorPower(double x, double y, double turnAmount, double scaleDownFactor,
+      boolean slowModeEnabled, int motorId) {
     if (slowModeEnabled) {
-      //If slow mode is enabled, increase the scale factor by 4, which will make it frice as slow
+      // If slow mode is enabled, increase the scale factor by 4, which will make it frice as slow
       scaleDownFactor *= 4;
     }
     switch (motorId) {
@@ -141,87 +144,105 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //These values can be anywhere from -1 to 1
-    //The left joystick values will determine the direction that the robot will strafe (crabwalk), these values will not rotate the robot
+    // These values can be anywhere from -1 to 1
+    // The left joystick values will determine the direction that the robot will strafe (crabwalk),
+    // these values will not rotate the robot
     double leftXboxJoystickY = xboxController.getLeftY();
     leftXboxJoystickY = setToZeroIfInDeadzone(leftXboxJoystickY, JOYSTICK_DEADZONE);
 
-    double leftXboxJoystickX = -xboxController.getLeftX(); //* 1.1 we might need to multiply by a bit more than one, if we want to counteract imperpefect strafing
+    // * 1.1 we might need to multiply by a bit more than one, if we want to counteract imperpefect
+    // strafing
+    double leftXboxJoystickX = -xboxController.getLeftX();
     leftXboxJoystickX = setToZeroIfInDeadzone(leftXboxJoystickX, JOYSTICK_DEADZONE);
 
-    //This value dictates how much the robot should rotate, higher value = more rotation
+    // This value dictates how much the robot should rotate, higher value = more rotation
     double turnAmount = -xboxController.getRightX();
     turnAmount = setToZeroIfInDeadzone(turnAmount, JOYSTICK_DEADZONE);
-    //System.out.println("Right bumber is "+xboxController.getRightTriggerAxis());
+    // System.out.println("Right bumber is "+xboxController.getRightTriggerAxis());
 
     if (xboxController.getAButtonPressed()) {
       slowMode = !slowMode;
     }
 
-    //This value determines how fast we should strafe, it is gotten by doing the pythagoras theorem
-     /*                                                      . - Left Joystick Y value
+    // This value determines how fast we should strafe, it is gotten by doing the pythagoras theorem
+    /*-                                                      . - Left Joystick Y value
      * The length of this line determins the strafe speed - /|
      *                                                    /  |
      *                         Left Joystick X value - ./____|. - Joystick center (0,0)     
      */
-    //Unused for now, needs testing to implement
-    double magnitude = Math.sqrt((Math.pow(leftXboxJoystickX, 2)) + (Math.pow(leftXboxJoystickY, 2)));
+    // Unused for now, needs testing to implement
+    double magnitude =
+        Math.sqrt((Math.pow(leftXboxJoystickX, 2)) + (Math.pow(leftXboxJoystickY, 2)));
 
 
     /*
-    The scale factor is the number we need to divide everything thing by to ensure all of our values are less than 1 while keeping the same ratio.
-    For example, say we had motor powers of 0.9, 1.0, 1.1, and 1.2. The top 3 values would all be the same, as motor power can only go up 1.
-    The scale factor factor makes sure that the values all keep the same ratio (in this example: 9:10:11:12).
-    It does this by making the largest value equal to 1, and scaling the other values down proportionally
-    */
-    double scaleDownFactor = Math.max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount), 1);
-    //to appease Colin:
-    //double scaleFactorNeededToMultipleyeverythingByToEnsureThatEveryhingIsLessThanOneWhileStillMaintainingProportionalToEachOther = Math.max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount), 1);
-    // double frontLeftPower = (leftXboxJoystickY + leftXboxJoystickX + turnAmount) / scaleDownFactor;
-    // double backLeftPower = (leftXboxJoystickY - leftXboxJoystickX + turnAmount) / scaleDownFactor;
-    // double frontRightPower = -((leftXboxJoystickY - leftXboxJoystickX - turnAmount) / scaleDownFactor);
-    // double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) / scaleDownFactor);
-    
-    double frontLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
-    double frontRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
-    double backRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
-    double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount, scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
-    
+     * The scale factor is the number we need to divide everything thing by to ensure all of our
+     * values are less than 1 while keeping the same ratio. For example, say we had motor powers of
+     * 0.9, 1.0, 1.1, and 1.2. The top 3 values would all be the same, as motor power can only go up
+     * 1. The scale factor factor makes sure that the values all keep the same ratio (in this
+     * example: 9:10:11:12). It does this by making the largest value equal to 1, and scaling the
+     * other values down proportionally
+     */
+    double scaleDownFactor = Math
+        .max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount), 1);
+    // to appease Colin:
+    // double
+    // scaleFactorNeededToMultipleyeverythingByToEnsureThatEveryhingIsLessThanOneWhileStillMaintainingProportionalToEachOther
+    // = Math.max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount),
+    // 1);
+    // double frontLeftPower = (leftXboxJoystickY + leftXboxJoystickX + turnAmount) /
+    // scaleDownFactor;
+    // double backLeftPower = (leftXboxJoystickY - leftXboxJoystickX + turnAmount) /
+    // scaleDownFactor;
+    // double frontRightPower = -((leftXboxJoystickY - leftXboxJoystickX - turnAmount) /
+    // scaleDownFactor);
+    // double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) /
+    // scaleDownFactor);
+
+    double frontLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount,
+        scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
+    double frontRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount,
+        scaleDownFactor, slowMode, Constants.FRONT_RIGHT_MOTOR_ID);
+    double backRightPower = -getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount,
+        scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
+    double backLeftPower = getMotorPower(leftXboxJoystickX, leftXboxJoystickY, turnAmount,
+        scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
+
     frontLeft.setPercentOutput(frontLeftPower);
     backLeft.setPercentOutput(backLeftPower);
     frontRight.setPercentOutput(frontRightPower);
     backRight.setPercentOutput(backRightPower);
+
+
+    /*-
+      // Self written code using math from website, doesn't really work 
+      // Code written using math from https://seamonsters-2605.github.io/archive/mecanum/
+      double XboxLeftStickY = xboxController.getLeftY();
+      double XboxLeftStickX = xboxController.getLeftX();
+      // This is amount that the robot will turn
+      double turnAmount = xboxController.getRightX();
+      // This is the direction that the robot will STRAFE
+      double direction = Math.atan2(XboxLeftStickY, XboxLeftStickX); 
+      // This will determine how fast we should strafe in that direction using the Pythagorean theorem
+      double magnitude = Math.sqrt((Math.pow(XboxLeftStickX, 2)) + (Math.pow(XboxLeftStickY, 2)));
     
-
-    /*Self written code using math from website, doesn't really work 
-    //Code written using math from https://seamonsters-2605.github.io/archive/mecanum/
-    double XboxLeftStickY = xboxController.getLeftY();
-    double XboxLeftStickX = xboxController.getLeftX();
-    //This is amount that the robot will turn
-    double turnAmount = xboxController.getRightX();
-    //This is the direction that the robot will STRAFE
-    double direction = Math.atan2(XboxLeftStickY, XboxLeftStickX); 
-    //This will determine how fast we should strafe in that direction using the Pythagorean theorem
-    double magnitude = Math.sqrt((Math.pow(XboxLeftStickX, 2)) + (Math.pow(XboxLeftStickY, 2)));
-
-    //TOD: Explain this, figure out what it does later.
-    //Basically a scale factor for the motor power, to make sure all values are under 100
-    double thingToDivideBy = Math.max((Math.abs(XboxLeftStickX) + Math.abs(XboxLeftStickY) + Math.abs(turnAmount)), 1);
-
-    //The motors can only go up to 100 power, so if magnitude was 1.2, it would tell the motors to move at 120% power, which isn't possible
-    double frontRightPower = (Math.sin(direction-(1/4)*Math.PI) * magnitude + turnAmount) / thingToDivideBy;
-    //Reversing the motor as it is needed for math
-    double backLeftPower = -frontRightPower; 
-    double backRightPower = (Math.sin(direction+(1/4)*(Math.PI)) * magnitude + turnAmount) / thingToDivideBy;
-   //Reversing the motor as it is needed for math
-    double frontLeftPower = -backLeftPower;
-
-    frontLeft.set(frontLeftPower);
-    backLeft.set(backLeftPower);
-    frontRight.set(frontRightPower);
-    backRight.set(backRightPower);
+      // TOD: Explain this, figure out what it does later.
+      // Basically a scale factor for the motor power, to make sure all values are under 100
+      double thingToDivideBy = Math.max((Math.abs(XboxLeftStickX) + Math.abs(XboxLeftStickY) + Math.abs(turnAmount)), 1);
+    
+      // The motors can only go up to 100 power, so if magnitude was 1.2, it would tell the motors to move at 120% power, which isn't possible
+      double frontRightPower = (Math.sin(direction-(1/4)*Math.PI) * magnitude + turnAmount) / thingToDivideBy;
+      // Reversing the motor as it is needed for math
+      double backLeftPower = -frontRightPower; 
+      double backRightPower = (Math.sin(direction+(1/4)*(Math.PI)) * magnitude + turnAmount) / thingToDivideBy;
+      // Reversing the motor as it is needed for math
+      double frontLeftPower = -backLeftPower;
+    
+      frontLeft.set(frontLeftPower);
+      backLeft.set(backLeftPower);
+      frontRight.set(frontRightPower);
+      backRight.set(backRightPower);
     */
-    
   }
 
   public double setToZeroIfInDeadzone(double value, double joystickDeadzone) {
@@ -230,6 +251,7 @@ public class Robot extends TimedRobot {
     }
     return value;
   }
+
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {}
