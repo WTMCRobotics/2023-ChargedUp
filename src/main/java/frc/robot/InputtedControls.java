@@ -8,6 +8,15 @@ public class InputtedControls {
     private double x;
     private double y;
     private double turnAmount;
+    private boolean slowMode;
+
+    public boolean isSlowMode() {
+        return slowMode;
+    }
+
+    public void setSlowMode(boolean slowMode) {
+        this.slowMode = slowMode;
+    }
 
     public double getX() {
         return x;
@@ -33,10 +42,11 @@ public class InputtedControls {
         this.turnAmount = turnAmount;
     }
 
-    public InputtedControls(double x, double y, double turnAmount) {
+    public InputtedControls(double x, double y, double turnAmount, boolean slowMode) {
         this.x = x;
         this.y = y;
         this.turnAmount = turnAmount;
+        this.slowMode = slowMode;
 
     }
 }

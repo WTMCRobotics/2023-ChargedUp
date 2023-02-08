@@ -60,7 +60,7 @@ public class Vision {
 
 
 
-            // Mats are very memory expensive. Lets reuse this Mat.
+            // Mats are very memory expensive. reusing it.
             Mat mat = new Mat();
             Mat greyMat = new Mat();
             Scalar red = new Scalar(0, 0, 255);
@@ -125,14 +125,14 @@ public class Vision {
                     SmartDashboard.putNumber("Detected April Tags", allAprilTags.length);
                 }
 
-                Imgproc.circle(mat, new Point(0, 0), // Circle the center point
+                Imgproc.circle(mat, new Point(0, 0), // Circle the center point of camera
                         8, red);
 
+                // Draw lines on camera view to visually show if something is centered
                 Imgproc.line(mat, new Point(halfCameraWidth - ALIGNMENT_MARGIAN, 0),
                         new Point(halfCameraWidth - ALIGNMENT_MARGIAN, CAMERA_HEIGHT), yellow);
                 Imgproc.line(mat, new Point(halfCameraWidth + ALIGNMENT_MARGIAN, 0),
                         new Point(halfCameraWidth + ALIGNMENT_MARGIAN, CAMERA_HEIGHT), yellow);
-                // Put a rectangle Around the AprilTag
 
                 if (targetedAprilTag == -1 || framesWithoutClosestTag > 5) {
                     targetedAprilTag = getClosestAprilTag(aprilDetector.detect(greyMat));
@@ -271,12 +271,10 @@ public class Vision {
             // Can be replaced with 0 for a more machine readable format
             return "None";
         } else if (lineLengthDifference > 0) {
-            // This can be replaced by a -1 for a more machine readable for, also, I have no idea if
-            // this is left or right, just a placeholder
+            // This can be replaced by a -1 for a more machine readable format
             return "Left";
         } else {
-            // AKA. 1, this might also be wrong becaise at the time of writing, I can't test whether
-            // it is left or right
+            // AKA. 1
             return "Right";
         }
     }
@@ -289,15 +287,21 @@ public class Vision {
             // Can be replaced with 0 for a more machine readable format
             return "None";
         } else if (CenterMinusTagCenterDifference > 0) {
-            // This can be replaced by a -1 for a more machine readable for, also, I have no idea if
-            // this is left or right, just a placeholder
+            // This can be replaced by a -1 for a more machine readable format
             return "Left";
         } else {
-            // AKA. 1, this might also be wrong
+            // AKA. 1
             return "Right";
         }
     }
 
+    /**
+     * Gets the (probably) closest april tag to the camera. It accomplishes this by averaging the 2
+     * verticle line length on the april tags.
+     * 
+     * @param tags All of the current april tags in frame
+     * @return The ID of the closest apriltag
+     */
     private int getClosestAprilTag(AprilTagDetection[] tags) {
         int closestAprilID = -1;
         double closestDistance = 0;
@@ -318,8 +322,9 @@ public class Vision {
         return closestAprilID;
     }
 
+
     private double getLineLength(AprilTagDetection tag, int corner1, int corner2) {
-        // Basic pythagoras theorem for finding the Height of lines, is basccily only helpful for
+        // Basic pythagoras theorem for finding the Height of lines, is basicaly only helpful for
         // verticle lines
         return Math.sqrt( // Get the square root of:
                 Math.pow( // Square the number
@@ -365,6 +370,9 @@ public class Vision {
                 , Imgproc.FONT_HERSHEY_SIMPLEX, 2, color, 7);
     }
 
+    /**
+     * Foribly stops the vision thread completly
+     */
     public void stop() {
         m_visionThread.interrupt();
     }

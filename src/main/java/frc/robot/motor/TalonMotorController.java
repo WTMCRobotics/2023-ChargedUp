@@ -5,8 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import frc.robot.K;
+import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class TalonMotorController implements MotorController {
@@ -32,12 +31,13 @@ public class TalonMotorController implements MotorController {
     public void setVelocity(double speed) {
         // convert from RPM to ticks/100 ms
         // 600 * (100 ms) = 1 minute
-        controller.set(ControlMode.Velocity, speed * K.encoderRotation / 600);
+        controller.set(ControlMode.Velocity, speed * Constants.encoderRotation / 600);
     }
 
     @Override
     public void setDistance(double inches) {
-        controller.set(ControlMode.MotionMagic, inches * K.encoderRotation / robot.circumference);
+        controller.set(ControlMode.MotionMagic,
+                inches * Constants.encoderRotation / robot.circumference);
     }
 
     @Override
@@ -53,18 +53,20 @@ public class TalonMotorController implements MotorController {
     @Override
     public void follow(MotorController leader) {
         if (!(leader instanceof TalonMotorController))
-            throw new IllegalArgumentException("Leader must be the same type of motor controller as the follower");
-        controller.follow(((TalonMotorController)leader).controller);
+            throw new IllegalArgumentException(
+                    "Leader must be the same type of motor controller as the follower");
+        controller.follow(((TalonMotorController) leader).controller);
     }
 
     @Override
     public void setSensorSource() {
-        controller.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, K.PID_LOOP_IDX, K.TIMEOUT_MS);
+        controller.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+                Constants.PID_LOOP_IDX, Constants.TIMEOUT_MS);
     }
 
     @Override
     public void setNeutralDeadband(double percent) {
-        controller.configNeutralDeadband(percent, K.TIMEOUT_MS);
+        controller.configNeutralDeadband(percent, Constants.TIMEOUT_MS);
     }
 
     @Override
@@ -74,51 +76,54 @@ public class TalonMotorController implements MotorController {
 
     @Override
     public void setStatusFramePeriod(int period) {
-        controller.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, period, K.TIMEOUT_MS);
-        controller.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, period, K.TIMEOUT_MS);
+        controller.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, period,
+                Constants.TIMEOUT_MS);
+        controller.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, period,
+                Constants.TIMEOUT_MS);
     }
 
     @Override
-    public void setOutputLimits(double nominalForward, double nominalReverse, double peakForward, double peakReverse) {
-        controller.configNominalOutputForward(nominalForward, K.TIMEOUT_MS);
-        controller.configNominalOutputReverse(nominalReverse, K.TIMEOUT_MS);
-        controller.configPeakOutputForward(peakForward, K.TIMEOUT_MS);
-        controller.configPeakOutputReverse(peakReverse, K.TIMEOUT_MS);
+    public void setOutputLimits(double nominalForward, double nominalReverse, double peakForward,
+            double peakReverse) {
+        controller.configNominalOutputForward(nominalForward, Constants.TIMEOUT_MS);
+        controller.configNominalOutputReverse(nominalReverse, Constants.TIMEOUT_MS);
+        controller.configPeakOutputForward(peakForward, Constants.TIMEOUT_MS);
+        controller.configPeakOutputReverse(peakReverse, Constants.TIMEOUT_MS);
     }
 
     @Override
     public void setPID(double P, double I, double D, double F) {
-        controller.selectProfileSlot(K.SLOT_IDX, K.PID_LOOP_IDX);
-        controller.config_kP(K.SLOT_IDX, P, K.TIMEOUT_MS);
-        controller.config_kI(K.SLOT_IDX, I, K.TIMEOUT_MS);
-        controller.config_kD(K.SLOT_IDX, D, K.TIMEOUT_MS);
-        controller.config_kF(K.SLOT_IDX, F, K.TIMEOUT_MS);
+        controller.selectProfileSlot(Constants.SLOT_IDX, Constants.PID_LOOP_IDX);
+        controller.config_kP(Constants.SLOT_IDX, P, Constants.TIMEOUT_MS);
+        controller.config_kI(Constants.SLOT_IDX, I, Constants.TIMEOUT_MS);
+        controller.config_kD(Constants.SLOT_IDX, D, Constants.TIMEOUT_MS);
+        controller.config_kF(Constants.SLOT_IDX, F, Constants.TIMEOUT_MS);
     }
 
     @Override
     public double getActiveTrajectoryVelocity() {
-        return controller.getActiveTrajectoryVelocity() / K.encoderRotation;
+        return controller.getActiveTrajectoryVelocity() / Constants.encoderRotation;
     }
 
     @Override
     public double getSensorVelocity() {
-        return controller.getSelectedSensorVelocity() / K.encoderRotation;
+        return controller.getSelectedSensorVelocity() / Constants.encoderRotation;
     }
 
     @Override
     public void setMotionSpeed(double cruiseVelocity, double acceleration) {
-        controller.configMotionCruiseVelocity(cruiseVelocity, K.TIMEOUT_MS);
-        controller.configMotionAcceleration(acceleration, K.TIMEOUT_MS);
+        controller.configMotionCruiseVelocity(cruiseVelocity, Constants.TIMEOUT_MS);
+        controller.configMotionAcceleration(acceleration, Constants.TIMEOUT_MS);
     }
 
     @Override
     public double getEncoderPosition() {
-        return controller.getSelectedSensorPosition() / K.encoderRotation;
+        return controller.getSelectedSensorPosition() / Constants.encoderRotation;
     }
 
     @Override
     public void setEncoderPosition(double position) {
-        controller.setSelectedSensorPosition(position * K.encoderRotation);
+        controller.setSelectedSensorPosition(position * Constants.encoderRotation);
     }
 
     @Override
@@ -130,5 +135,5 @@ public class TalonMotorController implements MotorController {
     public boolean getReverseLimit() {
         return controller.isRevLimitSwitchClosed() != 0;
     }
-    
+
 }

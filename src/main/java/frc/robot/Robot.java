@@ -207,7 +207,7 @@ public class Robot extends TimedRobot {
     // double backRightPower = -((leftXboxJoystickY + leftXboxJoystickX - turnAmount) /
     // scaleDownFactor);
     InputtedControls xboxControlValues =
-        new InputtedControls(leftXboxJoystickY, leftXboxJoystickX, turnAmount);
+        new InputtedControls(leftXboxJoystickY, leftXboxJoystickX, turnAmount, slowMode);
     double frontLeftPower =
         getMotorPower(xboxControlValues, scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
     double frontRightPower = -getMotorPower(xboxControlValues, scaleDownFactor, slowMode,
