@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
   private Vision robotVision;
 
   private boolean slowMode = false;
-
+  private double JOYSTICK_DEADZONE = .02;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -144,9 +144,14 @@ public class Robot extends TimedRobot {
     //These values can be anywhere from -1 to 1
     //The left joystick values will determine the direction that the robot will strafe (crabwalk), these values will not rotate the robot
     double leftXboxJoystickY = xboxController.getLeftY();
-    double leftXboxJoystickX = xboxController.getLeftX(); //* 1.1 we might need to multiply by a bit more than one, if we want to counteract imperpefect strafing
+    leftXboxJoystickY = setToZeroIfInDeadzone(leftXboxJoystickY, JOYSTICK_DEADZONE);
+
+    double leftXboxJoystickX = -xboxController.getLeftX(); //* 1.1 we might need to multiply by a bit more than one, if we want to counteract imperpefect strafing
+    leftXboxJoystickX = setToZeroIfInDeadzone(leftXboxJoystickX, JOYSTICK_DEADZONE);
+
     //This value dictates how much the robot should rotate, higher value = more rotation
-    double turnAmount = xboxController.getRightX();
+    double turnAmount = -xboxController.getRightX();
+    turnAmount = setToZeroIfInDeadzone(turnAmount, JOYSTICK_DEADZONE);
     //System.out.println("Right bumber is "+xboxController.getRightTriggerAxis());
 
     if (xboxController.getAButtonPressed()) {
@@ -219,6 +224,12 @@ public class Robot extends TimedRobot {
     
   }
 
+  public double setToZeroIfInDeadzone(double value, double joystickDeadzone) {
+    if (Math.abs(value) < JOYSTICK_DEADZONE) {
+      return 0;
+    }
+    return value;
+  }
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {}

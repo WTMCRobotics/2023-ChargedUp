@@ -197,4 +197,33 @@ public class DriveTrainTest {
             assertEquals(1, backRightMotorPower);
         }
     }
-}
+    @Nested
+    class deadZoneTests {
+        double joyStickX;
+        double joyStickY;
+        double turnAmount;
+        double JOYSTICK_DEADZONE;
+
+        @BeforeEach
+        void setup() {
+            JOYSTICK_DEADZONE = .02;
+           joyStickX = 0.015;
+           joyStickY = -.0125;
+           turnAmount = 1;
+        }
+
+        @Test
+        void joyStickXTest() {
+            assertEquals(robot.setToZeroIfInDeadzone(joyStickX, JOYSTICK_DEADZONE), 0);
+        }
+        @Test
+        void joyStickYTest() {
+            assertEquals(robot.setToZeroIfInDeadzone(joyStickY, JOYSTICK_DEADZONE), 0);
+        }
+         @Test
+        void turnAmountTest() {
+            assertEquals(robot.setToZeroIfInDeadzone(turnAmount, JOYSTICK_DEADZONE), turnAmount);
+        }
+        
+    }
+ }
