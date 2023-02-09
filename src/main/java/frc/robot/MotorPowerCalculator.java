@@ -8,6 +8,17 @@ public class MotorPowerCalculator {
         this.controls = controls;
         scaleDownFactor = Math.max(Math.abs(controls.getY()) + Math.abs(controls.getX())
                 + Math.abs(controls.getTurnAmount()), 1);
+
+    }
+
+    public MotorPowerCalculator() {
+
+    }
+
+    public void updateValues(InputtedControls controls) {
+        this.controls = controls;
+        this.scaleDownFactor = Math.max(Math.abs(controls.getY()) + Math.abs(controls.getX())
+                + Math.abs(controls.getTurnAmount()), 1);
     }
 
     public double getScaleDownFactor() {
@@ -18,11 +29,9 @@ public class MotorPowerCalculator {
     }
 
     public double getFrontLeftMotorPower() {
-        if (controls.isSlowMode()) {
-            return (controls.getY() + controls.getX() + controls.getTurnAmount())
-                    / (scaleDownFactor * 4);
-        }
-        return (controls.getY() + controls.getX() + controls.getTurnAmount()) / scaleDownFactor;
+
+        return (controls.getY() + controls.getX() + controls.getTurnAmount())
+                / getScaleDownFactor();
     }
 
     public double getFrontRightMotorPower() {
@@ -31,18 +40,14 @@ public class MotorPowerCalculator {
     }
 
     public double getBackLeftMotorPower() {
-        if (controls.isSlowMode()) {
-            return (controls.getY() + controls.getX() - controls.getTurnAmount())
-                    / (scaleDownFactor * 4);
-        }
-        return (controls.getY() + controls.getX() - controls.getTurnAmount()) / scaleDownFactor;
+
+        return (controls.getY() - controls.getX() + controls.getTurnAmount())
+                / getScaleDownFactor();
     }
 
     public double getBackRightMotorPower() {
-        if (controls.isSlowMode()) {
-            return (controls.getY() - controls.getX() + controls.getTurnAmount())
-                    / (scaleDownFactor * 4);
-        }
-        return (controls.getY() - controls.getX() + controls.getTurnAmount()) / scaleDownFactor;
+
+        return (controls.getY() + controls.getX() - controls.getTurnAmount())
+                / getScaleDownFactor();
     }
 }

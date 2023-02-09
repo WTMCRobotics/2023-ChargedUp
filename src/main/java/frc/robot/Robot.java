@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
 
   private boolean slowMode = false;
   private double JOYSTICK_DEADZONE = .02;
+  private MotorPowerCalculator motorPowerCalc;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -65,6 +66,8 @@ public class Robot extends TimedRobot {
     // This is needed for the mecanum math
     // backRight.setInverted(true);
     // frontRight.setInverted(true);
+
+    motorPowerCalc = new MotorPowerCalculator();
 
     robotVision = new Vision();
     robotVision.start();
@@ -216,6 +219,7 @@ public class Robot extends TimedRobot {
         -getMotorPower(xboxControlValues, scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
     double backLeftPower =
         getMotorPower(xboxControlValues, scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
+    // double frontLeftPower = motorPowerCalc.g
 
     frontLeft.setPercentOutput(frontLeftPower);
     backLeft.setPercentOutput(backLeftPower);
