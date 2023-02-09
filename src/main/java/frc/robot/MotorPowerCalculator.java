@@ -10,6 +10,13 @@ public class MotorPowerCalculator {
                 + Math.abs(controls.getTurnAmount()), 1);
     }
 
+    public double getScaleDownFactor() {
+        if (controls.isSlowMode()) {
+            return scaleDownFactor * 4;
+        }
+        return scaleDownFactor;
+    }
+
     public double getFrontLeftMotorPower() {
         if (controls.isSlowMode()) {
             return (controls.getY() + controls.getX() + controls.getTurnAmount())
@@ -19,11 +26,8 @@ public class MotorPowerCalculator {
     }
 
     public double getFrontRightMotorPower() {
-        if (controls.isSlowMode()) {
-            return (controls.getY() - controls.getX() - controls.getTurnAmount())
-                    / (scaleDownFactor * 4);
-        }
-        return (controls.getY() - controls.getX() - controls.getTurnAmount()) / scaleDownFactor;
+        return (controls.getY() - controls.getX() - controls.getTurnAmount())
+                / getScaleDownFactor();
     }
 
     public double getBackLeftMotorPower() {
