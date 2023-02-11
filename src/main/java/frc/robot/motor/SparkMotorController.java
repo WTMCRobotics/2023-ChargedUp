@@ -20,9 +20,15 @@ public class SparkMotorController implements MotorController {
 
     SparkMotorController(int canID, Robot robot) {
         controller = new CANSparkMax(canID, MotorType.kBrushed);
-        encoder = controller.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 8192); // 4096 = number of ticks per revolution
+        encoder = controller.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 8192); // 4096 =
+                                                                                         // number
+                                                                                         // of ticks
+                                                                                         // per
+                                                                                         // revolution
         pid = controller.getPIDController();
     }
+
+
 
     @Override
     public void reset() {
@@ -57,8 +63,9 @@ public class SparkMotorController implements MotorController {
     @Override
     public void follow(MotorController leader) {
         if (!(leader instanceof SparkMotorController))
-            throw new IllegalArgumentException("Leader must be the same type of motor controller as the follower");
-        controller.follow(((SparkMotorController)leader).controller);
+            throw new IllegalArgumentException(
+                    "Leader must be the same type of motor controller as the follower");
+        controller.follow(((SparkMotorController) leader).controller);
     }
 
     @Override
@@ -85,7 +92,8 @@ public class SparkMotorController implements MotorController {
     }
 
     @Override
-    public void setOutputLimits(double nominalForward, double nominalReverse, double peakForward, double peakReverse) {
+    public void setOutputLimits(double nominalForward, double nominalReverse, double peakForward,
+            double peakReverse) {
         pid.setOutputRange(peakReverse, peakForward);
         // No need for nominal range
     }
@@ -134,5 +142,40 @@ public class SparkMotorController implements MotorController {
     public boolean getReverseLimit() {
         return controller.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen).isPressed();
     }
-    
+
+
+
+    @Override
+    public void set(double speed) {
+        setPercentOutput(speed);
+    }
+
+
+
+    @Override
+    public double get() {
+        return controller.get();
+    }
+
+
+
+    @Override
+    public boolean getInverted() {
+        return controller.getInverted();
+    }
+
+
+
+    @Override
+    public void disable() {
+        controller.disable();
+    }
+
+
+
+    @Override
+    public void stopMotor() {
+        controller.stopMotor();
+    }
+
 }

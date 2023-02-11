@@ -10,12 +10,14 @@ import frc.robot.Robot;
 
 public class TalonMotorController implements MotorController {
     Robot robot;
-    TalonSRX controller;
+    public TalonSRX controller;
 
     TalonMotorController(int canID, Robot robot) {
         this.robot = robot;
         controller = new TalonSRX(canID);
     }
+
+
 
     @Override
     public void reset() {
@@ -136,4 +138,36 @@ public class TalonMotorController implements MotorController {
         return controller.isRevLimitSwitchClosed() != 0;
     }
 
+    @Override
+    public void set(double speed) {
+        setPercentOutput(speed);
+    }
+
+
+
+    @Override
+    public double get() {
+        return controller.getMotorOutputPercent();
+    }
+
+
+
+    @Override
+    public boolean getInverted() {
+        return controller.getInverted();
+    }
+
+
+
+    @Override
+    public void disable() {
+        // TODO: add motor disable for Talon
+    }
+
+
+
+    @Override
+    public void stopMotor() {
+        setPercentOutput(0);
+    }
 }
