@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.motor.*;
@@ -34,9 +35,10 @@ public class Robot extends TimedRobot {
   private boolean slowMode = false;
   private double JOYSTICK_DEADZONE = .02;
   private MotorPowerCalculator motorPowerCalc;
+  private MecanumDrive mecanumDriveTrain;
 
   /**
-   * This function is run when the robot is first started up and should be used for any
+   * m This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
@@ -61,6 +63,7 @@ public class Robot extends TimedRobot {
     frontRight.setInverted(true);
     backLeft.setInverted(true);
     backRight.setInverted(true);
+
 
 
     // This is needed for the mecanum math
@@ -194,8 +197,8 @@ public class Robot extends TimedRobot {
      * example: 9:10:11:12). It does this by making the largest value equal to 1, and scaling the
      * other values down proportionally
      */
-    double scaleDownFactor = Math
-        .max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount), 1);
+    // double scaleDownFactor = Math
+    // .max(Math.abs(leftXboxJoystickY) + Math.abs(leftXboxJoystickX) + Math.abs(turnAmount), 1);
     // to appease Colin:
     // double
     // scaleFactorNeededToMultipleyeverythingByToEnsureThatEveryhingIsLessThanOneWhileStillMaintainingProportionalToEachOther
@@ -211,15 +214,16 @@ public class Robot extends TimedRobot {
     // scaleDownFactor);
     InputtedControls xboxControlValues =
         new InputtedControls(leftXboxJoystickY, leftXboxJoystickX, turnAmount, slowMode);
-    double frontLeftPower =
-        getMotorPower(xboxControlValues, scaleDownFactor, slowMode, Constants.FRONT_LEFT_MOTOR_ID);
-    double frontRightPower = -getMotorPower(xboxControlValues, scaleDownFactor, slowMode,
-        Constants.FRONT_RIGHT_MOTOR_ID);
-    double backRightPower =
-        -getMotorPower(xboxControlValues, scaleDownFactor, slowMode, Constants.BACK_RIGHT_MOTOR_ID);
-    double backLeftPower =
-        getMotorPower(xboxControlValues, scaleDownFactor, slowMode, Constants.BACK_LEFT_MOTOR_ID);
-    // double frontLeftPower = motorPowerCalc.g
+
+    // Update the
+    motorPowerCalc.updateValues(xboxControlValues);
+
+    double frontLeftPower = motorPowerCalc.getFrontLeftMotorPower();
+    // getMotorPower(xboxControlValues, scaleDownFactor, slowMode,
+    // Constants.FRONT_LEFT_MOTOR_ID);
+    double frontRightPower = motorPowerCalc.getFrontRightMotorPower();
+    double backRightPower = motorPowerCalc.getBackRightMotorPower();
+    double backLeftPower = motorPowerCalc.getBackLeftMotorPower();
 
     frontLeft.setPercentOutput(frontLeftPower);
     backLeft.setPercentOutput(backLeftPower);
@@ -280,7 +284,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    System.out.println("I know wherer you live oliver");
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
