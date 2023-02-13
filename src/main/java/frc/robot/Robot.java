@@ -49,10 +49,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     // Assuming the motors are talons, if not, switch to Spark
-    frontLeft = MotorControllerFactory.create(this, 22, MotorController.Type.Talon);
-    frontRight = MotorControllerFactory.create(this, 32, MotorController.Type.Talon);
-    backLeft = MotorControllerFactory.create(this, 33, MotorController.Type.Talon);
-    backRight = MotorControllerFactory.create(this, 29, MotorController.Type.Talon);
+    frontLeft = MotorControllerFactory.create(this, Constants.FRONT_LEFT_MOTOR_ID, MotorController.Type.Talon);
+    frontRight = MotorControllerFactory.create(this, Constants.FRONT_RIGHT_MOTOR_ID, MotorController.Type.Talon);
+    backLeft = MotorControllerFactory.create(this, Constants.BACK_LEFT_MOTOR_ID, MotorController.Type.Talon);
+    backRight = MotorControllerFactory.create(this, Constants.BACK_RIGHT_MOTOR_ID, MotorController.Type.Talon);
     xboxController = new XboxController(0);
 
     frontLeft.setBrakeMode(true);
