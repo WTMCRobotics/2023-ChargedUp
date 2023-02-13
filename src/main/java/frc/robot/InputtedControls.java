@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class InputtedControls {
 
-
     private double x;
     private double y;
     private double turnAmount;
@@ -26,7 +25,6 @@ public class InputtedControls {
         return turnAmount;
     }
 
-
     public void updateValues() {
         this.x = controller.getLeftX();
         this.y = controller.getLeftY();
@@ -41,7 +39,6 @@ public class InputtedControls {
             turnAmount /= SLOW_MODE_MULTIPLIER;
         }
     }
-
 
     public InputtedControls(XboxController controller) {
         this.controller = controller;
