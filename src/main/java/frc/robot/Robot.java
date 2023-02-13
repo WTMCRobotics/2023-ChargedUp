@@ -62,6 +62,8 @@ public class Robot extends TimedRobot {
 
     frontLeft.setInverted(true);
     frontRight.setInverted(true);
+
+    System.out.println("Working");
     // backLeft.setInverted(true);
     // backRight.setInverted(true);
 
@@ -69,8 +71,8 @@ public class Robot extends TimedRobot {
 
     inputtedControls = new InputtedControls(xboxController);
 
-    // robotVision = new Vision();
-    // robotVision.start();
+    robotVision = new Vision();
+    robotVision.start();
     // robotVision.stop(); //This should stop the vision system
 
   }
