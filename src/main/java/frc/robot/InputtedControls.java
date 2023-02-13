@@ -17,6 +17,10 @@ public class InputtedControls {
         return x;
     }
 
+    /**
+     * @returns strafe amount on the y-axis within a range between -1 and 1
+     *          a positive value goes to the left
+     */
     public double getY() {
         return y;
     }
@@ -26,8 +30,8 @@ public class InputtedControls {
     }
 
     public void updateValues() {
-        this.x = controller.getLeftX();
-        this.y = controller.getLeftY();
+        this.x = controller.getLeftY();
+        this.y = controller.getLeftX();
         this.turnAmount = controller.getRightX();
         if (controller.getAButtonPressed()) {
             slowMode = !slowMode;
@@ -35,8 +39,9 @@ public class InputtedControls {
         if (slowMode) {
             x /= SLOW_MODE_MULTIPLIER;
             y /= SLOW_MODE_MULTIPLIER;
-            // Should this value be cut?
-            turnAmount /= SLOW_MODE_MULTIPLIER;
+            // Should this value be cut?++
+
+            // turnAmount /= SLOW_MODE_MULTIPLIER;
         }
     }
 
