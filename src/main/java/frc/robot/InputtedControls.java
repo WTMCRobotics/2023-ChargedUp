@@ -6,23 +6,15 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class InputtedControls {
 
-    /**
-     * strafe amount on the x-axis within a range between -1 and 1 a positive value goes forward
-     */
 
-    /**
-     * strafe amount on the y-axis within a range between -1 and 1 a positive value goes left
-     */
-
-
-    private double turnAmount;
     private boolean slowMode;
     private XboxController controller;
     private final double SLOW_MODE_MULTIPLIER = 4;
 
     /**
-     * @returns strafe amount on the x-axis within a range between -1 and 1 a positive value goes
-     *          forward
+     * Positive values mean move forward; negative values mean move backwards
+     * 
+     * @returns move amount on the x-axis within a range of -1 and 1
      */
     public double getX() {
         if (slowMode)
@@ -32,8 +24,9 @@ public class InputtedControls {
     }
 
     /**
-     * @returns strafe amount on the y-axis within a range between -1 and 1 a positive value goes to
-     *          the left
+     * Positive values mean strafe to the left; negative means to the right
+     * 
+     * @returns strafe amount on the y-axis within a range of -1 and 1
      */
     public double getY() {
         if (slowMode)
@@ -41,12 +34,17 @@ public class InputtedControls {
         return controller.getLeftX();
     }
 
+    /**
+     * Postive values indicate clockwise rotation; negative is counter-clockwise
+     * 
+     * @return the amount of rotation expected between -1 and 1
+     */
     public double getTurnAmount() {
-        return turnAmount;
+        // No slowmode for rotation, maybe change later?
+        return controller.getRightX();
     }
 
     public void updateValues() {
-        this.turnAmount = controller.getRightX();
         if (controller.getAButtonPressed()) {
             slowMode = !slowMode;
         }
