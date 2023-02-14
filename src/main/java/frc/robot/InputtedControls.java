@@ -7,15 +7,13 @@ import edu.wpi.first.wpilibj.XboxController;
 public class InputtedControls {
 
     /**
-     * strafe amount on the x-axis within a range between -1 and 1
-     * a positive value goes forward
+     * strafe amount on the x-axis within a range between -1 and 1 a positive value goes forward
      */
-    private double x;
+
     /**
-     * strafe amount on the y-axis within a range between -1 and 1
-     * a positive value goes left
+     * strafe amount on the y-axis within a range between -1 and 1 a positive value goes left
      */
-    private double y;
+
 
     private double turnAmount;
     private boolean slowMode;
@@ -23,19 +21,24 @@ public class InputtedControls {
     private final double SLOW_MODE_MULTIPLIER = 4;
 
     /**
-     * @returns strafe amount on the x-axis within a range between -1 and 1
-     *          a positive value goes forward
+     * @returns strafe amount on the x-axis within a range between -1 and 1 a positive value goes
+     *          forward
      */
     public double getX() {
-        return x;
+        if (slowMode)
+            return controller.getLeftY() / SLOW_MODE_MULTIPLIER;
+        return controller.getLeftY();
+
     }
 
     /**
-     * @returns strafe amount on the y-axis within a range between -1 and 1
-     *          a positive value goes to the left
+     * @returns strafe amount on the y-axis within a range between -1 and 1 a positive value goes to
+     *          the left
      */
     public double getY() {
-        return y;
+        if (slowMode)
+            return controller.getLeftX() / SLOW_MODE_MULTIPLIER;
+        return controller.getLeftX();
     }
 
     public double getTurnAmount() {
@@ -43,19 +46,11 @@ public class InputtedControls {
     }
 
     public void updateValues() {
-        this.x = controller.getLeftY();
-        this.y = controller.getLeftX();
         this.turnAmount = controller.getRightX();
         if (controller.getAButtonPressed()) {
             slowMode = !slowMode;
         }
-        if (slowMode) {
-            x /= SLOW_MODE_MULTIPLIER;
-            y /= SLOW_MODE_MULTIPLIER;
-            // Should this value be cut?++
 
-            // turnAmount /= SLOW_MODE_MULTIPLIER;
-        }
     }
 
     public InputtedControls(XboxController controller) {
