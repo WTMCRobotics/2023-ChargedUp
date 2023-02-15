@@ -6,9 +6,13 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class InputtedControls {
 
-
-    private boolean slowMode;
+    /**
+     * The controller this class get inputs from
+     */
     private XboxController controller;
+    /**
+     * The amount of times slower you want the robot to move while slowmode is enabled
+     */
     private final double SLOW_MODE_MULTIPLIER = 4;
 
     /**
@@ -17,20 +21,22 @@ public class InputtedControls {
      * @returns move amount on the x-axis within a range of -1 and 1
      */
     public double getX() {
-        if (slowMode)
+        if (isSlowMode()) {
             return controller.getLeftY() / SLOW_MODE_MULTIPLIER;
+        }
         return controller.getLeftY();
 
     }
 
     /**
-     * Positive values mean strafe to the left; negative means to the right
+     * Positive values mean strafe to the left; negative values mean to the right
      * 
      * @returns strafe amount on the y-axis within a range of -1 and 1
      */
     public double getY() {
-        if (slowMode)
+        if (isSlowMode()) {
             return controller.getLeftX() / SLOW_MODE_MULTIPLIER;
+        }
         return controller.getLeftX();
     }
 
@@ -40,17 +46,23 @@ public class InputtedControls {
      * @return the amount of rotation expected between -1 and 1
      */
     public double getTurnAmount() {
+
         // No slowmode for rotation, maybe change later?
         return controller.getRightX();
     }
 
-    public void updateValues() {
-        if (controller.getAButtonPressed()) {
-            slowMode = !slowMode;
-        }
-
+    /**
+     * Updates the value of slowmode, then return it
+     */
+    private boolean isSlowMode() {
+        return (controller.getRightTriggerAxis() > .5);
     }
 
+    /**
+     * Holds all the values of the Xbox controller.
+     * 
+     * @param controller the Xbox controller you want to get inputs from
+     */
     public InputtedControls(XboxController controller) {
         this.controller = controller;
     }
