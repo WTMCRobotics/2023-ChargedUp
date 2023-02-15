@@ -21,10 +21,13 @@ public class InputtedControls {
      * @returns move amount on the x-axis within a range of -1 and 1
      */
     public double getX() {
+        double controllerY = controller.getLeftY();
         if (isSlowMode()) {
-            return controller.getLeftY() / SLOW_MODE_MULTIPLIER;
+            controllerY /= SLOW_MODE_MULTIPLIER;
         }
-        return controller.getLeftY();
+        // TODO: Exponential Scaling
+
+        return controllerY;
 
     }
 
@@ -34,10 +37,14 @@ public class InputtedControls {
      * @returns strafe amount on the y-axis within a range of -1 and 1
      */
     public double getY() {
+        double controllerX = controller.getLeftX();
         if (isSlowMode()) {
-            return controller.getLeftX() / SLOW_MODE_MULTIPLIER;
+            controllerX /= SLOW_MODE_MULTIPLIER;
         }
-        return controller.getLeftX();
+        // TODO: Exponential Scaling
+
+        return controllerX;
+
     }
 
     /**
