@@ -36,12 +36,12 @@ public class ControlsTest {
 
         @Test
         public void xTest() {
-            assertEquals(.5, controls.getY());
+            assertEquals(0.5, controls.getY());
         }
 
         @Test
         public void yTest() {
-            assertEquals(.75, controls.getX());
+            assertEquals(0.75, controls.getX());
         }
     }
     @Nested
@@ -50,11 +50,11 @@ public class ControlsTest {
         XboxController xboxController;
         InputtedControls controls;
 
-        double leftX = .5;
-        double leftY = .75;
-        double rightX = .75;
+        double leftX = 0.5;
+        double leftY = 0.75;
+        double rightX = 0.75;
         // dictates if slowmode is enabled; .5 enables slowmode
-        double rightTriggerAxis = .6;
+        double rightTriggerAxis = 0.6;
 
         @BeforeEach
         void setup() {
@@ -69,7 +69,7 @@ public class ControlsTest {
 
         @Test
         public void xWhilstInSlowmode() {
-            assertEquals(.125, controls.getY());
+            assertEquals(0.125, controls.getY());
         }
 
 
@@ -87,7 +87,7 @@ public class ControlsTest {
         XboxController xboxController;
         InputtedControls controls;
 
-        double leftX = .125;
+        double leftX = 0.125;
         double leftY = 0;
         double rightX = 0;
         MotorController motors;
