@@ -12,16 +12,16 @@ import static org.mockito.Mockito.*;
 public class ControlsTest {
 
     @Nested
-    class BasicGetValuestest {
+    class BasicGetValuesTest {
 
         XboxController xboxController;
         InputtedControls controls;
 
-        double leftX = .5;
-        double leftY = .75;
-        double rightX = .75;
+        double leftX = 0.5;
+        double leftY = 0.75;
+        double rightX = 0.75;
         // dictates if slowmode is enabled; > .5 enables slowmode
-        double rightTriggerAxis = .4;
+        double rightTriggerAxis = 0.4;
 
         @BeforeEach
         void setup() {
