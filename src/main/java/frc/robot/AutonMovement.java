@@ -1,7 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
 
@@ -28,8 +30,20 @@ public class AutonMovement {
     public void AutoTurn(double angle, double speed) {
         drive.driveCartesian(0, 0, speed);
 
+        // ChassisSpeeds arguments are:
+        // chassis meters per second on the x-axis, positive is forward
+        // chassis meters per second on the y-axis, positive is left
+        // angular velocity of the robot in radians per second, positive is counterclockwise
+        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(1.0, 3.0, 1.5);
 
+        // Convert to wheel speeds
+        MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
 
+        // Get the individual wheel speeds
+        double frontLeft = wheelSpeeds.frontLeftMetersPerSecond;
+        double frontRight = wheelSpeeds.frontRightMetersPerSecond;
+        double backLeft = wheelSpeeds.rearLeftMetersPerSecond;
+        double backRight = wheelSpeeds.rearRightMetersPerSecond;
     }
 
 }
