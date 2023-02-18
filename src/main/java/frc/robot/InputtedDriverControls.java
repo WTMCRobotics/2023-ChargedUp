@@ -4,7 +4,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 
-public class InputtedControls {
+public class InputtedDriverControls {
 
     /**
      * The controller this class get inputs from
@@ -73,7 +73,7 @@ public class InputtedControls {
      * 
      * @param controller the Xbox controller you want to get inputs from
      */
-    public InputtedControls(XboxController controller) {
+    public InputtedDriverControls(XboxController controller) {
         this.controller = controller;
     }
 

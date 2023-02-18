@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.drive.MecanumDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import frc.robot.InputtedControls;
+import frc.robot.InputtedDriverControls;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -15,7 +15,7 @@ public class InputtedControlsTest {
     class BasicGetValuesTest {
 
         XboxController xboxController;
-        InputtedControls controls;
+        InputtedDriverControls controls;
 
         double leftX = 0.5;
         double leftY = 0.75;
@@ -30,7 +30,7 @@ public class InputtedControlsTest {
             when(xboxController.getLeftY()).thenReturn(leftY);
             when(xboxController.getRightX()).thenReturn(rightX);
             when(xboxController.getRightTriggerAxis()).thenReturn(rightTriggerAxis);
-            controls = new InputtedControls(xboxController);
+            controls = new InputtedDriverControls(xboxController);
         }
 
 
@@ -48,7 +48,7 @@ public class InputtedControlsTest {
     class SlowModeTest {
 
         XboxController xboxController;
-        InputtedControls controls;
+        InputtedDriverControls controls;
 
         double leftX = 0.5;
         double leftY = 0.75;
@@ -63,7 +63,7 @@ public class InputtedControlsTest {
             when(xboxController.getLeftY()).thenReturn(leftY);
             when(xboxController.getRightX()).thenReturn(rightX);
             when(xboxController.getRightTriggerAxis()).thenReturn(rightTriggerAxis);
-            controls = new InputtedControls(xboxController);
+            controls = new InputtedDriverControls(xboxController);
         }
 
 
@@ -85,7 +85,7 @@ public class InputtedControlsTest {
     class IsLinear {
 
         XboxController xboxController;
-        InputtedControls controls;
+        InputtedDriverControls controls;
 
         double leftX = 0.125;
         double leftY = 0;
@@ -95,7 +95,7 @@ public class InputtedControlsTest {
         @Test
         void linearTest() {
 
-            controls = new InputtedControls(xboxController);
+            controls = new InputtedDriverControls(xboxController);
             this.motors = mock(MotorController.class);
 
             // MecanumDrive mecanumDriveTrain = new MecanumDrive(motors, motors, motors, motors);
