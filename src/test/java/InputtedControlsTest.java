@@ -9,7 +9,7 @@ import frc.robot.InputtedControls;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ControlsTest {
+public class InputtedControlsTest {
 
     @Nested
     class BasicGetValuesTest {
@@ -36,12 +36,12 @@ public class ControlsTest {
 
         @Test
         public void xTest() {
-            assertEquals(0.5, controls.getY());
+            assertEquals(0.5, controls.getLeftJoystickX());
         }
 
         @Test
         public void yTest() {
-            assertEquals(0.75, controls.getX());
+            assertEquals(0.75, controls.getLeftJoystickY());
         }
     }
     @Nested
@@ -69,14 +69,14 @@ public class ControlsTest {
 
         @Test
         public void xWhilstInSlowmode() {
-            assertEquals(0.125, controls.getY());
+            assertEquals(0.125, controls.getLeftJoystickX());
         }
 
 
 
         @Test
         public void yWhilstInSlowmode() {
-            assertEquals(0.1875, controls.getX());
+            assertEquals(0.1875, controls.getLeftJoystickY());
         }
     }
     // Checking if wpilibs mechanumDrive class ratio from xbox controller to motor speed is a

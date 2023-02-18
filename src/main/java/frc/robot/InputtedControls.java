@@ -20,7 +20,7 @@ public class InputtedControls {
      * 
      * @returns move amount on the x-axis within a range of -1 and 1
      */
-    public double getX() {
+    public double getLeftJoystickY() {
         double controllerY = controller.getLeftY();
         if (isSlowMode()) {
             controllerY /= SLOW_MODE_MULTIPLIER;
@@ -36,7 +36,7 @@ public class InputtedControls {
      * 
      * @returns strafe amount on the y-axis within a range of -1 and 1
      */
-    public double getY() {
+    public double getLeftJoystickX() {
         double controllerX = controller.getLeftX();
         if (isSlowMode()) {
             controllerX /= SLOW_MODE_MULTIPLIER;

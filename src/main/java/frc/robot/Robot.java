@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.motor.*;
+import frc.robot.motor.MotorController;
+import frc.robot.motor.MotorControllerFactory;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -31,7 +32,7 @@ public class Robot extends TimedRobot {
   public XboxController xboxController;
   private Vision robotVision;
 
-  private MecanumDrive mecanumDriveTrain;
+  public MecanumDrive mecanumDriveTrain;
   private InputtedControls inputtedControls;
 
   /**
@@ -104,11 +105,16 @@ public class Robot extends TimedRobot {
     autoSelected = chooser.getSelected();
     // autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + autoSelected);
+
+
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+
+
+
     switch (autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
@@ -137,8 +143,12 @@ public class Robot extends TimedRobot {
 
     // inputtedControls.updateValues();
 
-    mecanumDriveTrain.driveCartesian(inputtedControls.getX(), inputtedControls.getY(),
-        inputtedControls.getTurnAmount());
+
+
+    // Joystick x (robot y, left/right) is inverted
+
+    mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickX(),
+        -inputtedControls.getLeftJoystickY(), inputtedControls.getTurnAmount());
 
   }
 
