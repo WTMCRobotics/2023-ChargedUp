@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.motor.MotorController;
@@ -34,6 +37,8 @@ public class Robot extends TimedRobot {
 
   public MecanumDrive mecanumDriveTrain;
   private InputtedControls inputtedControls;
+
+  private Gyro robotGyroscope;
 
   /**
    * m This function is run when the robot is first started up and should be used for any
@@ -75,8 +80,11 @@ public class Robot extends TimedRobot {
     // Deadzone
     mecanumDriveTrain.setDeadband(0.04);
 
-    robotVision = new Vision();
-    robotVision.start();
+    robotGyroscope = new AHRS(SPI.Port.kMXP);
+    robotGyroscope.calibrate();
+
+    // robotVision = new Vision();
+    // robotVision.start();
     // robotVision.stop(); //This should stop the vision system
 
   }
@@ -146,11 +154,10 @@ public class Robot extends TimedRobot {
 
     // inputtedControls.updateValues();
 
-
-
+    // I am testing the robotGyroscope thing, delete later probably
     mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY(),
-        inputtedControls.getLeftJoystickX(), inputtedControls.getTurnAmount());
-
+        inputtedControls.getLeftJoystickX(), inputtedControls.getTurnAmount(),
+        robotGyroscope.getRotation2d().times(-1));
   }
 
   /** This function is called once when the robot is disabled. */
@@ -158,6 +165,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   /** This function is called periodically when disabled. */
+
   @Override
   public void disabledPeriodic() {}
 

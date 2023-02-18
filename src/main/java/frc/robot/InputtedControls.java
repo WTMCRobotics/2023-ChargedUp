@@ -41,7 +41,6 @@ public class InputtedControls {
         if (isSlowMode()) {
             controllerX /= SLOW_MODE_MULTIPLIER;
         }
-        // TODO: Exponential Scaling
 
         return controllerX;
 

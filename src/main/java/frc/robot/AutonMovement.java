@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
@@ -40,10 +39,10 @@ public class AutonMovement {
         MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
 
         // Get the individual wheel speeds
-        double frontLeft = wheelSpeeds.frontLeftMetersPerSecond;
-        double frontRight = wheelSpeeds.frontRightMetersPerSecond;
-        double backLeft = wheelSpeeds.rearLeftMetersPerSecond;
-        double backRight = wheelSpeeds.rearRightMetersPerSecond;
+        double frontLefSpeed = wheelSpeeds.frontLeftMetersPerSecond;
+        double frontRightSpeed = wheelSpeeds.frontRightMetersPerSecond;
+        double backLeftSpeed = wheelSpeeds.rearLeftMetersPerSecond;
+        double backRightSpeed = wheelSpeeds.rearRightMetersPerSecond;
 
 
 
