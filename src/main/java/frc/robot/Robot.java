@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   private Vision robotVision;
 
   public MecanumDrive mecanumDriveTrain;
-  private InputtedControls inputtedControls;
+  private InputtedDriverControls inputtedControls;
 
   private Gyro robotGyroscope;
 
@@ -75,13 +75,13 @@ public class Robot extends TimedRobot {
 
     mecanumDriveTrain = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
 
-    inputtedControls = new InputtedControls(xboxController);
+    inputtedControls = new InputtedDriverControls(xboxController);
 
     // Deadzone
     mecanumDriveTrain.setDeadband(0.04);
 
     robotGyroscope = new AHRS(SPI.Port.kMXP);
-    robotGyroscope.calibrate();
+
 
     // robotVision = new Vision();
     // robotVision.start();
@@ -146,7 +146,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    robotGyroscope.calibrate();
+  }
 
   /** This function is called periodically during operator control. */
   @Override
