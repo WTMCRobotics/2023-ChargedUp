@@ -35,13 +35,13 @@ public class InputtedControlsTest {
 
 
         @Test
-        public void xTest() {
-            assertEquals(0.5, controls.getLeftJoystickX());
+        public void yTest() {
+            assertEquals(-0.75, controls.getLeftJoystickY());
         }
 
         @Test
-        public void yTest() {
-            assertEquals(0.75, controls.getLeftJoystickY());
+        public void xTest() {
+            assertEquals(0.5, controls.getLeftJoystickX());
         }
     }
     @Nested
@@ -68,15 +68,15 @@ public class InputtedControlsTest {
 
 
         @Test
-        public void xWhilstInSlowmode() {
-            assertEquals(0.125, controls.getLeftJoystickX());
+        public void yWhilstInSlowmode() {
+            assertEquals(-0.1875, controls.getLeftJoystickY());
         }
 
 
 
         @Test
-        public void yWhilstInSlowmode() {
-            assertEquals(0.1875, controls.getLeftJoystickY());
+        public void xWhilstInSlowmode() {
+            assertEquals(0.125, controls.getLeftJoystickX());
         }
     }
     // Checking if wpilibs mechanumDrive class ratio from xbox controller to motor speed is a
