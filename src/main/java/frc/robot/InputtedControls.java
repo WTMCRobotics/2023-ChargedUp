@@ -25,9 +25,9 @@ public class InputtedControls {
         if (isSlowMode()) {
             controllerY /= SLOW_MODE_MULTIPLIER;
         }
-        // TODO: Exponential Scaling
 
-        return controllerY;
+        // this has to be inverted
+        return -controllerY;
 
     }
 
@@ -53,9 +53,13 @@ public class InputtedControls {
      * @return the amount of rotation expected between -1 and 1
      */
     public double getTurnAmount() {
+        double rightJoystickX = controller.getRightX();
 
-        // No slowmode for rotation, maybe change later?
-        return controller.getRightX();
+        if (isSlowMode()) {
+            rightJoystickX /= SLOW_MODE_MULTIPLIER;
+        }
+
+        return rightJoystickX;
     }
 
     /**

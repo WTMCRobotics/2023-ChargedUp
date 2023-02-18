@@ -61,8 +61,8 @@ public class Robot extends TimedRobot {
     backLeft.setBrakeMode(true);
     backRight.setBrakeMode(true);
 
-    frontLeft.setInverted(true);
     frontRight.setInverted(true);
+    backRight.setInverted(true);
 
     System.out.println("Working");
     // backLeft.setInverted(true);
@@ -145,10 +145,8 @@ public class Robot extends TimedRobot {
 
 
 
-    // Joystick x (robot y, left/right) is inverted
-
-    mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickX(),
-        -inputtedControls.getLeftJoystickY(), inputtedControls.getTurnAmount());
+    mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY(),
+        inputtedControls.getLeftJoystickX(), inputtedControls.getTurnAmount());
 
   }
 
