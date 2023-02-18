@@ -72,6 +72,9 @@ public class Robot extends TimedRobot {
 
     inputtedControls = new InputtedControls(xboxController);
 
+    // Deadzone
+    mecanumDriveTrain.setDeadband(0.04);
+
     robotVision = new Vision();
     robotVision.start();
     // robotVision.stop(); //This should stop the vision system
