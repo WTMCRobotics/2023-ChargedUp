@@ -9,26 +9,32 @@ public class InputtedGuitarControls {
      */
     private XboxController guitar;
 
-    private ArmPosition postion;
+    public ArmPosition position;
 
     int pressedCount;
 
     public void updateLatestPostionPressed() {
         pressedCount = 0;
         if (guitar.getAButtonPressed()) {
-            postion = ArmPosition.STARTING_CONFIGURATION;
+            position = ArmPosition.STARTING_CONFIGURATION;
             pressedCount++;
         }
         if (guitar.getBButtonPressed()) {
+            position = ArmPosition.MIDDLE;
             pressedCount++;
         }
         if (guitar.getYButtonPressed()) {
+            position = ArmPosition.HIGH;
             pressedCount++;
         }
     }
 
     public InputtedGuitarControls(XboxController controller) {
         this.guitar = controller;
+    }
+
+    public ArmPosition[] armEnum() {
+        return ArmPosition.values();
     }
 }
 
