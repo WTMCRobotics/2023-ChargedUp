@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorController.Type;
@@ -30,25 +29,20 @@ public final class Constants {
 
         // DIO IDs
 
-        /** sensor for counting balls */
-        public static final int SHOOTER_SENSOR_ID = 0;
         /** Pixy LEDs - red */
-        public static final int PIXY_LED_RED_ID = 3;
+        public static final int LED_RED_ID = 3;
         /** Pixy LEDs - green */
-        public static final int PIXY_LED_GREEN_ID = 4;
+        public static final int LED_GREEN_ID = 4;
         /** Pixy LEDs - blue */
-        public static final int PIXY_LED_BLUE_ID = 5;
+        public static final int LED_BLUE_ID = 5;
 
         // Binary Sensors
-
-        /** sensor for counting balls */
-        public static final DigitalInput SHOOTER_SENSOR = new DigitalInput(SHOOTER_SENSOR_ID);
         /** Pixy LEDs - red */
-        public static final DigitalOutput PIXY_LED_RED = new DigitalOutput(PIXY_LED_RED_ID);
+        public static final DigitalOutput LED_RED = new DigitalOutput(LED_RED_ID);
         /** Pixy LEDs - green */
-        public static final DigitalOutput PIXY_LED_GREEN = new DigitalOutput(PIXY_LED_GREEN_ID);
+        public static final DigitalOutput LED_GREEN = new DigitalOutput(LED_GREEN_ID);
         /** Pixy LEDs - blue */
-        public static final DigitalOutput PIXY_LED_BLUE = new DigitalOutput(PIXY_LED_BLUE_ID);
+        public static final DigitalOutput LED_BLUE = new DigitalOutput(LED_BLUE_ID);
 
         // ##########################################
         // talon related constants and variables
