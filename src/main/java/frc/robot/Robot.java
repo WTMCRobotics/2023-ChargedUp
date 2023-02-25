@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
   private MotorController backLeft;
   private MotorController backRight;
   public XboxController xboxController;
-  private Vision robotVision;
+  // private Vision robotVision;
 
   public MecanumDrive mecanumDriveTrain;
   private InputtedDriverControls inputtedControls;
@@ -46,9 +46,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
     chooser.setDefaultOption("Default Auto", kDefaultAuto);
     chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", chooser);
+
+
 
     // Assuming the motors are talons, if not, switch to Spark
     frontLeft = MotorControllerFactory.create(this, Constants.FRONT_LEFT_MOTOR_ID,
@@ -111,11 +114,17 @@ public class Robot extends TimedRobot {
    * below with additional strings. If using the SendableChooser make sure to add them to the
    * chooser code above as well.
    */
+
+
+
   @Override
   public void autonomousInit() {
     autoSelected = chooser.getSelected();
     // autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + autoSelected);
+    RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight);
+    AutonMovement auton = new AutonMovement(motors);
+    auton.AutoForward(1, .25);
 
 
   }
@@ -145,9 +154,13 @@ public class Robot extends TimedRobot {
   }
 
   /** This function is called once when teleop is enabled. */
+
+
   @Override
   public void teleopInit() {
+
     robotGyroscope.calibrate();
+
   }
 
   /** This function is called periodically during operator control. */
@@ -160,6 +173,8 @@ public class Robot extends TimedRobot {
     mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY(),
         inputtedControls.getLeftJoystickX(), inputtedControls.getTurnAmount(),
         robotGyroscope.getRotation2d().times(-1));
+
+
   }
 
   /** This function is called once when the robot is disabled. */
