@@ -17,6 +17,8 @@ public class InputtedGuitarControls {
      */
     public GribberState gribberState;
 
+    public LightColor lightColor;
+
     int pressedCount;
 
     /**
@@ -25,6 +27,7 @@ public class InputtedGuitarControls {
     public void updateLatestPostionPressed() {
         ArmPosition storedArmPosition = position;
         pressedCount = 0;
+        // probably not the best way to be doing things, but who knows
         if (guitar.getAButtonPressed()) {
             position = ArmPosition.STARTING_CONFIGURATION;
             pressedCount++;
@@ -46,6 +49,15 @@ public class InputtedGuitarControls {
         if (guitar.getPOV() == 180) {
             gribberState = GribberState.CLOSING;
         }
+        if (guitar.getStartButtonPressed()) {
+            lightColor = LightColor.CUBE;
+        }
+        if (guitar.getBackButtonPressed()) {
+            lightColor = LightColor.CONE;
+        }
+        if (guitar.getStartButtonPressed() && guitar.getBackButtonPressed()) {
+            lightColor = LightColor.NONE;
+        }
     }
 
     /**
@@ -57,40 +69,28 @@ public class InputtedGuitarControls {
         this.guitar = controller;
     }
 
-    /**
-     * So we can assertEquals ArmPosition enum in Unit Tests. The enum itself can't be public, so
-     * this is the patchy solution
-     * 
-     * @return An array of all the Arm Positions
-     */
-    public ArmPosition[] armEnum() {
-        return ArmPosition.values();
-    }
+
 
     /**
-     * So we can assertEquals GribberState enum in Unit Tests. The enum itself can't be public, so
-     * this is the patchy solution.
-     * 
-     * @return An array of the Gribber states
+     * The states in which the Gribber will be in
      */
-    public GribberState[] gribberStates() {
-        return GribberState.values();
-
+    public static enum GribberState {
+        OPENING, CLOSING
     }
+
+
+    /**
+     * The three postions you can move the arm to
+     */
+    public static enum ArmPosition {
+        HIGH, MIDDLE, STARTING_CONFIGURATION
+    }
+
+
+    public static enum LightColor {
+        CONE, CUBE, NONE
+    }
+
 }
 
 
-/**
- * The states in which the Gribber will be in
- */
-enum GribberState {
-    OPENING, CLOSING
-}
-
-
-/**
- * The three postions you can move the arm to
- */
-enum ArmPosition {
-    HIGH, MIDDLE, STARTING_CONFIGURATION
-}

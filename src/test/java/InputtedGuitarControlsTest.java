@@ -41,7 +41,7 @@ public class InputtedGuitarControlsTest {
             when(guitar.getAButtonPressed()).thenReturn(AButtonPressed);
             guitarControls = new InputtedGuitarControls(guitar);
             guitarControls.updateLatestPostionPressed();
-            assertEquals(guitarControls.position, guitarControls.armEnum()[2]);
+            assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.STARTING_CONFIGURATION);
         }
 
         @Test
@@ -49,7 +49,7 @@ public class InputtedGuitarControlsTest {
             when(guitar.getBButtonPressed()).thenReturn(BButtonPressed);
             guitarControls = new InputtedGuitarControls(guitar);
             guitarControls.updateLatestPostionPressed();
-            assertEquals(guitarControls.position, guitarControls.armEnum()[1]);
+            assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.MIDDLE);
         }
 
         @Test
@@ -57,7 +57,7 @@ public class InputtedGuitarControlsTest {
             when(guitar.getYButtonPressed()).thenReturn(YButtonPressed);
             guitarControls = new InputtedGuitarControls(guitar);
             guitarControls.updateLatestPostionPressed();
-            assertEquals(guitarControls.position, guitarControls.armEnum()[0]);
+            assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.HIGH);
         }
     }
 }
