@@ -130,10 +130,11 @@ public class Robot extends TimedRobot {
     RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight);
     AutonMovement auton = new AutonMovement(motors);
     auton.AutoStrafe(1, .25);
+    // Eh, who needs safety anyway ¯\_(ツ)_/¯
     // System.out.println("Enabling Robot safety");
     // mecanumDriveTrain.setSafetyEnabled(true);
 
-  }
+  } // secret comment m(O o O)m
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -169,11 +170,15 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CONE)
+    // Turn Purple if Cube
+    if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CUBE) {
+      Constants.LED_GREEN.pulse(.02);
       Constants.LED_RED.pulse(.02);
-    // outputLight.close();
-
-    // inputtedControls.updateValues();
+      // Turn Yellow-ish Green if Cone
+    } else if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CONE) {
+      Constants.LED_BLUE.pulse(.02);
+      Constants.LED_RED.pulse(.02);
+    }
 
     mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY(),
         inputtedControls.getLeftJoystickX(), inputtedControls.getTurnAmount(),

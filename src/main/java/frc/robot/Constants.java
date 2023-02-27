@@ -30,11 +30,11 @@ public final class Constants {
         // DIO IDs
 
         /** Pixy LEDs - red */
-        public static final int LED_RED_ID = 3;
+        public static final int LED_RED_ID = 0;
         /** Pixy LEDs - green */
-        public static final int LED_GREEN_ID = 4;
+        public static final int LED_GREEN_ID = 1;
         /** Pixy LEDs - blue */
-        public static final int LED_BLUE_ID = 5;
+        public static final int LED_BLUE_ID = 2;
 
         // Binary Sensors
         /** Pixy LEDs - red */
