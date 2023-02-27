@@ -1,12 +1,17 @@
 package frc.robot;
 
+
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class AutonMovement {
     RobotMotors motors;
+    Gyro gyroscope;
     // wheels are 10.75 inches away from the center along the x-axis and 10.5 inches
     // away from the
     // center along the y-axis
@@ -19,15 +24,15 @@ public class AutonMovement {
 
     public AutonMovement(RobotMotors motors) {
         this.motors = motors;
+        gyroscope = new AHRS(SPI.Port.kMXP);
 
     }
 
     /**
      * 
-     * @param distance the amount in meters to move forward. Negative values move
-     *                 backwards
+     * @param distance the amount in meters to move forward. Negative values move backwards
      * 
-     * @param speed    The speed in which to move
+     * @param speed The speed in which to move
      *
      */
     public void AutoForward(double distance, double speed) {
@@ -41,21 +46,14 @@ public class AutonMovement {
 
         MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         // Get the individual wheel speeds
-        double frontLefSpeed = wheelSpeeds.frontLeftMetersPerSecond;
-        double frontRightSpeed = wheelSpeeds.frontRightMetersPerSecond;
-        double backLeftSpeed = wheelSpeeds.rearLeftMetersPerSecond;
-        double backRightSpeed = wheelSpeeds.rearRightMetersPerSecond;
-
-        motors.getFrontLeftMotor().set(frontLefSpeed);
-        motors.getFrontRightMotor().set(frontRightSpeed);
-        motors.getBackLeftMotor().set(backLeftSpeed);
-        motors.getBackRightMotor().set(backRightSpeed);
+        spinMotors(wheelSpeeds);
 
         System.out.println("Delaying for " + (distance / Math.abs(speed)));
         Timer.delay(distance / Math.abs(speed));
 
         motors.stopAllMotors();
     }
+
 
     public void AutoStrafe(double distance, double speed) {
         distance *= 2;
@@ -67,15 +65,7 @@ public class AutonMovement {
 
         MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         // Get the individual wheel speeds
-        double frontLefSpeed = wheelSpeeds.frontLeftMetersPerSecond;
-        double frontRightSpeed = wheelSpeeds.frontRightMetersPerSecond;
-        double backLeftSpeed = wheelSpeeds.rearLeftMetersPerSecond;
-        double backRightSpeed = wheelSpeeds.rearRightMetersPerSecond;
-
-        motors.getFrontLeftMotor().set(frontLefSpeed);
-        motors.getFrontRightMotor().set(frontRightSpeed);
-        motors.getBackLeftMotor().set(backLeftSpeed);
-        motors.getBackRightMotor().set(backRightSpeed);
+        spinMotors(wheelSpeeds);
 
         Timer.delay(distance / Math.abs(speed));
 
@@ -91,7 +81,6 @@ public class AutonMovement {
         // angular velocity of the robot in radians per second, positive is
         // counterclockwise
 
-        speed = Math.toRadians(angle);
 
         // originallilay 1.0, 3.0, 1
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, speed);
@@ -99,6 +88,27 @@ public class AutonMovement {
         // Convert to wheel speeds
         MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         // Get the individual wheel speeds
+        spinMotors(wheelSpeeds);
+
+        // Timer.delay(angle / Math.abs(speed));
+
+        // Incase the other code doesn't work:
+        gyroscope.calibrate();
+
+        // Convey negative angle to positive angle
+        if (angle < 0) {
+            angle = 360 - Math.abs(angle);
+        }
+        while (Math.toDegrees(gyroscope.getAngle()) < angle) {
+            Timer.delay(0.025);
+        }
+
+        motors.stopAllMotors();
+
+    }
+
+    private void spinMotors(MecanumDriveWheelSpeeds wheelSpeeds) {
+
         double frontLefSpeed = wheelSpeeds.frontLeftMetersPerSecond;
         double frontRightSpeed = wheelSpeeds.frontRightMetersPerSecond;
         double backLeftSpeed = wheelSpeeds.rearLeftMetersPerSecond;
@@ -108,11 +118,6 @@ public class AutonMovement {
         motors.getFrontRightMotor().set(frontRightSpeed);
         motors.getBackLeftMotor().set(backLeftSpeed);
         motors.getBackRightMotor().set(backRightSpeed);
-
-        Timer.delay(angle / Math.abs(speed));
-
-        motors.stopAllMotors();
-
     }
 
 }
