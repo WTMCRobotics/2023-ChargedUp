@@ -27,7 +27,7 @@ public class AutonomousActionQueueTest {
         @Test
         public void QueuePositionTest() {
             assertEquals(0, queue.getQueuePosition());
-            queue.queue(ActionType.DO_NOTHING, 1, .252);
+            queue.queue(ActionType.DO_NOTHING, 10, .252);
             queue.queue(ActionType.DO_NOTHING, 10, 34324);
             assertEquals(0, queue.getQueuePosition());
             queue.executeNext();
@@ -65,14 +65,6 @@ public class AutonomousActionQueueTest {
 
         }
 
-        // @Test
-        // There isn't a good way to make sure something waits long enough, so this test sucks
-        public void executeAllDelayTest() {
-            queue.queue(ActionType.DO_NOTHING, 0, 0);
-            queue.queue(ActionType.DO_NOTHING, 0, 1);
-            queue.queue(ActionType.DO_NOTHING, 0, 2);
-            queue.executeAll(1000);
 
-        }
     }
 }
