@@ -26,7 +26,7 @@ public class AutonomousActionQueue {
      * 
      * @param action The type of action to queue up. e.g. MOVE_BACKWARD
      * @param value How far the robot should move when executed. In meters for moving/strafing and
-     *        in degrees for rotating
+     *        in degrees for rotating, and in seconds for waiting
      * @param speed How fast the executed action should be run. In M/PS for moving/strafing
      */
     public void queue(ActionType action, double value, double speed) {
@@ -40,8 +40,9 @@ public class AutonomousActionQueue {
      */
     public void executeNext() {
 
-        if (queuePosition >= queue.size() - 1)
+        if (queuePosition >= queue.size() - 1) {
             return;
+        }
         queuePosition++;
 
         Action action = queue.get(queuePosition);
@@ -64,8 +65,9 @@ public class AutonomousActionQueue {
      * @param amountOfTimes The amount of times to execute the current action
      */
     public void executeCurrentActionNTimes(int amountOfTimes) {
-        for (int i = 0; i < amountOfTimes; i++)
+        for (int i = 0; i < amountOfTimes; i++) {
             executeAction(getCurrentAction());
+        }
     }
 
     /**
@@ -78,8 +80,9 @@ public class AutonomousActionQueue {
     }
 
     private Action getCurrentAction() {
-        if (queuePosition >= queue.size())
+        if (queuePosition >= queue.size()) {
             queuePosition = queue.size() - 1;
+        }
         return queue.get(queuePosition);
     }
 
@@ -90,8 +93,9 @@ public class AutonomousActionQueue {
      * @param millisecondDelay the delay between each action in milliseconds
      */
     public void executeAll(int millisecondDelay) {
-        if (millisecondDelay < 0)
+        if (millisecondDelay < 0) {
             millisecondDelay = 0;
+        }
         for (Action action : queue) {
             executeAction(action);
             Timer.delay(millisecondDelay / 1000);
@@ -105,8 +109,9 @@ public class AutonomousActionQueue {
      * @param millisecondDelay the delay between each action in milliseconds
      */
     public void executeRemaining(int millisecondDelay) {
-        if (millisecondDelay < 0)
+        if (millisecondDelay < 0) {
             millisecondDelay = 0;
+        }
         for (int i = queuePosition + 1; i < queue.size(); i++) {
             executeAction(queue.get(i));
             Timer.delay(millisecondDelay / 1000);
@@ -145,8 +150,9 @@ public class AutonomousActionQueue {
      * @param position the position in queue
      */
     public void setQueuePosition(int position) {
-        if (position > queue.size() || position < 0)
+        if (position > queue.size() || position < 0) {
             return;
+        }
         queuePosition = position;
     }
 
@@ -186,6 +192,9 @@ public class AutonomousActionQueue {
             case STRAFE_RIGHT:
                 mover.AutoStrafe(-action.amount, action.speed);
                 break;
+            case WAIT:
+                Timer.delay(action.amount);
+                break;
             case DO_NOTHING:
             default:
                 break;
@@ -194,7 +203,7 @@ public class AutonomousActionQueue {
     }
 
     public enum ActionType {
-        MOVE_FORWARD, MOVE_BACKWARD, STRAFE_LEFT, STRAFE_RIGHT, ROTATE_RIGHT, ROTATE_LEFT, DO_NOTHING
+        MOVE_FORWARD, MOVE_BACKWARD, STRAFE_LEFT, STRAFE_RIGHT, ROTATE_RIGHT, ROTATE_LEFT, WAIT, DO_NOTHING
     }
 }
 
