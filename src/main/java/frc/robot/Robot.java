@@ -117,6 +117,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {}
 
+  AutonMovement auton;
+
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
    * autonomous modes using the dashboard. The sendable chooser code works with the Java
@@ -139,16 +141,15 @@ public class Robot extends TimedRobot {
     actions.add(moveForward);
     AutonAction moveLeft = new AutonAction(AutonAction.MovmentType.LEFT, 1, 0.25);
     actions.add(moveLeft);
+    AutonAction turnLeft = new AutonAction(AutonAction.MovmentType.TURN_RIGHT, 180, 0.25);
+    actions.add(turnLeft);
 
     System.out.println("Auto selected: " + autoSelected);
 
     mecanumDriveTrain.setSafetyEnabled(false);
     RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight);
-    AutonMovement auton = new AutonMovement(motors, actions);
-    auton.AutoStrafe(1, .25);
-    // Eh, who needs safety anyway ¯\_(ツ)_/¯
-    // System.out.println("Enabling Robot safety");
-    // mecanumDriveTrain.setSafetyEnabled(true);
+    auton = new AutonMovement(motors, actions);
+
 
 
   } // secret comment m(O o O)m
@@ -156,7 +157,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
+    auton.autonomousEveryFrame();
     switch (autoSelected) {
       case kCustomAuto:
         // Put custom auto code here

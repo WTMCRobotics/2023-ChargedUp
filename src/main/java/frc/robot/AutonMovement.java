@@ -14,6 +14,7 @@ public class AutonMovement {
     private ArrayList<AutonAction> actionList;
     private int actionNumber;
     double targetedTimeStamp;
+    double targetTurnDegree;
     RobotMotors motors;
     Gyro gyroscope;
 
@@ -28,21 +29,83 @@ public class AutonMovement {
             Constants.FRONT_LEFT_WHEEL_LOCATION, Constants.FRONT_RIGHT_WHEEL_LOCATION,
             Constants.BACK_LEFT_WHEEL_LOCATION, Constants.BACK_RIGHT_WHEEL_LOCATION);
 
-    public void timeStamp() {
-        if (Timer.getFPGATimestamp() > targetedTimeStamp) {
-            motors.stopAllMotors();
 
+    /**
+     * This method is indended to be called every frame in autonomousPeriodic. This method checks if
+     * a certain timestamp has been reached, or if the gyroscope has reached the specified angle. If
+     * it has, then stop the motors, and execute the next queued action
+     */
+    public void autonomousEveryFrame() {
+        // If targetedTimeStamp is set to -1, that means we don't care about the time, and thus we
+        // won't check for it , same goes for turn degree
+        if (targetedTimeStamp != -1 && Timer.getFPGATimestamp() > targetedTimeStamp) {
+            motors.stopAllMotors();
+            targetedTimeStamp = -1;
+
+            if (actionList.size() < actionNumber) {
+                return;
+            }
+
+            this.executeAction(actionList.get(actionNumber));
+            actionNumber++;
+        }
+        if (targetTurnDegree != -1 && Math.toDegrees(gyroscope.getAngle()) >= targetTurnDegree) {
+            motors.stopAllMotors();
+            targetTurnDegree = -1;
+
+            if (actionList.size() < actionNumber) {
+                return;
+            }
+
+            this.executeAction(actionList.get(actionNumber));
+            actionNumber++;
         }
     }
 
     public AutonMovement(RobotMotors motors, ArrayList<AutonAction> actionList) {
+
         this.actionList = actionList;
 
 
-
+        this.actionNumber = 1;
         this.motors = motors;
-        gyroscope = new AHRS(SPI.Port.kMXP);
+        this.targetedTimeStamp = -1;
+        this.targetTurnDegree = -1;
+        this.gyroscope = new AHRS(SPI.Port.kMXP);
 
+        if (actionList.size() > 0) {
+            this.executeAction(actionList.get(0));
+        }
+
+
+    }
+
+    protected void executeAction(AutonAction action) {
+        double amount = action.amount;
+        double speed = action.speed;
+        switch (action.movmentType) {
+            case BACKWARD:
+                this.AutoForward(-amount, speed);
+                break;
+            case FORWARD:
+                this.AutoForward(amount, speed);
+                break;
+            case LEFT:
+                this.AutoStrafe(amount, speed);
+                break;
+            case RIGHT:
+                this.AutoStrafe(-amount, speed);
+                break;
+            case TURN_LEFT:
+                this.AutoTurn(-amount, speed);
+                break;
+            case TURN_RIGHT:
+                this.AutoTurn(amount, speed);
+                break;
+            default:
+                break;
+
+        }
     }
 
     /**
@@ -66,9 +129,9 @@ public class AutonMovement {
         spinMotors(wheelSpeeds);
 
         System.out.println("Delaying for " + (distance / Math.abs(speed)));
-        Timer.delay(distance / Math.abs(speed));
+        // Timer.delay(distance / Math.abs(speed));
+        targetedTimeStamp = distance / Math.abs(speed) + Timer.getFPGATimestamp();
 
-        motors.stopAllMotors();
     }
 
 
@@ -84,9 +147,9 @@ public class AutonMovement {
         // Get the individual wheel speeds
         spinMotors(wheelSpeeds);
 
-        Timer.delay(distance / Math.abs(speed));
+        // Timer.delay(distance / Math.abs(speed));
+        targetedTimeStamp = distance / Math.abs(speed) + Timer.getFPGATimestamp();
 
-        motors.stopAllMotors();
     }
 
     public void AutoTurn(double angle, double speed) {
@@ -105,22 +168,19 @@ public class AutonMovement {
         // Convert to wheel speeds
         MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         // Get the individual wheel speeds
+
+        // Spin the motors until stopped
         spinMotors(wheelSpeeds);
 
         // Timer.delay(angle / Math.abs(speed));
 
-        // Incase the other code doesn't work:
         gyroscope.calibrate();
 
-        // Convey negative angle to positive angle
+        // Convert negative angle to positive angle
         if (angle < 0) {
             angle = 360 - Math.abs(angle);
         }
-        while (Math.toDegrees(gyroscope.getAngle()) < angle) {
-            Timer.delay(0.025);
-        }
-
-        motors.stopAllMotors();
+        targetTurnDegree = angle;
 
     }
 
