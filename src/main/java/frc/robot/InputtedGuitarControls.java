@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
 public class InputtedGuitarControls {
 
@@ -20,6 +21,30 @@ public class InputtedGuitarControls {
     public LightColor lightColor;
 
     int pressedCount;
+    private MotorController armController;
+    private MotorController gribberController;
+
+    public void moveArmController() {
+        if (position == ArmPosition.HIGH) {
+            armController.set(.15);
+        }
+        if (position == ArmPosition.MIDDLE) {
+            armController.set(0);
+            // stop motor
+        }
+        if (position == ArmPosition.STARTING_CONFIGURATION) {
+            armController.set(-.15);
+            // move motor down
+        }
+
+
+
+    }
+
+    public void doEveryFrame() {
+        updateLatestPostionPressed();
+        moveArmController();
+    }
 
     /**
      * Updates the Enum values to the current Guitar values
@@ -65,8 +90,9 @@ public class InputtedGuitarControls {
      * 
      * @param controller The Guitar Hero controller
      */
-    public InputtedGuitarControls(XboxController controller) {
+    public InputtedGuitarControls(XboxController controller, MotorController armMotor) {
         this.guitar = controller;
+        this.armController = armMotor;
     }
 
 
@@ -85,6 +111,7 @@ public class InputtedGuitarControls {
     public static enum ArmPosition {
         HIGH, MIDDLE, STARTING_CONFIGURATION
     }
+
 
 
     public static enum LightColor {
