@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.security.DigestInputStream;
+import java.util.ArrayList;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
@@ -36,6 +37,8 @@ public class Robot extends TimedRobot {
   private MotorController backLeft;
   private MotorController backRight;
   public XboxController xboxController;
+
+  private MotorController armController;
   // private Vision robotVision;
 
   public MecanumDrive mecanumDriveTrain;
@@ -46,7 +49,10 @@ public class Robot extends TimedRobot {
 
   private Gyro robotGyroscope;
 
-  /**
+  private ArrayList<AutonAction> actions;
+
+
+  /*
    * m This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
@@ -67,6 +73,9 @@ public class Robot extends TimedRobot {
     backRight = MotorControllerFactory.create(this, Constants.BACK_RIGHT_MOTOR_ID,
         MotorController.Type.Talon);
     xboxController = new XboxController(0);
+
+    armController =
+        MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.Talon);
     guitarXboxController = new XboxController(1);
 
     frontLeft.setBrakeMode(true);
@@ -84,7 +93,7 @@ public class Robot extends TimedRobot {
     mecanumDriveTrain = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
 
     inputtedControls = new InputtedDriverControls(xboxController);
-    guitarControls = new InputtedGuitarControls(guitarXboxController);
+    guitarControls = new InputtedGuitarControls(guitarXboxController, null);
 
     // Deadzone
     mecanumDriveTrain.setDeadband(0.04);
@@ -124,15 +133,23 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     autoSelected = chooser.getSelected();
     // autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+
+    actions = new ArrayList<AutonAction>();
+    AutonAction moveForward = new AutonAction(AutonAction.MovmentType.FORWARD, 1, 0.25);
+    actions.add(moveForward);
+    AutonAction moveLeft = new AutonAction(AutonAction.MovmentType.LEFT, 1, 0.25);
+    actions.add(moveLeft);
+
     System.out.println("Auto selected: " + autoSelected);
 
     mecanumDriveTrain.setSafetyEnabled(false);
     RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight);
-    AutonMovement auton = new AutonMovement(motors);
+    AutonMovement auton = new AutonMovement(motors, actions);
     auton.AutoStrafe(1, .25);
     // Eh, who needs safety anyway ¯\_(ツ)_/¯
     // System.out.println("Enabling Robot safety");
     // mecanumDriveTrain.setSafetyEnabled(true);
+
 
   } // secret comment m(O o O)m
 
@@ -147,6 +164,7 @@ public class Robot extends TimedRobot {
       case kDefaultAuto:
       default:
         // Put default auto code here
+
         break;
     }
   }
@@ -171,6 +189,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // Turn Purple if Cube
+    guitarControls.doEveryFrame();
     if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CUBE) {
       Constants.LED_GREEN.pulse(.02);
       Constants.LED_RED.pulse(.02);

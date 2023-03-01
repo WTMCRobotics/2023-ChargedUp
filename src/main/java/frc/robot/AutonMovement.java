@@ -1,6 +1,7 @@
 package frc.robot;
 
 
+import java.util.ArrayList;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
@@ -10,8 +11,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class AutonMovement {
+    private ArrayList<AutonAction> actionList;
+    private int actionNumber;
+    double targetedTimeStamp;
     RobotMotors motors;
     Gyro gyroscope;
+
+
     // wheels are 10.75 inches away from the center along the x-axis and 10.5 inches
     // away from the
     // center along the y-axis
@@ -22,7 +28,18 @@ public class AutonMovement {
             Constants.FRONT_LEFT_WHEEL_LOCATION, Constants.FRONT_RIGHT_WHEEL_LOCATION,
             Constants.BACK_LEFT_WHEEL_LOCATION, Constants.BACK_RIGHT_WHEEL_LOCATION);
 
-    public AutonMovement(RobotMotors motors) {
+    public void timeStamp() {
+        if (Timer.getFPGATimestamp() > targetedTimeStamp) {
+            motors.stopAllMotors();
+
+        }
+    }
+
+    public AutonMovement(RobotMotors motors, ArrayList<AutonAction> actionList) {
+        this.actionList = actionList;
+
+
+
         this.motors = motors;
         gyroscope = new AHRS(SPI.Port.kMXP);
 
@@ -119,5 +136,7 @@ public class AutonMovement {
         motors.getBackLeftMotor().set(backLeftSpeed);
         motors.getBackRightMotor().set(backRightSpeed);
     }
+
+
 
 }
