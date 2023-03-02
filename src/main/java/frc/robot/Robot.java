@@ -4,11 +4,8 @@
 
 package frc.robot;
 
-import java.security.DigestInputStream;
 import java.util.ArrayList;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -217,7 +214,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when test mode is enabled. */
   @Override
-  public void testInit() {}
+  public void testInit() {
+    RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight);
+    MechanicsTest mechanicsTest = new MechanicsTest(motors);
+    mechanicsTest.testMechanics();
+  }
 
   /** This function is called periodically during test mode. */
   @Override
