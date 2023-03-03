@@ -6,6 +6,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -14,9 +15,11 @@ public class AutonMovement {
     private ArrayList<AutonAction> actionList;
     private int actionNumber;
     double targetedTimeStamp;
+    double targetDistance;
     double targetTurnDegree;
     RobotMotors motors;
     Gyro gyroscope;
+    Encoder encoder;
 
 
     // wheels are 10.75 inches away from the center along the x-axis and 10.5 inches
@@ -38,6 +41,18 @@ public class AutonMovement {
     public void autonomousEveryFrame() {
         // If targetedTimeStamp is set to -1, that means we don't care about the time, and thus we
         // won't check for it , same goes for turn degree
+        if (targetDistance != -1 && Math.abs(encoder.getDistance()) >= Math.abs(targetDistance)) {
+            motors.stopAllMotors();
+            targetDistance = -1;
+
+            if (actionList.size() < actionNumber) {
+                return;
+            }
+
+            this.executeAction(actionList.get(actionNumber));
+            actionNumber++;
+        }
+
         if (targetedTimeStamp != -1 && Timer.getFPGATimestamp() > targetedTimeStamp) {
             motors.stopAllMotors();
             targetedTimeStamp = -1;
@@ -49,6 +64,7 @@ public class AutonMovement {
             this.executeAction(actionList.get(actionNumber));
             actionNumber++;
         }
+
         if (targetTurnDegree != -1 && Math.toDegrees(gyroscope.getAngle()) >= targetTurnDegree) {
             motors.stopAllMotors();
             targetTurnDegree = -1;
@@ -71,10 +87,19 @@ public class AutonMovement {
         this.motors = motors;
         this.targetedTimeStamp = -1;
         this.targetTurnDegree = -1;
+        this.targetDistance = -1;
         this.gyroscope = new AHRS(SPI.Port.kMXP);
+
+        encoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X);
+        encoder.setDistancePerPulse((8.0 * Math.PI / 12.0) / 2048.0);
+        encoder.setMinRate(0.5 / 12.0);
+        encoder.setSamplesToAverage(5);
+
+
 
         if (actionList.size() > 0) {
             this.executeAction(actionList.get(0));
+
         }
 
 
@@ -116,8 +141,8 @@ public class AutonMovement {
      *
      */
     public void AutoForward(double distance, double speed) {
-        distance /= 2.55;
-        System.out.println("Attmepting stuff");
+        // distance /= 2.55;
+        System.out.println("Attempting to move forward");
         if (distance < 0) {
             distance *= -1;
             speed *= -1;
@@ -128,9 +153,11 @@ public class AutonMovement {
         // Get the individual wheel speeds
         spinMotors(wheelSpeeds);
 
-        System.out.println("Delaying for " + (distance / Math.abs(speed)));
+        // System.out.println("Delaying for " + (distance / Math.abs(speed)));
         // Timer.delay(distance / Math.abs(speed));
-        targetedTimeStamp = distance / Math.abs(speed) + Timer.getFPGATimestamp();
+        // targetedTimeStamp = distance / Math.abs(speed) + Timer.getFPGATimestamp();
+        encoder.reset();
+        targetDistance = distance;
 
     }
 
