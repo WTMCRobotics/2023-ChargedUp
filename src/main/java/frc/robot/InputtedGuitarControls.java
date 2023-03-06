@@ -1,10 +1,7 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import frc.robot.motor.MotorController;
 
 public class InputtedGuitarControls {
 
@@ -23,31 +20,30 @@ public class InputtedGuitarControls {
 
     public LightColor lightColor;
 
-    private Encoder encoder;
-
     int pressedCount;
     private MotorController armController;
     private MotorController gribberController;
 
     public void moveArmController() {
-        TalonSRX d = new TalonSRX(1);
-
+        armController.set(0);
         if (position == ArmPosition.PLACING_TOP) {
-            if (encoder.getDistance() <= Constants.ARM_PLACE_TOP_POSTION) {
-                armController.set(25);
+            if (armController.getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) {
+                armController.set(.25);
             }
         } else if (position == ArmPosition.PLACING_MIDDLE) {
-            if (encoder.getDistance() <= Constants.ARM_PLACE_TOP_POSTION) {
+            if (armController.getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) {
                 armController.set(0.25);
             }
-            if (encoder.getDistance() >= Constants.ARM_PLACE_TOP_POSTION + Constants.ARM_POSITION_BUFFER_DEGREES) {
+            if (armController.getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
+                    + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
                 armController.set(-0.25);
             }
         } else if (position == ArmPosition.PICKING_UP) {
-            if (encoder.getDistance() <= Constants.ARM_PICK_UP_POSITION) {
+            if (armController.getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) {
                 armController.set(0.25);
             }
-            if (encoder.getDistance() >= Constants.ARM_PICK_UP_POSITION + Constants.ARM_POSITION_BUFFER_DEGREES) {
+            if (armController.getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
+                    + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
                 armController.set(-0.25);
             }
         }
@@ -106,11 +102,14 @@ public class InputtedGuitarControls {
     public InputtedGuitarControls(XboxController controller, MotorController armMotor) {
         this.guitar = controller;
         this.armController = armMotor;
-        encoder = new Encoder(7, 7, false, Encoder.EncodingType.k2X);
-        encoder.setDistancePerPulse(360.0 / 2048.0);
-        encoder.setMinRate(0.5 / 12.0);
-        encoder.setSamplesToAverage(5);
+
+        armController.getEncoderPosition();
+        armController.setEncoderPosition(0);
         // Endocedder
+    }
+
+    public double degreesToEncoderPostion(double inputDegrees) {
+        return (inputDegrees / 360);
     }
 
     /**

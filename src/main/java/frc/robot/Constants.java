@@ -35,7 +35,7 @@ public final class Constants {
          * The postition in degrees from the starting position that the arm should go to
          * for placing cubes/cones on the middle level
          */
-        public static final double ARM_PLACE_MIDDLE_POSTION = 80;
+        public static final double ARM_PLACE_MIDDLE_POSTION = 60;
         /**
          * The postition in degrees from the starting position that the arm should go to
          * for picking up objects
