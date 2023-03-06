@@ -7,7 +7,8 @@ import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorController.Type;
 
 public final class Constants {
-        private Constants() {}
+        private Constants() {
+        }
 
         public static final int FRONT_LEFT_MOTOR_ID = 20;
         public static final int FRONT_RIGHT_MOTOR_ID = 21;
@@ -25,6 +26,27 @@ public final class Constants {
         /** the length of the robot in inches */
         public static final float robotLength = 38;
 
+        /**
+         * The postition in degrees from the starting position that the arm should go to
+         * for placing cubes/cones on the top level
+         */
+        public static final double ARM_PLACE_TOP_POSTION = 100;
+        /**
+         * The postition in degrees from the starting position that the arm should go to
+         * for placing cubes/cones on the middle level
+         */
+        public static final double ARM_PLACE_MIDDLE_POSTION = 80;
+        /**
+         * The postition in degrees from the starting position that the arm should go to
+         * for picking up objects
+         */
+        public static final double ARM_PICK_UP_POSITION = 20;
+
+        /**
+         * The postition in degrees from the starting position that the arm should go to
+         * for picking up objects
+         */
+        public static final double ARM_POSITION_BUFFER_DEGREES = 3;
         // ##########################################
         // Digital IO related constants
         // ##########################################
@@ -88,18 +110,14 @@ public final class Constants {
 
         // PID constants
         public static final Gains PRACTICE_ROBOT_GAINS = new Gains(0.2, 0.00035, 1.5, 0.2, 0, 1.0);
-        public static final Gains COMPETITION_ROBOT_GAINS =
-                        new Gains(0.35, 0.00001, 100, 0.2, 0, 1.0);
-        public static final Gains PRACTICE_ROTATION_GAINS =
-                        new Gains(0.004, 0.003, 0.001, 0.0, 0, 0.0);
-        public static final Gains COMPETITION_ROTATION_GAINS =
-                        new Gains(0.06, 0.003, 0.001, 0.0, 0, 0.0);
+        public static final Gains COMPETITION_ROBOT_GAINS = new Gains(0.35, 0.00001, 100, 0.2, 0, 1.0);
+        public static final Gains PRACTICE_ROTATION_GAINS = new Gains(0.004, 0.003, 0.001, 0.0, 0, 0.0);
+        public static final Gains COMPETITION_ROTATION_GAINS = new Gains(0.06, 0.003, 0.001, 0.0, 0, 0.0);
         public static final Gains TURRET_ROTATION_GAINS = new Gains(0.002, 0, 0, 0, 0, 1.0);
         public static final Gains TURRET_HOOD_GAINS = new Gains(3, 0.005, 0.003, 0, 0, 1);
-        public static final Constraints ROTATIONAL_GAIN_CONSTRAINTS =
-                        new Constraints(Double.POSITIVE_INFINITY, 20); // m/s
-                                                                       // and
-                                                                       // m/s^2
+        public static final Constraints ROTATIONAL_GAIN_CONSTRAINTS = new Constraints(Double.POSITIVE_INFINITY, 20); // m/s
+                                                                                                                     // and
+                                                                                                                     // m/s^2
 
         // ##########################################
         // intake and popper related constants and variables
@@ -160,5 +178,5 @@ public final class Constants {
         public static final int PCM_DRAWBRIDGE_OUT = 0;
         public static final int PCM_RATCHET = 2;
 
-        public static final String[] galacticSearchNames = {"Red A", "Blue A", "Red B", "Blue B"};
+        public static final String[] galacticSearchNames = { "Red A", "Blue A", "Red B", "Blue B" };
 }

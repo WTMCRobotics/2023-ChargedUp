@@ -10,7 +10,6 @@ import frc.robot.InputtedGuitarControls;
 
 public class InputtedGuitarControlsTest {
 
-
     @Nested
     class positionsTest {
         public XboxController guitar;
@@ -41,7 +40,7 @@ public class InputtedGuitarControlsTest {
             when(guitar.getAButtonPressed()).thenReturn(AButtonPressed);
             guitarControls = new InputtedGuitarControls(guitar, null);
             guitarControls.updateLatestPostionPressed();
-            assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.STARTING_CONFIGURATION);
+            assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.PICKING_UP);
         }
 
         @Test
@@ -49,7 +48,7 @@ public class InputtedGuitarControlsTest {
             when(guitar.getBButtonPressed()).thenReturn(BButtonPressed);
             guitarControls = new InputtedGuitarControls(guitar, null);
             guitarControls.updateLatestPostionPressed();
-            assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.MIDDLE);
+            assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.PLACING_MIDDLE);
         }
 
         @Test
@@ -57,7 +56,7 @@ public class InputtedGuitarControlsTest {
             when(guitar.getYButtonPressed()).thenReturn(YButtonPressed);
             guitarControls = new InputtedGuitarControls(guitar, null);
             guitarControls.updateLatestPostionPressed();
-            assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.HIGH);
+            assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.PLACING_TOP);
         }
     }
 }
