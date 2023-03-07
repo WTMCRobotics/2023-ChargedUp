@@ -156,11 +156,15 @@ public class Robot extends TimedRobot {
     actions.add(moveLeft);
     AutonAction turnLeft = new AutonAction(AutonAction.MovmentType.TURN_RIGHT, 180, 0.25);
     actions.add(turnLeft);
+    AutonAction raiseArm = new AutonAction(AutonAction.MovmentType.MOVE_ARM_PLACING_TOP, 0, 0);
+    actions.add(raiseArm);
+    AutonAction openGribber = new AutonAction(AutonAction.MovmentType.OPEN_GRIBBER, 0, 0);
+    actions.add(openGribber);
 
     System.out.println("Auto selected: " + autoSelected);
 
     mecanumDriveTrain.setSafetyEnabled(false);
-    RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight);
+    RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight, gribberController, armController);
     auton = new AutonMovement(motors, actions);
 
   } // secret comment m(O o O)m
@@ -231,7 +235,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight);
+    RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight, gribberController, armController);
     MechanicsTest mechanicsTest = new MechanicsTest(motors);
     mechanicsTest.testMechanics();
   }
