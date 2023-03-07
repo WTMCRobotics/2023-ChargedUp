@@ -27,6 +27,14 @@ public class InputtedGuitarControls {
     private void moveGribberController() {
         // TODO: Gribber logic
         // TODO: Overthrow Brazilian government
+        if (gribberState == GribberState.OPENING) {
+            gribberController.set(.25);
+
+        }
+
+        if (gribberState == GribberState.CLOSING) {
+            gribberController.set(-.25);
+        }
     }
 
     public void moveArmController() {
