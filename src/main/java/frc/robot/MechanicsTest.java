@@ -8,50 +8,57 @@ public class MechanicsTest {
     private MotorController frontRightMotor;
     private MotorController backLeftMotor;
     private MotorController backRightMotor;
-    private Timer countingTimer;
+    private MotorController gribberMotor;
+    private MotorController armMotor;
 
     public MechanicsTest(RobotMotors motors) {
         frontLeftMotor = motors.getFrontLeftMotor();
         frontRightMotor = motors.getFrontRightMotor();
         backLeftMotor = motors.getBackLeftMotor();
         backRightMotor = motors.getBackRightMotor();
-        countingTimer = new Timer();
+        gribberMotor = motors.getGribberMotor();
+        armMotor = motors.getArmMotor();
 
     }
 
     public void testMechanics() {
-        countingTimer.start();
         Thread testingThread;
         // So uh, I don't actually know if this works or not.
         testingThread = new Thread(() -> {
             System.out.println(
                     "Front left wheel should spinning forwards. The top of the wheel should be going towards the front of the robot");
-            frontLeftMotor.set(15);
-            // This shouuuuuuuuuuuuuuuld be fine because it's on a different thread. Yea, yea,
-            // definitely definitely
-            Timer.delay(5);
-
+            spinMotorForTime(frontLeftMotor, 0.15, 5);
             System.out.println(
                     "Back left wheel should spinning forwards. The top of the wheel should be going towards the front of the robot");
-            frontLeftMotor.stopMotor();
-            backLeftMotor.set(15);
-            Timer.delay(5);
-
+            spinMotorForTime(backLeftMotor, 0.15, 5);
             System.out.println(
                     "Front right wheel should spinning forwards. The top of the wheel should be going towards the front of the robot");
-            backLeftMotor.stopMotor();
-            frontRightMotor.set(15);
-            Timer.delay(5);
-
+            // It's negative because this motor was reversed in Robot.java
+            spinMotorForTime(frontRightMotor, -0.15, 5);
             System.out.println(
                     "Back right wheel should spinning forwards. The top of the wheel should be going towards the front of the robot");
-            frontRightMotor.stopMotor();
-            backRightMotor.set(15);
-            Timer.delay(5);
-            backRightMotor.stopMotor();
+            // It's negative because this motor was reversed in Robot.java
+            spinMotorForTime(backRightMotor, -0.15, 5);
 
+            System.out.println("The Gribber should now be opening");
+            spinMotorForTime(gribberMotor, 0.25, 2);
+            System.out.println("The Gribber should now be closing");
+            spinMotorForTime(gribberMotor, -0.25, 3);
+
+            System.out.println("The arm should be going up");
+            spinMotorForTime(armMotor, 0.25, 3);
+            System.out.println("The arm should now be going down");
+            spinMotorForTime(armMotor, -0.25, 3);
         });
-        testingThread.setDaemon(true);
+        // Ooga booga
+        testingThread.setDaemon(false);
         testingThread.start();
+    }
+
+    private void spinMotorForTime(MotorController motor, double speed, double time) {
+        motor.set(speed);
+        // This should be fine because it is being called on a seperate thread
+        Timer.delay(time);
+        motor.stopMotor();
     }
 }
