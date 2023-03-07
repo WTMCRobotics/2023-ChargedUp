@@ -5,7 +5,6 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -16,6 +15,7 @@ public class AutonMovement {
     double targetedTimeStamp;
     double targetDistance;
     double targetTurnDegree;
+    double targetArmDegree;
     RobotMotors motors;
     Gyro gyroscope;
 
@@ -33,6 +33,18 @@ public class AutonMovement {
         return motors.getBackLeftMotor().getEncoderPosition() * (8.0 * Math.PI / 12.0);
     }
 
+    public double degreesToEncoderPostion(double inputDegrees) {
+        return (inputDegrees / 360);
+    }
+
+    private boolean isCloseEnoughToRange() {
+        return (motors.getArmMotor()
+                .getEncoderPosition() >= (degreesToEncoderPostion(targetArmDegree)
+                        - (Constants.ARM_POSITION_BUFFER_DEGREES / 2))
+                && motors.getArmMotor().getEncoderPosition() <= (degreesToEncoderPostion(targetArmDegree)
+                        + (Constants.ARM_POSITION_BUFFER_DEGREES / 2)));
+    }
+
     /**
      * This method is indended to be called every frame in autonomousPeriodic. This
      * method checks if
@@ -45,6 +57,18 @@ public class AutonMovement {
         // and thus we
         // won't check for it , same goes for turn degree
         if (targetDistance != -1 && Math.abs(getFeetTraveled()) >= Math.abs(targetDistance)) {
+            motors.stopAllMotors();
+            targetDistance = -1;
+
+            if (actionList.size() < actionNumber) {
+                return;
+            }
+
+            this.executeAction(actionList.get(actionNumber));
+            actionNumber++;
+        }
+
+        if (targetArmDegree != -1 && isCloseEnoughToRange()) {
             motors.stopAllMotors();
             targetDistance = -1;
 
@@ -90,6 +114,7 @@ public class AutonMovement {
         this.targetedTimeStamp = -1;
         this.targetTurnDegree = -1;
         this.targetDistance = -1;
+        this.targetArmDegree = -1;
         this.gyroscope = new AHRS(SPI.Port.kMXP);
 
         if (actionList.size() > 0) {
@@ -120,6 +145,21 @@ public class AutonMovement {
                 break;
             case TURN_RIGHT:
                 this.AutoTurn(amount, speed);
+                break;
+            case CLOSE_GRIBBER:
+                this.AutoGribberClose();
+                break;
+            case OPEN_GRIBBER:
+                this.AutoGribberOpen();
+                break;
+            case MOVE_ARM_PICKING_UP:
+                this.AutoMoveArmPickingUp();
+                break;
+            case MOVE_ARM_PLACING_MIDDLE:
+                this.AutoMoveArmPlaceMiddle();
+                break;
+            case MOVE_ARM_PLACING_TOP:
+                this.AutoMoveArmPlaceTop();
                 break;
             default:
                 break;
@@ -157,6 +197,39 @@ public class AutonMovement {
 
     }
 
+    public void AutoMoveArmPickingUp() {
+        if (motors.getArmMotor().getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) {
+            motors.getArmMotor().set(0.25);
+        }
+        if (motors.getArmMotor().getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
+                + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+            motors.getArmMotor().set(-0.25);
+        }
+        targetArmDegree = Constants.ARM_PICK_UP_POSITION;
+    }
+
+    public void AutoMoveArmPlaceTop() {
+        if (motors.getArmMotor().getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) {
+            motors.getArmMotor().set(0.25);
+        }
+        if (motors.getArmMotor().getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
+                + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+            motors.getArmMotor().set(-0.25);
+        }
+        targetArmDegree = Constants.ARM_PLACE_TOP_POSTION;
+    }
+
+    public void AutoMoveArmPlaceMiddle() {
+        if (motors.getArmMotor().getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION)) {
+            motors.getArmMotor().set(0.25);
+        }
+        if (motors.getArmMotor().getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION)
+                + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+            motors.getArmMotor().set(-0.25);
+        }
+        targetArmDegree = Constants.ARM_PLACE_MIDDLE_POSTION;
+    }
+
     public void AutoStrafe(double distance, double speed) {
         distance *= 2;
         if (distance < 0) {
@@ -171,6 +244,17 @@ public class AutonMovement {
 
         // Timer.delay(distance / Math.abs(speed));
         targetedTimeStamp = distance / Math.abs(speed) + Timer.getFPGATimestamp();
+
+    }
+
+    public void AutoGribberOpen() {
+        motors.getGribberMotor().set(.25);
+        targetedTimeStamp = Timer.getFPGATimestamp() + 2;
+    }
+
+    public void AutoGribberClose() {
+        motors.getGribberMotor().set(-.25);
+        targetedTimeStamp = Timer.getFPGATimestamp() + 2;
 
     }
 
