@@ -15,7 +15,8 @@ public final class Constants {
         public static final int BACK_LEFT_MOTOR_ID = 22;
         public static final int BACK_RIGHT_MOTOR_ID = 23;
         // fix
-        public static final int ARM_MOTOR_ID = 23423;
+        public static final int ARM_MOTOR_ID = 24;
+        public static final int GRIBBER_MOTOR_ID = 25;
 
         public static Translation2d FRONT_LEFT_WHEEL_LOCATION = new Translation2d(10.75, 10.5);
         public static Translation2d FRONT_RIGHT_WHEEL_LOCATION = new Translation2d(10.75, -10.5);

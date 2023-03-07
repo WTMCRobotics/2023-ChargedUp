@@ -1,6 +1,5 @@
 package frc.robot;
 
-
 import java.util.ArrayList;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -19,8 +18,6 @@ public class AutonMovement {
     double targetTurnDegree;
     RobotMotors motors;
     Gyro gyroscope;
-    Encoder encoder;
-
 
     // wheels are 10.75 inches away from the center along the x-axis and 10.5 inches
     // away from the
@@ -32,16 +29,22 @@ public class AutonMovement {
             Constants.FRONT_LEFT_WHEEL_LOCATION, Constants.FRONT_RIGHT_WHEEL_LOCATION,
             Constants.BACK_LEFT_WHEEL_LOCATION, Constants.BACK_RIGHT_WHEEL_LOCATION);
 
+    private double getFeetTraveled() {
+        return motors.getBackLeftMotor().getEncoderPosition() * (8.0 * Math.PI / 12.0);
+    }
 
     /**
-     * This method is indended to be called every frame in autonomousPeriodic. This method checks if
-     * a certain timestamp has been reached, or if the gyroscope has reached the specified angle. If
+     * This method is indended to be called every frame in autonomousPeriodic. This
+     * method checks if
+     * a certain timestamp has been reached, or if the gyroscope has reached the
+     * specified angle. If
      * it has, then stop the motors, and execute the next queued action
      */
     public void autonomousEveryFrame() {
-        // If targetedTimeStamp is set to -1, that means we don't care about the time, and thus we
+        // If targetedTimeStamp is set to -1, that means we don't care about the time,
+        // and thus we
         // won't check for it , same goes for turn degree
-        if (targetDistance != -1 && Math.abs(encoder.getDistance()) >= Math.abs(targetDistance)) {
+        if (targetDistance != -1 && Math.abs(getFeetTraveled()) >= Math.abs(targetDistance)) {
             motors.stopAllMotors();
             targetDistance = -1;
 
@@ -82,7 +85,6 @@ public class AutonMovement {
 
         this.actionList = actionList;
 
-
         this.actionNumber = 1;
         this.motors = motors;
         this.targetedTimeStamp = -1;
@@ -90,18 +92,10 @@ public class AutonMovement {
         this.targetDistance = -1;
         this.gyroscope = new AHRS(SPI.Port.kMXP);
 
-        encoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X);
-        encoder.setDistancePerPulse((8.0 * Math.PI / 12.0) / 2048.0);
-        encoder.setMinRate(0.5 / 12.0);
-        encoder.setSamplesToAverage(5);
-
-
-
         if (actionList.size() > 0) {
             this.executeAction(actionList.get(0));
 
         }
-
 
     }
 
@@ -135,9 +129,10 @@ public class AutonMovement {
 
     /**
      * 
-     * @param distance the amount in meters to move forward. Negative values move backwards
+     * @param distance the amount in meters to move forward. Negative values move
+     *                 backwards
      * 
-     * @param speed The speed in which to move
+     * @param speed    The speed in which to move
      *
      */
     public void AutoForward(double distance, double speed) {
@@ -156,11 +151,11 @@ public class AutonMovement {
         // System.out.println("Delaying for " + (distance / Math.abs(speed)));
         // Timer.delay(distance / Math.abs(speed));
         // targetedTimeStamp = distance / Math.abs(speed) + Timer.getFPGATimestamp();
-        encoder.reset();
         targetDistance = distance;
 
-    }
+        motors.getFrontLeftMotor().setEncoderPosition(0);
 
+    }
 
     public void AutoStrafe(double distance, double speed) {
         distance *= 2;
@@ -187,7 +182,6 @@ public class AutonMovement {
         // chassis meters per second on the y-axis, positive is left
         // angular velocity of the robot in radians per second, positive is
         // counterclockwise
-
 
         // originallilay 1.0, 3.0, 1
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, speed);
@@ -223,7 +217,5 @@ public class AutonMovement {
         motors.getBackLeftMotor().set(backLeftSpeed);
         motors.getBackRightMotor().set(backRightSpeed);
     }
-
-
 
 }

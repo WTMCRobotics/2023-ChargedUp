@@ -24,6 +24,11 @@ public class InputtedGuitarControls {
     private MotorController armController;
     private MotorController gribberController;
 
+    private void moveGribberController() {
+        // TODO: Gribber logic
+        // TODO: Overthrow Brazilian government
+    }
+
     public void moveArmController() {
         armController.set(0);
         if (position == ArmPosition.PLACING_TOP) {
@@ -53,6 +58,7 @@ public class InputtedGuitarControls {
     public void doEveryFrame() {
         updateLatestPostionPressed();
         moveArmController();
+        moveGribberController();
     }
 
     /**
@@ -62,7 +68,7 @@ public class InputtedGuitarControls {
         ArmPosition storedArmPosition = position;
         pressedCount = 0;
         // probably not the best way to be doing things, but who knows
-        if (guitar.getAButtonPressed()) {
+        if (guitar.getYButtonPressed()) {
             position = ArmPosition.PICKING_UP;
             pressedCount++;
         }
@@ -70,7 +76,7 @@ public class InputtedGuitarControls {
             position = ArmPosition.PLACING_MIDDLE;
             pressedCount++;
         }
-        if (guitar.getYButtonPressed()) {
+        if (guitar.getAButtonPressed()) {
             position = ArmPosition.PLACING_TOP;
             pressedCount++;
         }
@@ -78,19 +84,16 @@ public class InputtedGuitarControls {
             position = storedArmPosition;
         }
         if (guitar.getPOV() == 0) {
-            gribberState = GribberState.OPENING;
-        }
-        if (guitar.getPOV() == 180) {
-            gribberState = GribberState.CLOSING;
-        }
-        if (guitar.getStartButtonPressed()) {
             lightColor = LightColor.CUBE;
         }
-        if (guitar.getBackButtonPressed()) {
+        if (guitar.getPOV() == 180) {
             lightColor = LightColor.CONE;
         }
-        if (guitar.getStartButtonPressed() && guitar.getBackButtonPressed()) {
-            lightColor = LightColor.NONE;
+        if (guitar.getStartButtonPressed()) {
+            gribberState = GribberState.OPENING;
+        }
+        if (guitar.getBackButtonPressed()) {
+            gribberState = GribberState.CLOSING;
         }
     }
 
@@ -99,12 +102,12 @@ public class InputtedGuitarControls {
      * 
      * @param controller The Guitar Hero controller
      */
-    public InputtedGuitarControls(XboxController controller, MotorController armMotor) {
+    public InputtedGuitarControls(XboxController controller, MotorController armMotor, MotorController gribberMotor) {
         this.guitar = controller;
         this.armController = armMotor;
-
-        armController.getEncoderPosition();
+        this.gribberController = gribberMotor;
         armController.setEncoderPosition(0);
+        gribberMotor.setEncoderPosition(0);
         // Endocedder
     }
 

@@ -26,7 +26,7 @@ public class InputtedGuitarControlsTest {
             // when(guitar.getBButtonPressed()).thenReturn(BButtonPressed);
             // when(guitar.getYButtonPressed()).thenReturn(YButtonPressed);
             // when(guitar.pov)
-            guitarControls = new InputtedGuitarControls(guitar, null);
+            guitarControls = new InputtedGuitarControls(guitar, null, null);
             guitarControls.updateLatestPostionPressed();
         }
 
@@ -38,7 +38,7 @@ public class InputtedGuitarControlsTest {
         @Test
         public void JustAButtonPressed() {
             when(guitar.getAButtonPressed()).thenReturn(AButtonPressed);
-            guitarControls = new InputtedGuitarControls(guitar, null);
+            guitarControls = new InputtedGuitarControls(guitar, null, null);
             guitarControls.updateLatestPostionPressed();
             assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.PICKING_UP);
         }
@@ -46,7 +46,7 @@ public class InputtedGuitarControlsTest {
         @Test
         public void JustBButtonPressed() {
             when(guitar.getBButtonPressed()).thenReturn(BButtonPressed);
-            guitarControls = new InputtedGuitarControls(guitar, null);
+            guitarControls = new InputtedGuitarControls(guitar, null, null);
             guitarControls.updateLatestPostionPressed();
             assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.PLACING_MIDDLE);
         }
@@ -54,7 +54,7 @@ public class InputtedGuitarControlsTest {
         @Test
         public void JustYButtonPressed() {
             when(guitar.getYButtonPressed()).thenReturn(YButtonPressed);
-            guitarControls = new InputtedGuitarControls(guitar, null);
+            guitarControls = new InputtedGuitarControls(guitar, null, null);
             guitarControls.updateLatestPostionPressed();
             assertEquals(guitarControls.position, InputtedGuitarControls.ArmPosition.PLACING_TOP);
         }

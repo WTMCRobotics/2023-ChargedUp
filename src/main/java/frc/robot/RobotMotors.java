@@ -1,6 +1,6 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import frc.robot.motor.MotorController;
 
 public class RobotMotors {
 

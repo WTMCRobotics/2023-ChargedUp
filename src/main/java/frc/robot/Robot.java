@@ -39,6 +39,7 @@ public class Robot extends TimedRobot {
   public XboxController xboxController;
 
   private MotorController armController;
+  private MotorController gribberController;
   // private Vision robotVision;
 
   public MecanumDrive mecanumDriveTrain;
@@ -74,8 +75,9 @@ public class Robot extends TimedRobot {
         MotorController.Type.Talon);
     xboxController = new XboxController(0);
 
-    armController = MotorControllerFactory.create(this, 5, MotorController.Type.SparkMax);
-    MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.Talon);
+    armController = MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
+
+    gribberController = MotorControllerFactory.create(this, Constants.GRIBBER_MOTOR_ID, MotorController.Type.SparkMax);
 
     guitarXboxController = new XboxController(1);
 
@@ -95,7 +97,7 @@ public class Robot extends TimedRobot {
 
     inputtedControls = new InputtedDriverControls(xboxController);
 
-    guitarControls = new InputtedGuitarControls(guitarXboxController, armController);
+    guitarControls = new InputtedGuitarControls(guitarXboxController, armController, gribberController);
 
     // Deadzone
     mecanumDriveTrain.setDeadband(0.04);
