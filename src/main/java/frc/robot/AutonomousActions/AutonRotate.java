@@ -24,8 +24,6 @@ public class AutonRotate extends AutonomousAction {
         this.speed = speed;
         this.isFirstTimeRunning = true;
         if (gyroscope == null) {
-            // Despite this warning, I think that this will help performance, as I think
-            // declaring a new gyroscope everytime may nto be the the brst
             gyroscope = new AHRS(SPI.Port.kMXP);
         }
 

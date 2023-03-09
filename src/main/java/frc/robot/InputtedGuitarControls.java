@@ -39,24 +39,37 @@ public class InputtedGuitarControls {
 
     public void moveArmController() {
         armController.set(0);
+        // Manual adjust arm
+        if (guitar.getXButton()) {
+            armController.set(25);
+            return;
+        } else if (guitar.getLeftBumper()) {
+            armController.set(-.25);
+            return;
+        }
         if (position == ArmPosition.PLACING_TOP) {
-            if (armController.getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) {
+            if (armController.getEncoderPosition() < degreesToEncoderPostion(
+                    Constants.ARM_PLACE_TOP_POSTION)) {
                 armController.set(.25);
             }
         } else if (position == ArmPosition.PLACING_MIDDLE) {
-            if (armController.getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) {
+            if (armController.getEncoderPosition() < degreesToEncoderPostion(
+                    Constants.ARM_PLACE_TOP_POSTION)) {
                 armController.set(0.25);
             }
-            if (armController.getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
-                    + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+            if (armController
+                    .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
+                            + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
                 armController.set(-0.25);
             }
         } else if (position == ArmPosition.PICKING_UP) {
-            if (armController.getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) {
+            if (armController.getEncoderPosition() < degreesToEncoderPostion(
+                    Constants.ARM_PICK_UP_POSITION)) {
                 armController.set(0.25);
             }
-            if (armController.getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
-                    + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+            if (armController
+                    .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
+                            + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
                 armController.set(-0.25);
             }
         }
@@ -110,7 +123,8 @@ public class InputtedGuitarControls {
      * 
      * @param controller The Guitar Hero controller
      */
-    public InputtedGuitarControls(XboxController controller, MotorController armMotor, MotorController gribberMotor) {
+    public InputtedGuitarControls(XboxController controller, MotorController armMotor,
+            MotorController gribberMotor) {
         this.guitar = controller;
         this.armController = armMotor;
         this.gribberController = gribberMotor;
