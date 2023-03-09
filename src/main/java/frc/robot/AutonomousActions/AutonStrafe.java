@@ -14,6 +14,16 @@ public class AutonStrafe extends AutonomousAction {
     private double targetedTimeStamp;
     private RobotMotors motors;
 
+
+    /**
+     * Strafes a specified distance at a specified speed.
+     * <p>
+     * WARNING! This just doesn't really work, it will kinda move, not at the correct speed, and not
+     * very well either. Maybe just rotate and move instead!
+     * 
+     * @param distance The distance to strafe, measure in feet.
+     * @param speed The speed to move at, in feet per second.
+     */
     public AutonStrafe(double distance, double speed) {
         this.distance = distance;
         this.speed = speed;
@@ -27,6 +37,9 @@ public class AutonStrafe extends AutonomousAction {
                 distance *= -1;
                 speed *= -1;
             }
+            // Convert from f/s to m/s
+            speed /= 3.281;
+
             ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, speed, 0);
 
             MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);

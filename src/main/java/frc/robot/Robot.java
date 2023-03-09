@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousActions.AutonMoveArm;
 import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
-import frc.robot.AutonomousActions.AutonMultiAction;
 import frc.robot.AutonomousActions.AutonRotate;
 import frc.robot.AutonomousActions.AutonStrafe;
 import frc.robot.AutonomousActions.AutonWait;
@@ -102,7 +101,7 @@ public class Robot extends TimedRobot {
     // backLeft.setInverted(true);
     // backRight.setInverted(true);
 
-    Constants.bottomArmLimitSwitch = new DigitalInput(Constants.bottomArmLimitSwitchID);
+    // Constants.bottomArmLimitSwitch = new DigitalInput(Constants.bottomArmLimitSwitchID);
 
     mecanumDriveTrain = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
 

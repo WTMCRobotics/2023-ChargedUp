@@ -12,6 +12,12 @@ public class AutonWait extends AutonomousAction {
     private double targetedTime;
     private double delay;
 
+    /**
+     * Used to make the robot wait for a specified number of seconds. The thread will not be harmed
+     * 
+     * @param secondsToDelay the seconds number of seconds to delay to make the robot wait, in
+     *        seconds (timed in seconds)
+     */
     public AutonWait(double secondsToDelay) {
         delay = secondsToDelay;
         this.isFirstTimeRunning = true;

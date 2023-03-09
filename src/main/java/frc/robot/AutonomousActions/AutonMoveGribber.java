@@ -11,6 +11,11 @@ public class AutonMoveGribber extends AutonomousAction {
     private RobotMotors motors;
     private double targetedTimeStamp;
 
+    /**
+     * Used to open or close the gribber on the robot
+     * 
+     * @param position the state to move the gribber, either OPENING, or CLOSING
+     */
     public AutonMoveGribber(GribberState position) {
         this.position = position;
     }

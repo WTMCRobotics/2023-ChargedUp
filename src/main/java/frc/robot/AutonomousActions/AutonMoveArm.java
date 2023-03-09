@@ -11,6 +11,13 @@ public class AutonMoveArm extends AutonomousAction {
     private double targetArmDegree;
     private ArmPosition position;
 
+
+    /**
+     * Moves the arm to the specified position
+     * 
+     * @param position The position to move the arm to. Either PICKING_UP, PICKING_MIDDLE,
+     *        PLACING_TOP
+     */
     public AutonMoveArm(ArmPosition position) {
         this.isFirstTimeRunning = true;
         this.position = position;

@@ -19,6 +19,13 @@ public class AutonRotate extends AutonomousAction {
     private double targetTurnDegrees;
     private static Gyro gyroscope = null;
 
+    /**
+     * Rotate a specified amount of degrees at a specified speed.
+     * 
+     * @param degrees The amount of degrees to rotate.
+     * @param speed The speed to turn at in degrees per second. Positive turns right, negative turns
+     *        left.
+     */
     public AutonRotate(double degrees, double speed) {
         this.targetTurnDegrees = degrees;
         this.speed = speed;
@@ -37,6 +44,7 @@ public class AutonRotate extends AutonomousAction {
     @Override
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
+            speed = Math.toRadians(speed);
             ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, speed);
             MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
             spinMotors(wheelSpeeds, motors);
