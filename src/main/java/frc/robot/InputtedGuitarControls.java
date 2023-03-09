@@ -44,6 +44,9 @@ public class InputtedGuitarControls {
             armController.set(25);
             return;
         } else if (guitar.getLeftBumper()) {
+            if (Constants.bottomArmLimitSwitch.get()) {
+                return;
+            }
             armController.set(-.25);
             return;
         }
@@ -52,16 +55,29 @@ public class InputtedGuitarControls {
                     Constants.ARM_PLACE_TOP_POSTION)) {
                 armController.set(.25);
             }
-        } else if (position == ArmPosition.PLACING_MIDDLE) {
-            if (armController.getEncoderPosition() < degreesToEncoderPostion(
-                    Constants.ARM_PLACE_TOP_POSTION)) {
-                armController.set(0.25);
-            }
             if (armController
                     .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
                             + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+                if (Constants.bottomArmLimitSwitch.get()) {
+                    return;
+                }
                 armController.set(-0.25);
             }
+
+        } else if (position == ArmPosition.PLACING_MIDDLE) {
+            if (armController.getEncoderPosition() < degreesToEncoderPostion(
+                    Constants.ARM_PLACE_MIDDLE_POSTION)) {
+                armController.set(0.25);
+            }
+            if (armController.getEncoderPosition() > degreesToEncoderPostion(
+                    Constants.ARM_PLACE_MIDDLE_POSTION)
+                    + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+                if (Constants.bottomArmLimitSwitch.get()) {
+                    return;
+                }
+                armController.set(-0.25);
+            }
+
         } else if (position == ArmPosition.PICKING_UP) {
             if (armController.getEncoderPosition() < degreesToEncoderPostion(
                     Constants.ARM_PICK_UP_POSITION)) {
@@ -70,6 +86,9 @@ public class InputtedGuitarControls {
             if (armController
                     .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
                             + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+                if (Constants.bottomArmLimitSwitch.get()) {
+                    return;
+                }
                 armController.set(-0.25);
             }
         }

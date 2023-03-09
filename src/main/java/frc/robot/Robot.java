@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.ArrayDeque;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -44,6 +45,7 @@ public class Robot extends TimedRobot {
 
   private MotorController armController;
   private MotorController gribberController;
+
   // private Vision robotVision;
 
   public MecanumDrive mecanumDriveTrain;
@@ -98,6 +100,8 @@ public class Robot extends TimedRobot {
     // backLeft.setInverted(true);
     // backRight.setInverted(true);
 
+    Constants.bottomArmLimitSwitch = new DigitalInput(Constants.bottomArmLimitSwitchID);
+
     mecanumDriveTrain = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
 
     inputtedControls = new InputtedDriverControls(xboxController);
@@ -127,7 +131,13 @@ public class Robot extends TimedRobot {
    * integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    // Reset encoder value and stop motor, to prevent arm from over extending
+    if (Constants.bottomArmLimitSwitch.get()) {
+      armController.setEncoderPosition(0.0);
+    }
+
+  }
 
   AutonMovement auton;
 
