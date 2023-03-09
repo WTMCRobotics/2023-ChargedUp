@@ -20,6 +20,7 @@ import frc.robot.AutonomousActions.AutonMoveGribber;
 import frc.robot.AutonomousActions.AutonMultiAction;
 import frc.robot.AutonomousActions.AutonRotate;
 import frc.robot.AutonomousActions.AutonStrafe;
+import frc.robot.AutonomousActions.AutonWait;
 import frc.robot.InputtedGuitarControls.ArmPosition;
 import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.motor.MotorController;
@@ -169,6 +170,10 @@ public class Robot extends TimedRobot {
     actions.add(moveArm);
     AutonomousAction openGribber = new AutonMoveGribber(GribberState.OPENING);
     actions.add(openGribber);
+    AutonomousAction waitThreeSeconds = new AutonWait(3);
+    actions.add(waitThreeSeconds);
+    AutonomousAction moveBackward = new AutonMoveForward(-3, 0.25);
+    actions.add(moveBackward);
 
     System.out.println("Auto selected: " + autoSelected);
 
