@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
 
   private Gyro robotGyroscope;
 
-  private ArrayList<AutonomousAction> actions;
+  private ArrayDeque<AutonomousAction> actions;
 
   /*
    * m This function is run when the robot is first started up and should be used for any
@@ -110,6 +110,8 @@ public class Robot extends TimedRobot {
 
     robotGyroscope = new AHRS(SPI.Port.kMXP);
 
+    armController.setEncoderPosition(0.0);
+
     // robotVision = new Vision();
     // robotVision.start();
     // robotVision.stop(); //This should stop the vision system
@@ -145,8 +147,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     autoSelected = chooser.getSelected();
     // autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-
-    actions = new ArrayList<AutonomousAction>();
+    actions = new ArrayDeque<AutonomousAction>();
     AutonomousAction moveForward = new AutonMoveForward(3, 0.25);
     actions.add(moveForward);
     AutonomousAction moveLeft = new AutonStrafe(1, 0.25);

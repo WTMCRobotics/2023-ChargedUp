@@ -1,18 +1,11 @@
 package frc.robot;
 
-import java.util.ArrayList;
-import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import java.util.ArrayDeque;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
-import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class AutonMovement {
-    private ArrayList<AutonomousAction> actionList;
-    private int actionNumber;
-    private AutonomousAction currentAction;
+    private ArrayDeque<AutonomousAction> actionList;
     RobotMotors motors;
     Gyro gyroscope;
 
@@ -27,75 +20,57 @@ public class AutonMovement {
             Constants.BACK_LEFT_WHEEL_LOCATION, Constants.BACK_RIGHT_WHEEL_LOCATION);
 
     /**
-     * This method is indended to be called every frame in autonomousPeriodic. This
-     * method checks if
-     * a certain timestamp has been reached, or if the gyroscope has reached the
-     * specified angle. If
+     * This method is indended to be called every frame in autonomousPeriodic. This method checks if
+     * a certain timestamp has been reached, or if the gyroscope has reached the specified angle. If
      * it has, then stop the motors, and execute the next queued action
      */
     public void autonomousEveryFrame() {
-        if (currentAction.executeAndIsDone()) {
+        if (actionList.size() < 1) {
+            return;
+        }
+        if (actionList.getFirst().executeAndIsDone()) {
             motors.stopAllMotors();
-            if (actionList.size() < actionNumber) {
+            actionList.removeFirst();
+            if (actionList.size() < 1) {
+                System.out.println("Auton finished!");
                 return;
             }
-            currentAction = actionList.get(actionNumber);
-            currentAction.passMotors(motors);
-            actionNumber++;
+            actionList.getFirst().passMotors(motors);
+
 
         }
 
     }
 
-    public AutonMovement(RobotMotors motors, ArrayList<AutonomousAction> actionList) {
-
+    public AutonMovement(RobotMotors motors, ArrayDeque<AutonomousAction> actionList) {
         this.actionList = actionList;
-
-        this.actionNumber = 1;
         this.motors = motors;
         // this.gyroscope = new AHRS(SPI.Port.kMXP);
-        currentAction = actionList.get(0);
-        currentAction.passMotors(motors);
+        actionList.getFirst().passMotors(motors);
 
     }
 
     /*
-     * public void AutoMoveArmPickingUp() {
-     * if (motors.getArmMotor().getEncoderPosition() <
-     * degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) {
-     * motors.getArmMotor().set(0.25);
-     * }
+     * public void AutoMoveArmPickingUp() { if (motors.getArmMotor().getEncoderPosition() <
+     * degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) { motors.getArmMotor().set(0.25); }
      * if (motors.getArmMotor().getEncoderPosition() >
-     * degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
-     * + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-     * motors.getArmMotor().set(-0.25);
-     * }
-     * targetArmDegree = Constants.ARM_PICK_UP_POSITION;
-     * }
+     * degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION) +
+     * degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+     * motors.getArmMotor().set(-0.25); } targetArmDegree = Constants.ARM_PICK_UP_POSITION; }
      * 
-     * public void AutoMoveArmPlaceTop() {
-     * if (motors.getArmMotor().getEncoderPosition() <
-     * degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) {
-     * motors.getArmMotor().set(0.25);
-     * }
+     * public void AutoMoveArmPlaceTop() { if (motors.getArmMotor().getEncoderPosition() <
+     * degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) { motors.getArmMotor().set(0.25); }
      * if (motors.getArmMotor().getEncoderPosition() >
-     * degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
-     * + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-     * motors.getArmMotor().set(-0.25);
-     * }
-     * }
+     * degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION) +
+     * degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+     * motors.getArmMotor().set(-0.25); } }
      * 
-     * public void AutoMoveArmPlaceMiddle() {
-     * if (motors.getArmMotor().getEncoderPosition() <
+     * public void AutoMoveArmPlaceMiddle() { if (motors.getArmMotor().getEncoderPosition() <
      * degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION)) {
-     * motors.getArmMotor().set(0.25);
-     * }
-     * if (motors.getArmMotor().getEncoderPosition() >
-     * degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION)
-     * + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-     * motors.getArmMotor().set(-0.25);
-     * }
-     * }
+     * motors.getArmMotor().set(0.25); } if (motors.getArmMotor().getEncoderPosition() >
+     * degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION) +
+     * degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+     * motors.getArmMotor().set(-0.25); } }
      */
 
 }
