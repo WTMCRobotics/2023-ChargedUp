@@ -6,7 +6,6 @@ package frc.robot;
 
 import java.util.ArrayDeque;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -93,6 +92,7 @@ public class Robot extends TimedRobot {
     frontRight.setBrakeMode(true);
     backLeft.setBrakeMode(true);
     backRight.setBrakeMode(true);
+
 
     frontRight.setInverted(true);
     backRight.setInverted(true);

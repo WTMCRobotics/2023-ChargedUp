@@ -19,7 +19,7 @@ public final class Constants {
         public static final int GRIBBER_MOTOR_ID = 25;
 
         public static final int bottomArmLimitSwitchID = 26;
-        public static DigitalInput bottomArmLimitSwitch =
+        public static final DigitalInput bottomArmLimitSwitch =
                         new DigitalInput(Constants.bottomArmLimitSwitchID);
 
         public static Translation2d FRONT_LEFT_WHEEL_LOCATION = new Translation2d(10.75, 10.5);
@@ -27,7 +27,10 @@ public final class Constants {
         public static Translation2d BACK_LEFT_WHEEL_LOCATION = new Translation2d(-10.75, 10.5);
         public static Translation2d BACK_RIGHT_WHEEL_LOCATION = new Translation2d(-10.75, -10.5);
 
-
+        /** The speed in which to move the robot while balancing, in m/s */
+        public static final double ROBOT_SPEED_WHILE_BALANCING = .15;
+        /** The margain of error, in degrees, while balancing */
+        public static final double BALANCING_MARGAIN_OF_ERROR = 6.0;
 
         public static final float robotWidth = 32;
         /** the length of the robot in inches */
