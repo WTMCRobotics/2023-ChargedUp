@@ -28,7 +28,18 @@ public final class Constants {
         public static Translation2d BACK_RIGHT_WHEEL_LOCATION = new Translation2d(-10.75, -10.5);
 
         /** The speed in which to move the robot while balancing, in m/s */
-        public static final double ROBOT_SPEED_WHILE_BALANCING = .15;
+        public static final double ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION = .2;
+        public static final double ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION = .1;
+        /**
+         * The amount of time in seconds the robot has to be unbalanced for for it to change to it's
+         * "unbalanced" state
+         */
+        public static final double BEING_UNBALANCED_DEBOUNCE_TIME = .02;
+        /**
+         * The amount of time in seconds the robot has to be balanced for for it to be considered
+         * balanced
+         */
+        public static final double BALANCING_DEBOUNCE_TIME = 0.1;
         /** The margain of error, in degrees, while balancing */
         public static final double BALANCING_MARGAIN_OF_ERROR = 6.0;
 
