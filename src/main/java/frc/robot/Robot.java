@@ -66,8 +66,11 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", chooser);
+    chooser.addOption("Place object, leave community, and balance", "PlaceLeaveCommunityBalance");
+    chooser.addOption("Place object and balance", "PlaceBalance");
+    chooser.addOption("Place object and leave community", "PlaceLeaveCommunity");
+    chooser.addOption("Leave Community", "LeaveCommunity");
+    SmartDashboard.putData("Auton Routes", chooser);
 
     // Assuming the motors are talons, if not, switch to Spark
     frontLeft = MotorControllerFactory.create(this, Constants.FRONT_LEFT_MOTOR_ID,
@@ -157,29 +160,30 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autoSelected = chooser.getSelected();
-    // autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    actions = new ArrayDeque<AutonomousAction>();
-    AutonomousAction moveForward = new AutonMoveForward(3, 0.25);
-    actions.add(moveForward);
-    AutonomousAction moveLeft = new AutonStrafe(1, 0.25);
-    actions.add(moveLeft);
-    AutonomousAction turnLeft = new AutonRotate(180, 0.25);
-    actions.add(turnLeft);
-    AutonomousAction moveArm = new AutonMoveArm(ArmPosition.PLACING_TOP);
-    actions.add(moveArm);
-    AutonomousAction openGribber = new AutonMoveGribber(GribberState.OPENING);
-    actions.add(openGribber);
-    AutonomousAction waitThreeSeconds = new AutonWait(3);
-    actions.add(waitThreeSeconds);
-    AutonomousAction moveBackward = new AutonMoveForward(-3, 0.25);
-    actions.add(moveBackward);
-
+    ArrayDeque<AutonomousAction> selectedRoute;
+    switch (autoSelected) {
+      case "PlaceLeaveCommunityBalance":
+        selectedRoute = AutonRoutes.placeLeaveCommunityThenBalance();
+        break;
+      case "PlaceBalance":
+        selectedRoute = AutonRoutes.placeThenBalance();
+        break;
+      case "PlaceLeaveCommunity":
+        selectedRoute = AutonRoutes.placeObjectAndLeaveCommunity();
+        break;
+      case "LeaveCommunity":
+        selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
+        break;
+      default:
+        selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
+    }
     System.out.println("Auto selected: " + autoSelected);
 
-    mecanumDriveTrain.setSafetyEnabled(false);
     RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight,
         gribberController, armController);
     auton = new AutonMovement(motors, actions);
+
+    new AutonMovement(motors, selectedRoute);
 
   } // secret comment m(O o O)m
 
