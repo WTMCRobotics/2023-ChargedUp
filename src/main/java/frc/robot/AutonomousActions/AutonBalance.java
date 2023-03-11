@@ -13,6 +13,8 @@ public class AutonBalance extends AutonomousAction {
     private RobotMotors motors;
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
     private boolean wasUnbalanced = false;
+    private double currentDebounceTime = 0;
+    private double currentBalanceDebouceTime = 0;
 
     /**
      * Used to automatically balance the robot on the charging station, within a certain degree.
@@ -29,35 +31,41 @@ public class AutonBalance extends AutonomousAction {
         if (isFirstTimeRunning) {
 
             gyro.calibrate();
-
-            MecanumDriveWheelSpeeds wheelSpeeds;
             if (movementDirection == MovementDirection.FORWARDS) {
-                wheelSpeeds = new MecanumDriveWheelSpeeds(Constants.ROBOT_SPEED_WHILE_BALANCING,
-                        Constants.ROBOT_SPEED_WHILE_BALANCING,
-                        Constants.ROBOT_SPEED_WHILE_BALANCING,
-                        Constants.ROBOT_SPEED_WHILE_BALANCING);
+                spinMotorsAtSpeed(Constants.ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION);
             } else {
-                wheelSpeeds = new MecanumDriveWheelSpeeds(-Constants.ROBOT_SPEED_WHILE_BALANCING,
-                        -Constants.ROBOT_SPEED_WHILE_BALANCING,
-                        -Constants.ROBOT_SPEED_WHILE_BALANCING,
-                        -Constants.ROBOT_SPEED_WHILE_BALANCING);
+                spinMotorsAtSpeed(-Constants.ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION);
             }
-
-            spinMotors(wheelSpeeds, motors);
 
             isFirstTimeRunning = false;
             return false;
         }
 
         if (!this.isProbablyBalanced()) {
-            wasUnbalanced = true;
-            return false;
+            currentDebounceTime += .02;
+            if (currentDebounceTime >= Constants.BEING_UNBALANCED_DEBOUNCE_TIME) {
+                if (movementDirection == MovementDirection.FORWARDS) {
+                    spinMotorsAtSpeed(Constants.ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION);
+                } else {
+                    spinMotorsAtSpeed(-Constants.ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION);
+                }
+                wasUnbalanced = true;
+                return false;
+            }
+
+        } else {
+            currentDebounceTime = 0;
         }
 
         if (wasUnbalanced && isProbablyBalanced()) {
-            motors.stopAllMotors();
-            gyro.close();
-            return true;
+            currentBalanceDebouceTime += .02;
+            if (currentBalanceDebouceTime > Constants.BALANCING_DEBOUNCE_TIME) {
+                motors.stopDriveMotors();
+                gyro.close();
+                return true;
+            }
+        } else {
+            currentBalanceDebouceTime = 0;
         }
 
         return false;
@@ -66,6 +74,12 @@ public class AutonBalance extends AutonomousAction {
     @Override
     public void passMotors(RobotMotors motors) {
         this.motors = motors;
+    }
+
+    private void spinMotorsAtSpeed(double speed) {
+        MecanumDriveWheelSpeeds wheelSpeeds =
+                new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
+        spinMotors(wheelSpeeds, motors);
     }
 
     /**
