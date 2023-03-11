@@ -36,7 +36,8 @@ public class RobotMotors {
     }
 
     public RobotMotors(MotorController frontLeft, MotorController frontRight,
-            MotorController backLeft, MotorController backRight, MotorController gribber, MotorController arm) {
+            MotorController backLeft, MotorController backRight, MotorController gribber,
+            MotorController arm) {
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.backLeft = backLeft;
@@ -53,5 +54,12 @@ public class RobotMotors {
         backRight.set(0);
         gribber.set(0);
         arm.set(0);
+    }
+
+    public void stopDriveMotors() {
+        frontLeft.set(0);
+        frontRight.set(0);
+        backLeft.set(0);
+        backRight.set(0);
     }
 }
