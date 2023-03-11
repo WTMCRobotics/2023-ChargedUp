@@ -52,6 +52,7 @@ public class AutonStrafe extends AutonomousAction {
             return false;
         }
         if (Timer.getFPGATimestamp() > targetedTimeStamp) {
+            motors.stopDriveMotors();
             return true;
         }
         return false;

@@ -63,7 +63,7 @@ public class AutonRotate extends AutonomousAction {
         }
 
         if (Math.toDegrees(gyroscope.getAngle()) >= targetTurnDegrees) {
-            motors.stopAllMotors();
+            motors.stopDriveMotors();
             try {
                 gyroscope.close();
             } catch (Exception e) {

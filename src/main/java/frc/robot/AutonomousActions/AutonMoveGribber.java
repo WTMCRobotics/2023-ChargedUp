@@ -34,6 +34,7 @@ public class AutonMoveGribber extends AutonomousAction {
             return false;
         }
         if (Timer.getFPGATimestamp() > targetedTimeStamp) {
+            motors.getGribberMotor().set(0);
             return true;
         }
         return false;

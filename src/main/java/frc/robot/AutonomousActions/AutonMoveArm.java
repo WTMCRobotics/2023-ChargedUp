@@ -47,7 +47,7 @@ public class AutonMoveArm extends AutonomousAction {
         }
 
         if (isCloseEnoughToRange()) {
-            motors.stopAllMotors();
+            motors.getArmMotor().set(0);
             return true;
         }
         return false;

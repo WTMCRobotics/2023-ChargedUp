@@ -53,7 +53,7 @@ public class AutonMoveForward extends AutonomousAction {
         }
 
         if (Math.abs(getFeetTraveled()) >= Math.abs(targetDistance)) {
-            motors.stopAllMotors();
+            motors.stopDriveMotors();
             return true;
         }
         return false;
