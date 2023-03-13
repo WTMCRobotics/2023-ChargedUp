@@ -178,4 +178,13 @@ public class SparkMotorController implements MotorController {
         controller.stopMotor();
     }
 
+    /**
+     * Returns the encoder object being used for encoding.
+     * 
+     * @return The RelativeEncoder that the spark max is using.
+     */
+    public RelativeEncoder getEncoderObject() {
+        return encoder;
+    }
+
 }

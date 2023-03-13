@@ -28,12 +28,12 @@ public class InputtedGuitarControls {
         // TODO: Gribber logic
         // TODO: Overthrow Brazilian government
         if (gribberState == GribberState.OPENING) {
-            gribberController.set(.25);
+            gribberController.set(.40);
 
         }
 
         if (gribberState == GribberState.CLOSING) {
-            gribberController.set(-.25);
+            gribberController.set(-.40);
         }
     }
 
@@ -41,55 +41,61 @@ public class InputtedGuitarControls {
         armController.set(0);
         // Manual adjust arm
         if (guitar.getXButton()) {
-            armController.set(25);
+            armController.set(0.50);
+            System.out.println("MANUAL UP");
             return;
         } else if (guitar.getLeftBumper()) {
-            if (Constants.bottomArmLimitSwitch.get()) {
-                return;
-            }
-            armController.set(-.25);
+            // if (Constants.bottomArmLimitSwitch.get()) {
+            // return;
+            // }
+            armController.set(-.50);
+            System.out.println("MANUAL DOWN");
             return;
         }
         if (position == ArmPosition.PLACING_TOP) {
+            System.out.println("Going to PLACING TOP");
             if (armController.getEncoderPosition() < degreesToEncoderPostion(
                     Constants.ARM_PLACE_TOP_POSTION)) {
-                armController.set(.25);
+                armController.set(.50);
             }
             if (armController
                     .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
                             + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-                if (Constants.bottomArmLimitSwitch.get()) {
-                    return;
-                }
-                armController.set(-0.25);
+                // if (Constants.bottomArmLimitSwitch.get()) {
+                // return;
+                // }
+                armController.set(-0.50);
             }
-
+            return;
         } else if (position == ArmPosition.PLACING_MIDDLE) {
+            System.out.println("Going to PLACING_MIDDLE");
             if (armController.getEncoderPosition() < degreesToEncoderPostion(
                     Constants.ARM_PLACE_MIDDLE_POSTION)) {
-                armController.set(0.25);
+                armController.set(0.50);
             }
             if (armController.getEncoderPosition() > degreesToEncoderPostion(
                     Constants.ARM_PLACE_MIDDLE_POSTION)
                     + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-                if (Constants.bottomArmLimitSwitch.get()) {
-                    return;
-                }
-                armController.set(-0.25);
+                // if (Constants.bottomArmLimitSwitch.get()) {
+                // return;
+                // }
+                armController.set(-0.50);
             }
+            return;
 
         } else if (position == ArmPosition.PICKING_UP) {
+            System.out.println("Going to PICKING UP");
             if (armController.getEncoderPosition() < degreesToEncoderPostion(
                     Constants.ARM_PICK_UP_POSITION)) {
-                armController.set(0.25);
+                armController.set(0.50);
             }
             if (armController
                     .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
                             + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-                if (Constants.bottomArmLimitSwitch.get()) {
-                    return;
-                }
-                armController.set(-0.25);
+                // if (Constants.bottomArmLimitSwitch.get()) {
+                // return;
+                // }
+                armController.set(-0.50);
             }
         }
 

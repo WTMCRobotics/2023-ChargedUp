@@ -18,9 +18,9 @@ public final class Constants {
         public static final int ARM_MOTOR_ID = 24;
         public static final int GRIBBER_MOTOR_ID = 25;
 
-        public static final int bottomArmLimitSwitchID = 26;
-        public static final DigitalInput bottomArmLimitSwitch =
-                        new DigitalInput(Constants.bottomArmLimitSwitchID);
+        public static final int bottomArmLimitSwitchID = 0;
+        public static DigitalInput bottomArmLimitSwitch;
+
 
         public static Translation2d FRONT_LEFT_WHEEL_LOCATION = new Translation2d(10.75, 10.5);
         public static Translation2d FRONT_RIGHT_WHEEL_LOCATION = new Translation2d(10.75, -10.5);
@@ -51,12 +51,12 @@ public final class Constants {
          * The postition in degrees from the starting position that the arm should go to for placing
          * cubes/cones on the top level
          */
-        public static final double ARM_PLACE_TOP_POSTION = 100;
+        public static final double ARM_PLACE_TOP_POSTION = 50;
         /**
          * The postition in degrees from the starting position that the arm should go to for placing
          * cubes/cones on the middle level
          */
-        public static final double ARM_PLACE_MIDDLE_POSTION = 60;
+        public static final double ARM_PLACE_MIDDLE_POSTION = 30;
         /**
          * The postition in degrees from the starting position that the arm should go to for picking
          * up objects

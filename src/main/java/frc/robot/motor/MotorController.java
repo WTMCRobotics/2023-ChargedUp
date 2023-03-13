@@ -145,6 +145,7 @@ public interface MotorController extends edu.wpi.first.wpilibj.motorcontrol.Moto
      */
     public double getEncoderPosition();
 
+
     /**
      * Set the position of the encoder.
      * 

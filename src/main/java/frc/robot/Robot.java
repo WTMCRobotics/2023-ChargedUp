@@ -6,23 +6,22 @@ package frc.robot;
 
 import java.util.ArrayDeque;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousActions.AutonMoveArm;
-import frc.robot.AutonomousActions.AutonMoveForward;
-import frc.robot.AutonomousActions.AutonMoveGribber;
-import frc.robot.AutonomousActions.AutonRotate;
-import frc.robot.AutonomousActions.AutonStrafe;
-import frc.robot.AutonomousActions.AutonWait;
 import frc.robot.InputtedGuitarControls.ArmPosition;
-import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
+import frc.robot.motor.SparkMotorController;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -91,6 +90,8 @@ public class Robot extends TimedRobot {
 
     guitarXboxController = new XboxController(1);
 
+
+
     frontLeft.setBrakeMode(true);
     frontRight.setBrakeMode(true);
     backLeft.setBrakeMode(true);
@@ -113,12 +114,25 @@ public class Robot extends TimedRobot {
     guitarControls =
         new InputtedGuitarControls(guitarXboxController, armController, gribberController);
 
+
     // Deadzone
     mecanumDriveTrain.setDeadband(0.04);
 
     robotGyroscope = new AHRS(SPI.Port.kMXP);
 
     armController.setEncoderPosition(0.0);
+
+    System.out.println("SYOUST WORKING");
+
+    // Constants.bottomArmLimitSwitch = new DigitalInput(Constants.bottomArmLimitSwitchID);
+
+    // Constants.bottomArmLimitSwitch.
+
+    // driveTab.add("Gyro Reading", robotGyroscope).withWidget(BuiltInWidgets.kGyro);
+    // driveTab.add("The Drive", mecanumDriveTrain).withWidget(BuiltInWidgets.kMecanumDrive);
+    // driveTab.add("Arm Encoder", ((SparkMotorController) armController).getEncoderObject())
+    // .withWidget(BuiltInWidgets.kEncoder);
+
 
     // robotVision = new Vision();
     // robotVision.start();
@@ -137,9 +151,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Reset encoder value and stop motor, to prevent arm from over extending
-    if (Constants.bottomArmLimitSwitch.get()) {
-      armController.setEncoderPosition(0.0);
-    }
+    // if (Constants.bottomArmLimitSwitch.get()) {
+    // armController.setEncoderPosition(0.0);
+    // }
 
   }
 
@@ -183,6 +197,7 @@ public class Robot extends TimedRobot {
         gribberController, armController);
     auton = new AutonMovement(motors, actions);
 
+
     new AutonMovement(motors, selectedRoute);
 
   } // secret comment m(O o O)m
@@ -214,7 +229,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
+    armController.setEncoderPosition(0.0);
     robotGyroscope.calibrate();
 
   }
@@ -251,10 +266,12 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight,
-        gribberController, armController);
-    MechanicsTest mechanicsTest = new MechanicsTest(motors);
-    mechanicsTest.testMechanics();
+    System.out.println("Setting motor power");
+    armController.set(-0.60);
+    // RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight,
+    // gribberController, armController);
+    // MechanicsTest mechanicsTest = new MechanicsTest(motors);
+    // mechanicsTest.testMechanics();
   }
 
   /** This function is called periodically during test mode. */
