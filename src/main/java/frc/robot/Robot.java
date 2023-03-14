@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousActions.AutonArmCalibrate;
 import frc.robot.AutonomousActions.AutonMoveArm;
-import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
 import frc.robot.InputtedGuitarControls.ArmPosition;
 import frc.robot.InputtedGuitarControls.GribberState;
@@ -24,9 +23,12 @@ import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -62,7 +64,8 @@ public class Robot extends TimedRobot {
   RobotMotors motors;
 
   /*
-   * m This function is run when the robot is first started up and should be used for any
+   * m This function is run when the robot is first started up and should be used
+   * for any
    * initialization code.
    */
   @Override
@@ -76,7 +79,6 @@ public class Robot extends TimedRobot {
     chooser.addOption("Declare manually in code", "manualInCode");
     SmartDashboard.putData("Auton Routes", chooser);
 
-
     // Assuming the motors are talons, if not, switch to Spark
     frontLeft = MotorControllerFactory.create(this, Constants.FRONT_LEFT_MOTOR_ID,
         MotorController.Type.Talon);
@@ -88,8 +90,7 @@ public class Robot extends TimedRobot {
         MotorController.Type.Talon);
     xboxController = new XboxController(0);
 
-    armController =
-        MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
+    armController = MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
 
     gribberController = MotorControllerFactory.create(this, Constants.GRIBBER_MOTOR_ID,
         MotorController.Type.SparkMax);
@@ -116,8 +117,7 @@ public class Robot extends TimedRobot {
 
     inputtedControls = new InputtedDriverControls(xboxController);
 
-    guitarControls =
-        new InputtedGuitarControls(guitarXboxController, armController, gribberController);
+    guitarControls = new InputtedGuitarControls(guitarXboxController, armController, gribberController);
 
     // Deadzone
     mecanumDriveTrain.setDeadband(0.04);
@@ -153,11 +153,13 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+   * This function is called every 20 ms, no matter the mode. Use this for items
+   * like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
    *
    * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard
    * integrated updating.
    */
   @Override
@@ -172,14 +174,20 @@ public class Robot extends TimedRobot {
   AutonMovement auton;
 
   /**
-   * This autonomous (along with the chooser code above) shows how to select between different
-   * autonomous modes using the dashboard. The sendable chooser code works with the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-   * uncomment the getString line to get the auto name from the text box below the Gyro
+   * This autonomous (along with the chooser code above) shows how to select
+   * between different
+   * autonomous modes using the dashboard. The sendable chooser code works with
+   * the Java
+   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the
+   * chooser code and
+   * uncomment the getString line to get the auto name from the text box below the
+   * Gyro
    *
    * <p>
-   * You can add additional auto modes by adding additional comparisons to the switch structure
-   * below with additional strings. If using the SendableChooser make sure to add them to the
+   * You can add additional auto modes by adding additional comparisons to the
+   * switch structure
+   * below with additional strings. If using the SendableChooser make sure to add
+   * them to the
    * chooser code above as well.
    */
 
@@ -201,9 +209,11 @@ public class Robot extends TimedRobot {
         selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
         break;
       case "manualInCode":
+
         ArrayDeque<AutonomousAction> manualActions = new ArrayDeque<>();
         // manualActions.add(new AutonMoveForward(6, 2));
         // manualActions.add(new AutonMoveGribber(GribberState.CLOSING));
+        manualActions.add(new AutonArmCalibrate(true));
         manualActions.add(new AutonMoveArm(ArmPosition.PLACING_MIDDLE));
         manualActions.add(new AutonMoveGribber(GribberState.OPENING));
         System.out.println("Manual action!");
@@ -213,7 +223,6 @@ public class Robot extends TimedRobot {
         selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
     }
     System.out.println("Auto selected: " + autoSelected);
-
 
     auton = new AutonMovement(motors, actions);
 
@@ -275,12 +284,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   /** This function is called periodically when disabled. */
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   AutonomousAction armCalibrate;
   boolean calibrateFinished = false;
@@ -316,5 +327,6 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }
