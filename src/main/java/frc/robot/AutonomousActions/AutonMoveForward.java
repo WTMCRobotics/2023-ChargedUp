@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import frc.robot.AutonomousAction;
 import frc.robot.RobotMotors;
 
-
 public class AutonMoveForward extends AutonomousAction {
     private double speed;
     private boolean isFirstTimeRunning;
@@ -15,9 +14,10 @@ public class AutonMoveForward extends AutonomousAction {
     /**
      * Moves a specified distance at a specified speed.
      * 
-     * @param distance The distance to move, measure in feet. Positive is forward, negative is
-     *        backwards.
-     * @param speed The speed to move at, in feet per second.
+     * @param distance The distance to move, measure in feet. Positive is forward,
+     *                 negative is
+     *                 backwards.
+     * @param speed    The speed to move at, in feet per second.
      */
     public AutonMoveForward(double distance, double speed) {
         this.targetDistance = distance;
@@ -53,6 +53,8 @@ public class AutonMoveForward extends AutonomousAction {
         }
 
         if (Math.abs(getFeetTraveled()) >= Math.abs(targetDistance)) {
+            System.out.println(
+                    "The robot has moved enough, as " + getFeetTraveled() + " is greater than " + targetDistance);
             motors.stopDriveMotors();
             return true;
         }
@@ -61,7 +63,7 @@ public class AutonMoveForward extends AutonomousAction {
     }
 
     private double getFeetTraveled() {
-        return motors.getBackLeftMotor().getEncoderPosition() * (8.0 * Math.PI / 12.0);
+        return motors.getFrontLeftMotor().getEncoderPosition() * (8.0 * Math.PI / 12.0);
     }
 
 }
