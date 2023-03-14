@@ -24,10 +24,10 @@ public class AutonMoveGribber extends AutonomousAction {
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
             if (position == GribberState.OPENING) {
-                motors.getGribberMotor().set(.25);
+                motors.getGribberMotor().set(-.45);
                 targetedTimeStamp = Timer.getFPGATimestamp() + 2;
-            } else if (position == GribberState.OPENING) {
-                motors.getGribberMotor().set(-.25);
+            } else if (position == GribberState.CLOSING) {
+                motors.getGribberMotor().set(.6);
                 targetedTimeStamp = Timer.getFPGATimestamp() + 2;
             }
             isFirstTimeRunning = false;
