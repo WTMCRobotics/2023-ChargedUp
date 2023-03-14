@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.util.ArrayDeque;
+import frc.robot.AutonomousActions.AutonArmCalibrate;
 import frc.robot.AutonomousActions.AutonBalance;
 import frc.robot.AutonomousActions.AutonMoveArm;
 import frc.robot.AutonomousActions.AutonMoveForward;
@@ -15,6 +16,7 @@ public class AutonRoutes {
 
     public static ArrayDeque<AutonomousAction> placeObjectAndLeaveCommunity() {
         ArrayDeque<AutonomousAction> actions = new ArrayDeque<>();
+        actions.add(new AutonArmCalibrate(false));
         actions.add(new AutonMoveGribber(GribberState.CLOSING));
         actions.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
         actions.add(new AutonMoveForward(3, 1.25));
@@ -26,6 +28,7 @@ public class AutonRoutes {
 
     public static ArrayDeque<AutonomousAction> placeLeaveCommunityThenBalance() {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<AutonomousAction>();
+        actionQueue.add(new AutonArmCalibrate(false));
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING));
         actionQueue.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
         actionQueue.add(new AutonMoveForward(3, 1));
@@ -39,6 +42,7 @@ public class AutonRoutes {
 
     public static ArrayDeque<AutonomousAction> placeThenBalance() {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<AutonomousAction>();
+        actionQueue.add(new AutonArmCalibrate(false));
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING));
         actionQueue.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
         actionQueue.add(new AutonMoveForward(3, 1));

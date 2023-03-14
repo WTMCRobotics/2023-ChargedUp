@@ -11,12 +11,12 @@ public class AutonMoveArm extends AutonomousAction {
     private double targetArmDegree;
     private ArmPosition position;
 
-
     /**
      * Moves the arm to the specified position
      * 
-     * @param position The position to move the arm to. Either PICKING_UP, PICKING_MIDDLE,
-     *        PLACING_TOP
+     * @param position The position to move the arm to. Either PICKING_UP,
+     *                 PICKING_MIDDLE,
+     *                 PLACING_TOP
      */
     public AutonMoveArm(ArmPosition position) {
         this.isFirstTimeRunning = true;
@@ -41,12 +41,17 @@ public class AutonMoveArm extends AutonomousAction {
                 case PLACING_TOP:
                     AutoMoveArmPlaceTop();
                     break;
+                default:
+                    break;
             }
             isFirstTimeRunning = false;
             return false;
         }
 
         if (isCloseEnoughToRange()) {
+            System.out.println(
+                    "The arm is done moving, as " + motors.getArmMotor().getEncoderPosition()
+                            + " is close enought to" + degreesToEncoderPostion(targetArmDegree));
             motors.getArmMotor().set(0);
             return true;
         }
@@ -77,6 +82,7 @@ public class AutonMoveArm extends AutonomousAction {
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
             motors.getArmMotor().set(-0.25);
         }
+        targetArmDegree = Constants.ARM_PLACE_TOP_POSTION;
     }
 
     public void AutoMoveArmPlaceMiddle() {
@@ -90,18 +96,16 @@ public class AutonMoveArm extends AutonomousAction {
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
             motors.getArmMotor().set(-0.25);
         }
+        targetArmDegree = Constants.ARM_PLACE_MIDDLE_POSTION;
     }
 
     public double degreesToEncoderPostion(double inputDegrees) {
-        return (inputDegrees / 360);
+        return (inputDegrees / 360.0);
     }
 
     private boolean isCloseEnoughToRange() {
-        return (motors.getArmMotor()
-                .getEncoderPosition() >= (degreesToEncoderPostion(targetArmDegree)
-                        - (Constants.ARM_POSITION_BUFFER_DEGREES / 2))
-                && motors.getArmMotor()
-                        .getEncoderPosition() <= (degreesToEncoderPostion(targetArmDegree)
-                                + (Constants.ARM_POSITION_BUFFER_DEGREES / 2)));
+        return (Math.abs(degreesToEncoderPostion(targetArmDegree)
+                - Math.abs(motors.getArmMotor().getEncoderPosition())) <= degreesToEncoderPostion(
+                        Constants.ARM_POSITION_BUFFER_DEGREES));
     }
 }

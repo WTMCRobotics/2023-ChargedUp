@@ -6,22 +6,22 @@ package frc.robot;
 
 import java.util.ArrayDeque;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.AutonomousActions.AutonArmCalibrate;
 import frc.robot.AutonomousActions.AutonMoveArm;
+import frc.robot.AutonomousActions.AutonMoveForward;
+import frc.robot.AutonomousActions.AutonMoveGribber;
 import frc.robot.InputtedGuitarControls.ArmPosition;
+import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
-import frc.robot.motor.SparkMotorController;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -55,7 +55,11 @@ public class Robot extends TimedRobot {
 
   private Gyro robotGyroscope;
 
+  private LidarProxy lidarSensor;
+
   private ArrayDeque<AutonomousAction> actions;
+
+  RobotMotors motors;
 
   /*
    * m This function is run when the robot is first started up and should be used for any
@@ -68,8 +72,10 @@ public class Robot extends TimedRobot {
     chooser.addOption("Place object, leave community, and balance", "PlaceLeaveCommunityBalance");
     chooser.addOption("Place object and balance", "PlaceBalance");
     chooser.addOption("Place object and leave community", "PlaceLeaveCommunity");
-    chooser.addOption("Leave Community", "LeaveCommunity");
+    chooser.addOption("Leave community", "LeaveCommunity");
+    chooser.addOption("Declare manually in code", "manualInCode");
     SmartDashboard.putData("Auton Routes", chooser);
+
 
     // Assuming the motors are talons, if not, switch to Spark
     frontLeft = MotorControllerFactory.create(this, Constants.FRONT_LEFT_MOTOR_ID,
@@ -90,13 +96,10 @@ public class Robot extends TimedRobot {
 
     guitarXboxController = new XboxController(1);
 
-
-
     frontLeft.setBrakeMode(true);
     frontRight.setBrakeMode(true);
     backLeft.setBrakeMode(true);
     backRight.setBrakeMode(true);
-
 
     frontRight.setInverted(true);
     backRight.setInverted(true);
@@ -104,8 +107,10 @@ public class Robot extends TimedRobot {
     System.out.println("Working");
     // backLeft.setInverted(true);
     // backRight.setInverted(true);
-
-    // Constants.bottomArmLimitSwitch = new DigitalInput(Constants.bottomArmLimitSwitchID);
+    motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight, gribberController,
+        armController);
+    // Constants.bottomArmLimitSwitch = new
+    // DigitalInput(Constants.bottomArmLimitSwitchID);
 
     mecanumDriveTrain = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
 
@@ -113,7 +118,6 @@ public class Robot extends TimedRobot {
 
     guitarControls =
         new InputtedGuitarControls(guitarXboxController, armController, gribberController);
-
 
     // Deadzone
     mecanumDriveTrain.setDeadband(0.04);
@@ -124,15 +128,23 @@ public class Robot extends TimedRobot {
 
     System.out.println("SYOUST WORKING");
 
-    // Constants.bottomArmLimitSwitch = new DigitalInput(Constants.bottomArmLimitSwitchID);
+    lidarSensor = new LidarProxy(SerialPort.Port.kMXP);
+    System.out.println("The disatnce is " + lidarSensor.get());
+
+    mecanumDriveTrain.setSafetyEnabled(false);
+
+    // Constants.bottomArmLimitSwitch = new
+    // DigitalInput(Constants.bottomArmLimitSwitchID);
 
     // Constants.bottomArmLimitSwitch.
 
-    // driveTab.add("Gyro Reading", robotGyroscope).withWidget(BuiltInWidgets.kGyro);
-    // driveTab.add("The Drive", mecanumDriveTrain).withWidget(BuiltInWidgets.kMecanumDrive);
-    // driveTab.add("Arm Encoder", ((SparkMotorController) armController).getEncoderObject())
+    // driveTab.add("Gyro Reading",
+    // robotGyroscope).withWidget(BuiltInWidgets.kGyro);
+    // driveTab.add("The Drive",
+    // mecanumDriveTrain).withWidget(BuiltInWidgets.kMecanumDrive);
+    // driveTab.add("Arm Encoder", ((SparkMotorController)
+    // armController).getEncoderObject())
     // .withWidget(BuiltInWidgets.kEncoder);
-
 
     // robotVision = new Vision();
     // robotVision.start();
@@ -151,9 +163,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Reset encoder value and stop motor, to prevent arm from over extending
-    // if (Constants.bottomArmLimitSwitch.get()) {
-    // armController.setEncoderPosition(0.0);
-    // }
+    if (motors.getArmMotor().getEncoderPosition() > 0.1 && motors.getArmMotor().getReverseLimit()) {
+      armController.setEncoderPosition(0.0);
+    }
 
   }
 
@@ -188,15 +200,22 @@ public class Robot extends TimedRobot {
       case "LeaveCommunity":
         selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
         break;
+      case "manualInCode":
+        ArrayDeque<AutonomousAction> manualActions = new ArrayDeque<>();
+        // manualActions.add(new AutonMoveForward(6, 2));
+        // manualActions.add(new AutonMoveGribber(GribberState.CLOSING));
+        manualActions.add(new AutonMoveArm(ArmPosition.PLACING_MIDDLE));
+        manualActions.add(new AutonMoveGribber(GribberState.OPENING));
+        System.out.println("Manual action!");
+        actions = manualActions;
+
       default:
         selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
     }
     System.out.println("Auto selected: " + autoSelected);
 
-    RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight,
-        gribberController, armController);
-    auton = new AutonMovement(motors, actions);
 
+    auton = new AutonMovement(motors, actions);
 
     new AutonMovement(motors, selectedRoute);
 
@@ -263,12 +282,19 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {}
 
+  AutonomousAction armCalibrate;
+  boolean calibrateFinished = false;
+
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    System.out.println("Setting motor power");
-    armController.set(-0.60);
-    // RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight,
+    System.out.println("calibraint arm");
+    armCalibrate = new AutonArmCalibrate(true);
+    System.out.println(motors);
+    armCalibrate.passMotors(motors);
+    // armController.set(-0.60);
+    // RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft,
+    // backRight,
     // gribberController, armController);
     // MechanicsTest mechanicsTest = new MechanicsTest(motors);
     // mechanicsTest.testMechanics();
@@ -276,7 +302,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    if (!calibrateFinished) {
+      calibrateFinished = armCalibrate.executeAndIsDone();
+    }
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

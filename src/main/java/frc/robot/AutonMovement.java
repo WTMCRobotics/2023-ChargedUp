@@ -31,6 +31,7 @@ public class AutonMovement {
         if (actionList.getFirst().executeAndIsDone()) {
             motors.stopAllMotors();
             actionList.removeFirst();
+            System.out.println("Finished an action");
             if (actionList.size() < 1) {
                 System.out.println("Auton finished!");
                 return;

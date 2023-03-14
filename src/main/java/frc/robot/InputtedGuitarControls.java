@@ -1,9 +1,11 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.motor.MotorController;
 
 public class InputtedGuitarControls {
+
 
     /**
      * The guitar hero controller.
@@ -12,7 +14,7 @@ public class InputtedGuitarControls {
     /**
      * The current position the arm should be moving to.
      */
-    public ArmPosition position;
+    public ArmPosition position = ArmPosition.MANUAL;
     /**
      * Holds if the gribber should be opening or closing
      */
@@ -24,11 +26,16 @@ public class InputtedGuitarControls {
     private MotorController armController;
     private MotorController gribberController;
 
+    double timeSinceGribberStateChange = 0.0;
+
     private void moveGribberController() {
-        // TODO: Gribber logic
         // TODO: Overthrow Brazilian government
+        if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
+            gribberController.set(0);
+            return;
+        }
         if (gribberState == GribberState.OPENING) {
-            gribberController.set(.40);
+            gribberController.set(.90);
 
         }
 
@@ -38,70 +45,74 @@ public class InputtedGuitarControls {
     }
 
     public void moveArmController() {
-        armController.set(0);
-        // Manual adjust arm
         if (guitar.getXButton()) {
-            armController.set(0.50);
-            System.out.println("MANUAL UP");
+            armController.set(Constants.ARM_MOVE_UP_SPEED);
+            position = ArmPosition.MANUAL;
             return;
         } else if (guitar.getLeftBumper()) {
             // if (Constants.bottomArmLimitSwitch.get()) {
             // return;
             // }
-            armController.set(-.50);
-            System.out.println("MANUAL DOWN");
+            position = ArmPosition.MANUAL;
+            armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             return;
         }
-        if (position == ArmPosition.PLACING_TOP) {
-            System.out.println("Going to PLACING TOP");
-            if (armController.getEncoderPosition() < degreesToEncoderPostion(
-                    Constants.ARM_PLACE_TOP_POSTION)) {
-                armController.set(.50);
+        armController.set(0);
+        // Manual adjust arm
+
+        double encoderBuffer = degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES);
+        if (position == ArmPosition.MANUAL) {
+            return;
+        } else if (position == ArmPosition.PLACING_TOP) {
+            if (armController
+                    .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
+                            - encoderBuffer) {
+                armController.set(Constants.ARM_MOVE_UP_SPEED);
             }
             if (armController
                     .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
-                            + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+                            + encoderBuffer) {
                 // if (Constants.bottomArmLimitSwitch.get()) {
                 // return;
                 // }
-                armController.set(-0.50);
+                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             }
             return;
         } else if (position == ArmPosition.PLACING_MIDDLE) {
-            System.out.println("Going to PLACING_MIDDLE");
             if (armController.getEncoderPosition() < degreesToEncoderPostion(
-                    Constants.ARM_PLACE_MIDDLE_POSTION)) {
-                armController.set(0.50);
+                    Constants.ARM_PLACE_MIDDLE_POSTION) - encoderBuffer) {
+                armController.set(Constants.ARM_MOVE_UP_SPEED);
             }
             if (armController.getEncoderPosition() > degreesToEncoderPostion(
-                    Constants.ARM_PLACE_MIDDLE_POSTION)
-                    + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+                    Constants.ARM_PLACE_MIDDLE_POSTION) + encoderBuffer) {
                 // if (Constants.bottomArmLimitSwitch.get()) {
                 // return;
                 // }
-                armController.set(-0.50);
+                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             }
             return;
 
         } else if (position == ArmPosition.PICKING_UP) {
-            System.out.println("Going to PICKING UP");
-            if (armController.getEncoderPosition() < degreesToEncoderPostion(
-                    Constants.ARM_PICK_UP_POSITION)) {
-                armController.set(0.50);
+            if (armController
+                    .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
+                            - encoderBuffer) {
+                armController.set(Constants.ARM_MOVE_UP_SPEED);
             }
             if (armController
                     .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
-                            + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+                            + encoderBuffer) {
                 // if (Constants.bottomArmLimitSwitch.get()) {
                 // return;
                 // }
-                armController.set(-0.50);
+                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             }
         }
 
     }
 
     public void doEveryFrame() {
+        // System.out.println("Endoder position is "
+        // + encoderPositionToDegrees(armController.getEncoderPosition()));
         updateLatestPostionPressed();
         moveArmController();
         moveGribberController();
@@ -137,9 +148,11 @@ public class InputtedGuitarControls {
         }
         if (guitar.getStartButtonPressed()) {
             gribberState = GribberState.OPENING;
+            timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
         if (guitar.getBackButtonPressed()) {
             gribberState = GribberState.CLOSING;
+            timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
     }
 
@@ -162,6 +175,10 @@ public class InputtedGuitarControls {
         return (inputDegrees / 360);
     }
 
+    public double encoderPositionToDegrees(double inputEncoderPosition) {
+        return (inputEncoderPosition * 360);
+    }
+
     /**
      * The states in which the Gribber will be in
      */
@@ -173,7 +190,7 @@ public class InputtedGuitarControls {
      * The three postions you can move the arm to
      */
     public static enum ArmPosition {
-        PICKING_UP, PLACING_TOP, PLACING_MIDDLE
+        PICKING_UP, PLACING_TOP, PLACING_MIDDLE, MANUAL
     }
 
     public static enum LightColor {
