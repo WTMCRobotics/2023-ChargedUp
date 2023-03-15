@@ -56,8 +56,11 @@ public class InputtedGuitarControls {
             position = ArmPosition.MANUAL;
             return;
         } else if (guitar.getPOV() == 180) {
-            position = ArmPosition.MANUAL;
             armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
+            if (armController.getEncoderPosition() < 0) {
+                armController.set(0);
+            }
+            position = ArmPosition.MANUAL;
             return;
         }
         armController.set(0);
