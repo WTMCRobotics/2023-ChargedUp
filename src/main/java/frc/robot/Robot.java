@@ -20,7 +20,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousActions.AutonArmCalibrate;
 import frc.robot.AutonomousActions.AutonMoveArm;
+import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
+import frc.robot.AutonomousActions.AutonMultiAction;
 import frc.robot.InputtedGuitarControls.ArmPosition;
 import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.motor.MotorController;
@@ -178,6 +180,7 @@ public class Robot extends TimedRobot {
       armController.setEncoderPosition(0.0);
     }
     SmartDashboard.putNumber("Arm Encoder Pos", armController.getEncoderPosition() * 360);
+    SmartDashboard.putNumber("Eheel Encoder Pos", frontLeft.getEncoderPosition());
 
   }
 
@@ -216,14 +219,15 @@ public class Robot extends TimedRobot {
 
         ArrayDeque<AutonomousAction> manualActions = new ArrayDeque<>();
         // manualActions.add(new AutonMoveForward(6, 2));
-        // manualActions.add(new AutonMoveGribber(GribberState.CLOSING));
         manualActions.add(new AutonArmCalibrate(true));
-        manualActions.add(new AutonMoveArm(ArmPosition.PLACING_MIDDLE));
-        manualActions.add(new AutonMoveGribber(GribberState.OPENING));
-        manualActions.add(new AutonMoveArm(ArmPosition.PICKING_UP));
-        manualActions.add(new AutonMoveGribber(GribberState.CLOSING));
+        // manualActions.add(new AutonMoveArm(ArmPosition.PLACING_MIDDLE));
+        // manualActions.add(new AutonMoveGribber(GribberState.OPENING));
+        // manualActions.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.FLIP_CONE),
+        // new AutonMoveGribber(GribberState.CLOSING)));
+        manualActions.add(new AutonMoveForward(-3, 1));
         System.out.println("Manual action!");
         selectedRoute = manualActions;
+        break;
 
       default:
         selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
@@ -302,24 +306,25 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    System.out.println("calibrain't arm");
-    ArrayDeque<AutonomousAction> resetQueue = new ArrayDeque<>();
-    resetQueue.add(new AutonArmCalibrate(true));
-    resetQueue.add(new AutonMoveGribber(GribberState.OPENING));
-
-    resetMovement = new AutonMovement(motors, resetQueue);
+    /*
+     * System.out.println("calibrain't arm"); ArrayDeque<AutonomousAction> resetQueue = new
+     * ArrayDeque<>(); resetQueue.add(new AutonArmCalibrate(true)); resetQueue.add(new
+     * AutonMoveGribber(GribberState.OPENING));
+     * 
+     * resetMovement = new AutonMovement(motors, resetQueue);
+     */
     // armController.set(-0.60);
     // RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft,
     // backRight,
     // gribberController, armController);
-    // MechanicsTest mechanicsTest = new MechanicsTest(motors);
-    // mechanicsTest.testMechanics();
+    MechanicsTest mechanicsTest = new MechanicsTest(motors);
+    mechanicsTest.testMechanics();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    resetMovement.autonomousEveryFrame();
+    // resetMovement.autonomousEveryFrame();
   }
 
   /** This function is called once when the robot is first started up. */

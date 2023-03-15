@@ -34,11 +34,11 @@ public class MechanicsTest {
             System.out.println(
                     "Front right wheel should spinning forwards. The top of the wheel should be going towards the front of the robot");
             // It's negative because this motor was reversed in Robot.java
-            spinMotorForTime(frontRightMotor, -0.15, 5);
+            spinMotorForTime(frontRightMotor, 0.15, 5);
             System.out.println(
                     "Back right wheel should spinning forwards. The top of the wheel should be going towards the front of the robot");
             // It's negative because this motor was reversed in Robot.java
-            spinMotorForTime(backRightMotor, -0.15, 5);
+            spinMotorForTime(backRightMotor, 0.15, 5);
 
             System.out.println("The Gribber should now be opening");
             spinMotorForTime(gribberMotor, 0.25, 2);
@@ -46,9 +46,9 @@ public class MechanicsTest {
             spinMotorForTime(gribberMotor, -0.25, 3);
 
             System.out.println("The arm should be going up");
-            spinMotorForTime(armMotor, 0.25, 3);
+            spinMotorForTime(armMotor, 0.60, 4);
             System.out.println("The arm should now be going down");
-            spinMotorForTime(armMotor, -0.25, 3);
+            spinMotorForTime(armMotor, -0.60, 4);
         });
         // Ooga booga
         testingThread.setDaemon(false);

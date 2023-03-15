@@ -14,10 +14,9 @@ public class AutonMoveForward extends AutonomousAction {
     /**
      * Moves a specified distance at a specified speed.
      * 
-     * @param distance The distance to move, measure in feet. Positive is forward,
-     *                 negative is
-     *                 backwards.
-     * @param speed    The speed to move at, in feet per second.
+     * @param distance The distance to move, measure in feet. Positive is forward, negative is
+     *        backwards.
+     * @param speed The speed to move at, in feet per second.
      */
     public AutonMoveForward(double distance, double speed) {
         this.targetDistance = distance;
@@ -44,17 +43,17 @@ public class AutonMoveForward extends AutonomousAction {
 
             MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
 
-            spinMotors(wheelSpeeds, motors, true);
+            spinMotors(wheelSpeeds, motors, false);
             // Get the individual wheel speeds
-
+            System.out.println("Ressetting encoder values to 0!");
             motors.getFrontLeftMotor().setEncoderPosition(0);
             isFirstTimeRunning = false;
             return false;
         }
 
         if (Math.abs(getFeetTraveled()) >= Math.abs(targetDistance)) {
-            System.out.println(
-                    "The robot has moved enough, as " + getFeetTraveled() + " is greater than " + targetDistance);
+            System.out.println("The robot has moved enough, as " + getFeetTraveled()
+                    + " is greater than " + targetDistance);
             motors.stopDriveMotors();
             return true;
         }

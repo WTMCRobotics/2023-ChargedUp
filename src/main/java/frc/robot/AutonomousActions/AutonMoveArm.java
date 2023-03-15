@@ -30,6 +30,7 @@ public class AutonMoveArm extends AutonomousAction {
     @Override
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
+            System.out.println("Setting motor power!");
             switch (position) {
                 case PICKING_UP:
                     AutoMoveArmPickingUp();
@@ -65,12 +66,12 @@ public class AutonMoveArm extends AutonomousAction {
     public void AutoMoveArmPickingUp() {
         if (motors.getArmMotor()
                 .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) {
-            motors.getArmMotor().set(0.6);
+            motors.getArmMotor().set(0.8);
         }
         if (motors.getArmMotor()
                 .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-            motors.getArmMotor().set(-0.6);
+            motors.getArmMotor().set(-0.8);
         }
         targetArmDegree = Constants.ARM_PICK_UP_POSITION;
     }
@@ -78,12 +79,12 @@ public class AutonMoveArm extends AutonomousAction {
     public void AutoMoveArmPlaceTop() {
         if (motors.getArmMotor()
                 .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSITION)) {
-            motors.getArmMotor().set(0.6);
+            motors.getArmMotor().set(0.8);
         }
         if (motors.getArmMotor()
                 .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSITION)
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-            motors.getArmMotor().set(-0.6);
+            motors.getArmMotor().set(-0.8);
         }
         targetArmDegree = Constants.ARM_PLACE_TOP_POSITION;
     }
@@ -92,12 +93,12 @@ public class AutonMoveArm extends AutonomousAction {
         if (motors.getArmMotor().getEncoderPosition() <
 
                 degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSITION)) {
-            motors.getArmMotor().set(0.6);
+            motors.getArmMotor().set(0.8);
         }
         if (motors.getArmMotor()
                 .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSITION)
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-            motors.getArmMotor().set(-0.6);
+            motors.getArmMotor().set(-0.8);
         }
         targetArmDegree = Constants.ARM_PLACE_MIDDLE_POSITION;
     }
