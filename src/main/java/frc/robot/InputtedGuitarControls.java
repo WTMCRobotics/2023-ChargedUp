@@ -44,19 +44,18 @@ public class InputtedGuitarControls {
     }
 
     public void moveArmController() {
-        if (guitar.getXButton()) {
-            if (armController.getEncoderPosition() < degreesToEncoderPostion(Constants.MAX_ARM_UP_DEGREES)) {
+        if (guitar.getPOV() == 0) {
+            if (armController.getEncoderPosition() < degreesToEncoderPosition(
+                    Constants.MAX_ARM_UP_DEGREES)) {
                 armController.set(Constants.ARM_MOVE_UP_SPEED);
             }
-            if (armController.getEncoderPosition() > degreesToEncoderPostion(Constants.MAX_ARM_UP_DEGREES)) {
+            if (armController.getEncoderPosition() > degreesToEncoderPosition(
+                    Constants.MAX_ARM_UP_DEGREES)) {
                 armController.set(0);
             }
             position = ArmPosition.MANUAL;
             return;
-        } else if (guitar.getLeftBumper()) {
-            // if (Constants.bottomArmLimitSwitch.get()) {
-            // return;
-            // }
+        } else if (guitar.getPOV() == 180) {
             position = ArmPosition.MANUAL;
             armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             return;
@@ -64,18 +63,16 @@ public class InputtedGuitarControls {
         armController.set(0);
         // Manual adjust arm
 
-        double encoderBuffer = degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES);
+        double encoderBuffer = degreesToEncoderPosition(Constants.ARM_POSITION_BUFFER_DEGREES);
         if (position == ArmPosition.MANUAL) {
             return;
         } else if (position == ArmPosition.PLACING_TOP) {
-            if (armController
-                    .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
-                            - encoderBuffer) {
+            if (armController.getEncoderPosition() < degreesToEncoderPosition(
+                    Constants.ARM_PLACE_TOP_POSITION) - encoderBuffer) {
                 armController.set(Constants.ARM_MOVE_UP_SPEED);
             }
-            if (armController
-                    .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
-                            + encoderBuffer) {
+            if (armController.getEncoderPosition() > degreesToEncoderPosition(
+                    Constants.ARM_PLACE_TOP_POSITION) + encoderBuffer) {
                 // if (Constants.bottomArmLimitSwitch.get()) {
                 // return;
                 // }
@@ -83,12 +80,12 @@ public class InputtedGuitarControls {
             }
             return;
         } else if (position == ArmPosition.PLACING_MIDDLE) {
-            if (armController.getEncoderPosition() < degreesToEncoderPostion(
-                    Constants.ARM_PLACE_MIDDLE_POSTION) - encoderBuffer) {
+            if (armController.getEncoderPosition() < degreesToEncoderPosition(
+                    Constants.ARM_PLACE_MIDDLE_POSITION) - encoderBuffer) {
                 armController.set(Constants.ARM_MOVE_UP_SPEED);
             }
-            if (armController.getEncoderPosition() > degreesToEncoderPostion(
-                    Constants.ARM_PLACE_MIDDLE_POSTION) + encoderBuffer) {
+            if (armController.getEncoderPosition() > degreesToEncoderPosition(
+                    Constants.ARM_PLACE_MIDDLE_POSITION) + encoderBuffer) {
                 // if (Constants.bottomArmLimitSwitch.get()) {
                 // return;
                 // }
@@ -96,14 +93,26 @@ public class InputtedGuitarControls {
             }
             return;
 
+        } else if (position == ArmPosition.FLIP_CONE) {
+            if (armController.getEncoderPosition() < degreesToEncoderPosition(
+                    Constants.ARM_FLIP_CONE_POSITION) - encoderBuffer) {
+                armController.set(Constants.ARM_MOVE_UP_SPEED);
+            }
+            if (armController.getEncoderPosition() > degreesToEncoderPosition(
+                    Constants.ARM_FLIP_CONE_POSITION) + encoderBuffer) {
+                // if (Constants.bottomArmLimitSwitch.get()) {
+                // return;
+                // }
+                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
+            }
         } else if (position == ArmPosition.PICKING_UP) {
             if (armController
-                    .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
+                    .getEncoderPosition() < degreesToEncoderPosition(Constants.ARM_PICK_UP_POSITION)
                             - encoderBuffer) {
                 armController.set(Constants.ARM_MOVE_UP_SPEED);
             }
             if (armController
-                    .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
+                    .getEncoderPosition() > degreesToEncoderPosition(Constants.ARM_PICK_UP_POSITION)
                             + encoderBuffer) {
                 // if (Constants.bottomArmLimitSwitch.get()) {
                 // return;
@@ -129,18 +138,23 @@ public class InputtedGuitarControls {
         ArmPosition storedArmPosition = position;
         pressedCount = 0;
         // probably not the best way to be doing things, but who knows
-        if (guitar.getYButtonPressed()) {
-            position = ArmPosition.PICKING_UP;
-            pressedCount++;
-        }
-        if (guitar.getBButtonPressed()) {
-            position = ArmPosition.PLACING_MIDDLE;
-            pressedCount++;
-        }
         if (guitar.getAButtonPressed()) {
             position = ArmPosition.PLACING_TOP;
             pressedCount++;
         }
+
+        if (guitar.getBButtonPressed()) {
+            position = ArmPosition.PLACING_MIDDLE;
+            pressedCount++;
+        }
+        if (guitar.getYButton()) {
+            position = ArmPosition.FLIP_CONE;
+            pressedCount++;
+        }
+        if (guitar.getXButtonPressed()) {
+            position = ArmPosition.PICKING_UP;
+        }
+
         if (pressedCount > 1) {
             position = storedArmPosition;
         }
@@ -175,7 +189,7 @@ public class InputtedGuitarControls {
         // Endocedder
     }
 
-    public double degreesToEncoderPostion(double inputDegrees) {
+    public double degreesToEncoderPosition(double inputDegrees) {
         return (inputDegrees / 360);
     }
 
@@ -194,7 +208,7 @@ public class InputtedGuitarControls {
      * The three postions you can move the arm to
      */
     public static enum ArmPosition {
-        PICKING_UP, PLACING_TOP, PLACING_MIDDLE, MANUAL
+        PICKING_UP, FLIP_CONE, PLACING_TOP, PLACING_MIDDLE, MANUAL
     }
 
     public static enum LightColor {

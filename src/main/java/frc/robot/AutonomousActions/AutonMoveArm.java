@@ -14,9 +14,8 @@ public class AutonMoveArm extends AutonomousAction {
     /**
      * Moves the arm to the specified position
      * 
-     * @param position The position to move the arm to. Either PICKING_UP,
-     *                 PICKING_MIDDLE,
-     *                 PLACING_TOP
+     * @param position The position to move the arm to. Either PICKING_UP, PICKING_MIDDLE,
+     *        PLACING_TOP
      */
     public AutonMoveArm(ArmPosition position) {
         this.isFirstTimeRunning = true;
@@ -40,6 +39,9 @@ public class AutonMoveArm extends AutonomousAction {
                     break;
                 case PLACING_TOP:
                     AutoMoveArmPlaceTop();
+                    break;
+                case FLIP_CONE:
+                    AutoMoveArmFlipCone();
                     break;
                 default:
                     break;
@@ -75,29 +77,43 @@ public class AutonMoveArm extends AutonomousAction {
 
     public void AutoMoveArmPlaceTop() {
         if (motors.getArmMotor()
-                .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) {
+                .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSITION)) {
             motors.getArmMotor().set(0.6);
         }
         if (motors.getArmMotor()
-                .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)
+                .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSITION)
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
             motors.getArmMotor().set(-0.6);
         }
-        targetArmDegree = Constants.ARM_PLACE_TOP_POSTION;
+        targetArmDegree = Constants.ARM_PLACE_TOP_POSITION;
     }
 
     public void AutoMoveArmPlaceMiddle() {
         if (motors.getArmMotor().getEncoderPosition() <
 
-                degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION)) {
+                degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSITION)) {
             motors.getArmMotor().set(0.6);
         }
         if (motors.getArmMotor()
-                .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION)
+                .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSITION)
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
             motors.getArmMotor().set(-0.6);
         }
-        targetArmDegree = Constants.ARM_PLACE_MIDDLE_POSTION;
+        targetArmDegree = Constants.ARM_PLACE_MIDDLE_POSITION;
+    }
+
+    public void AutoMoveArmFlipCone() {
+        if (motors.getArmMotor().getEncoderPosition() <
+
+                degreesToEncoderPostion(Constants.ARM_FLIP_CONE_POSITION)) {
+            motors.getArmMotor().set(0.6);
+        }
+        if (motors.getArmMotor()
+                .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_FLIP_CONE_POSITION)
+                        + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+            motors.getArmMotor().set(-0.6);
+        }
+        targetArmDegree = Constants.ARM_FLIP_CONE_POSITION;
     }
 
     public double degreesToEncoderPostion(double inputDegrees) {
