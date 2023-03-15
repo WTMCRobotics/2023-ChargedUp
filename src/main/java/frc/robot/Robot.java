@@ -297,16 +297,17 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {}
 
-  AutonomousAction armCalibrate;
-  boolean calibrateFinished = false;
+  AutonMovement resetMovement;
 
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    System.out.println("calibraint arm");
-    armCalibrate = new AutonArmCalibrate(true);
-    System.out.println(motors);
-    armCalibrate.passMotors(motors);
+    System.out.println("calibrain't arm");
+    ArrayDeque<AutonomousAction> resetQueue = new ArrayDeque<>();
+    resetQueue.add(new AutonArmCalibrate(true));
+    resetQueue.add(new AutonMoveGribber(GribberState.OPENING));
+
+    resetMovement = new AutonMovement(motors, resetQueue);
     // armController.set(-0.60);
     // RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft,
     // backRight,
@@ -318,9 +319,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    if (!calibrateFinished) {
-      calibrateFinished = armCalibrate.executeAndIsDone();
-    }
+    resetMovement.autonomousEveryFrame();
   }
 
   /** This function is called once when the robot is first started up. */
