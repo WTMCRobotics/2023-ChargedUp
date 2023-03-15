@@ -20,8 +20,10 @@ public class AutonMovement {
             Constants.BACK_LEFT_WHEEL_LOCATION, Constants.BACK_RIGHT_WHEEL_LOCATION);
 
     /**
-     * This method is indended to be called every frame in autonomousPeriodic. This method checks if
-     * a certain timestamp has been reached, or if the gyroscope has reached the specified angle. If
+     * This method is indended to be called every frame in autonomousPeriodic. This
+     * method checks if
+     * a certain timestamp has been reached, or if the gyroscope has reached the
+     * specified angle. If
      * it has, then stop the motors, and execute the next queued action
      */
     public void autonomousEveryFrame() {
@@ -38,7 +40,6 @@ public class AutonMovement {
             }
             actionList.getFirst().passMotors(motors);
 
-
         }
 
     }
@@ -52,23 +53,30 @@ public class AutonMovement {
     }
 
     /*
-     * public void AutoMoveArmPickingUp() { if (motors.getArmMotor().getEncoderPosition() <
-     * degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) { motors.getArmMotor().set(0.25); }
+     * public void AutoMoveArmPickingUp() { if
+     * (motors.getArmMotor().getEncoderPosition() <
+     * degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) {
+     * motors.getArmMotor().set(0.25); }
      * if (motors.getArmMotor().getEncoderPosition() >
      * degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION) +
      * degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-     * motors.getArmMotor().set(-0.25); } targetArmDegree = Constants.ARM_PICK_UP_POSITION; }
+     * motors.getArmMotor().set(-0.25); } targetArmDegree =
+     * Constants.ARM_PICK_UP_POSITION; }
      * 
-     * public void AutoMoveArmPlaceTop() { if (motors.getArmMotor().getEncoderPosition() <
-     * degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) { motors.getArmMotor().set(0.25); }
+     * public void AutoMoveArmPlaceTop() { if
+     * (motors.getArmMotor().getEncoderPosition() <
+     * degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) {
+     * motors.getArmMotor().set(0.25); }
      * if (motors.getArmMotor().getEncoderPosition() >
      * degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION) +
      * degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
      * motors.getArmMotor().set(-0.25); } }
      * 
-     * public void AutoMoveArmPlaceMiddle() { if (motors.getArmMotor().getEncoderPosition() <
+     * public void AutoMoveArmPlaceMiddle() { if
+     * (motors.getArmMotor().getEncoderPosition() <
      * degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION)) {
-     * motors.getArmMotor().set(0.25); } if (motors.getArmMotor().getEncoderPosition() >
+     * motors.getArmMotor().set(0.25); } if
+     * (motors.getArmMotor().getEncoderPosition() >
      * degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION) +
      * degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
      * motors.getArmMotor().set(-0.25); } }

@@ -6,6 +6,10 @@ package frc.robot;
 
 import java.util.ArrayDeque;
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -23,12 +27,9 @@ import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the
- * name of this class or
- * the package after creating this project, you must also update the
- * build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the name of this class or
+ * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -59,13 +60,13 @@ public class Robot extends TimedRobot {
 
   private LidarProxy lidarSensor;
 
-  private ArrayDeque<AutonomousAction> actions;
+  private VideoSink videoArmServer;
+  private VideoSink videoFrontServer;
 
   RobotMotors motors;
 
   /*
-   * m This function is run when the robot is first started up and should be used
-   * for any
+   * m This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
@@ -90,7 +91,8 @@ public class Robot extends TimedRobot {
         MotorController.Type.Talon);
     xboxController = new XboxController(0);
 
-    armController = MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
+    armController =
+        MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
 
     gribberController = MotorControllerFactory.create(this, Constants.GRIBBER_MOTOR_ID,
         MotorController.Type.SparkMax);
@@ -117,7 +119,8 @@ public class Robot extends TimedRobot {
 
     inputtedControls = new InputtedDriverControls(xboxController);
 
-    guitarControls = new InputtedGuitarControls(guitarXboxController, armController, gribberController);
+    guitarControls =
+        new InputtedGuitarControls(guitarXboxController, armController, gribberController);
 
     // Deadzone
     mecanumDriveTrain.setDeadband(0.04);
@@ -131,7 +134,15 @@ public class Robot extends TimedRobot {
     lidarSensor = new LidarProxy(SerialPort.Port.kMXP);
     System.out.println("The disatnce is " + lidarSensor.get());
 
+    // hopefully after testing we can remove this
     mecanumDriveTrain.setSafetyEnabled(false);
+
+    UsbCamera frontFacingCamera = CameraServer.startAutomaticCapture("Front Camera", 1);
+    UsbCamera armCamera = CameraServer.startAutomaticCapture("Arm Camera", 0);
+    videoArmServer = CameraServer.getServer();
+    videoArmServer.setSource(armCamera);
+    videoFrontServer = CameraServer.getServer();
+    videoFrontServer.setSource(frontFacingCamera);
 
     // Constants.bottomArmLimitSwitch = new
     // DigitalInput(Constants.bottomArmLimitSwitchID);
@@ -153,13 +164,11 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This function is called every 20 ms, no matter the mode. Use this for items
-   * like diagnostics
+   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
    *
    * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
-   * and SmartDashboard
+   * This runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard
    * integrated updating.
    */
   @Override
@@ -168,26 +177,21 @@ public class Robot extends TimedRobot {
     if (motors.getArmMotor().getEncoderPosition() > 0.1 && motors.getArmMotor().getReverseLimit()) {
       armController.setEncoderPosition(0.0);
     }
+    SmartDashboard.putNumber("Arm Encoder Pos", armController.getEncoderPosition() * 360);
 
   }
 
   AutonMovement auton;
 
   /**
-   * This autonomous (along with the chooser code above) shows how to select
-   * between different
-   * autonomous modes using the dashboard. The sendable chooser code works with
-   * the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the
-   * chooser code and
-   * uncomment the getString line to get the auto name from the text box below the
-   * Gyro
+   * This autonomous (along with the chooser code above) shows how to select between different
+   * autonomous modes using the dashboard. The sendable chooser code works with the Java
+   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
+   * uncomment the getString line to get the auto name from the text box below the Gyro
    *
    * <p>
-   * You can add additional auto modes by adding additional comparisons to the
-   * switch structure
-   * below with additional strings. If using the SendableChooser make sure to add
-   * them to the
+   * You can add additional auto modes by adding additional comparisons to the switch structure
+   * below with additional strings. If using the SendableChooser make sure to add them to the
    * chooser code above as well.
    */
 
@@ -216,17 +220,19 @@ public class Robot extends TimedRobot {
         manualActions.add(new AutonArmCalibrate(true));
         manualActions.add(new AutonMoveArm(ArmPosition.PLACING_MIDDLE));
         manualActions.add(new AutonMoveGribber(GribberState.OPENING));
+        manualActions.add(new AutonMoveArm(ArmPosition.PICKING_UP));
+        manualActions.add(new AutonMoveGribber(GribberState.CLOSING));
         System.out.println("Manual action!");
-        actions = manualActions;
+        selectedRoute = manualActions;
 
       default:
         selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
     }
     System.out.println("Auto selected: " + autoSelected);
 
-    auton = new AutonMovement(motors, actions);
+    auton = new AutonMovement(motors, selectedRoute);
 
-    new AutonMovement(motors, selectedRoute);
+    // new AutonMovement(motors, selectedRoute);
 
   } // secret comment m(O o O)m
 
@@ -284,14 +290,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {
-  }
+  public void disabledInit() {}
 
   /** This function is called periodically when disabled. */
 
   @Override
-  public void disabledPeriodic() {
-  }
+  public void disabledPeriodic() {}
 
   AutonomousAction armCalibrate;
   boolean calibrateFinished = false;
@@ -327,6 +331,5 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {
-  }
+  public void simulationPeriodic() {}
 }

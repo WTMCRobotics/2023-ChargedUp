@@ -44,7 +44,7 @@ public class AutonMoveForward extends AutonomousAction {
 
             MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
 
-            spinMotors(wheelSpeeds, motors);
+            spinMotors(wheelSpeeds, motors, true);
             // Get the individual wheel speeds
 
             motors.getFrontLeftMotor().setEncoderPosition(0);

@@ -6,7 +6,6 @@ import frc.robot.motor.MotorController;
 
 public class InputtedGuitarControls {
 
-
     /**
      * The guitar hero controller.
      */
@@ -46,7 +45,12 @@ public class InputtedGuitarControls {
 
     public void moveArmController() {
         if (guitar.getXButton()) {
-            armController.set(Constants.ARM_MOVE_UP_SPEED);
+            if (armController.getEncoderPosition() < degreesToEncoderPostion(Constants.MAX_ARM_UP_DEGREES)) {
+                armController.set(Constants.ARM_MOVE_UP_SPEED);
+            }
+            if (armController.getEncoderPosition() > degreesToEncoderPostion(Constants.MAX_ARM_UP_DEGREES)) {
+                armController.set(0);
+            }
             position = ArmPosition.MANUAL;
             return;
         } else if (guitar.getLeftBumper()) {

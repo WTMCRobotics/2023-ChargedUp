@@ -11,6 +11,8 @@ public final class Constants {
         private Constants() {
         }
 
+        public static final double MAX_ARM_UP_DEGREES = 108;
+
         public static final int FRONT_LEFT_MOTOR_ID = 20;
         public static final int FRONT_RIGHT_MOTOR_ID = 21;
         public static final int BACK_LEFT_MOTOR_ID = 22;
@@ -64,13 +66,13 @@ public final class Constants {
          * for placing
          * cubes/cones on the middle level
          */
-        public static final double ARM_PLACE_MIDDLE_POSTION = 60;
+        public static final double ARM_PLACE_MIDDLE_POSTION = 80;
         /**
          * The postition in degrees from the starting position that the arm should go to
          * for picking
          * up objects
          */
-        public static final double ARM_PICK_UP_POSITION = 13;
+        public static final double ARM_PICK_UP_POSITION = 1;
 
         /**
          * The postition in degrees from the starting position that the arm should go to

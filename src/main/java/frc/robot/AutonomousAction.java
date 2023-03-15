@@ -25,4 +25,17 @@ public abstract class AutonomousAction {
         motors.getBackLeftMotor().set(backLeftSpeed);
         motors.getBackRightMotor().set(backRightSpeed);
     }
+
+    public void spinMotors(MecanumDriveWheelSpeeds wheelSpeeds, RobotMotors motors, boolean inverseHalf) {
+
+        double frontLefSpeed = wheelSpeeds.frontLeftMetersPerSecond;
+        double frontRightSpeed = wheelSpeeds.frontRightMetersPerSecond;
+        double backLeftSpeed = wheelSpeeds.rearLeftMetersPerSecond;
+        double backRightSpeed = wheelSpeeds.rearRightMetersPerSecond;
+
+        motors.getFrontLeftMotor().set(frontLefSpeed);
+        motors.getFrontRightMotor().set(-frontRightSpeed);
+        motors.getBackLeftMotor().set(backLeftSpeed);
+        motors.getBackRightMotor().set(-backRightSpeed);
+    }
 }

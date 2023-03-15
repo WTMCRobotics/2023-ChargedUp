@@ -17,7 +17,8 @@ public class AutonBalance extends AutonomousAction {
     private double currentBalanceDebouceTime = 0;
 
     /**
-     * Used to automatically balance the robot on the charging station, within a certain degree.
+     * Used to automatically balance the robot on the charging station, within a
+     * certain degree.
      * 
      * @param position Whether to start the robot moving forwards, or backwards
      */
@@ -77,18 +78,19 @@ public class AutonBalance extends AutonomousAction {
     }
 
     private void spinMotorsAtSpeed(double speed) {
-        MecanumDriveWheelSpeeds wheelSpeeds =
-                new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
-        spinMotors(wheelSpeeds, motors);
+        MecanumDriveWheelSpeeds wheelSpeeds = new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
+        spinMotors(wheelSpeeds, motors, true);
     }
 
     /**
-     * Returns whether the robot is currently balanced or not. Is it accurate? Maybe.
+     * Returns whether the robot is currently balanced or not. Is it accurate?
+     * Maybe.
      * 
      * @return Whether or not the robot is balanced or not (probably)
      */
     private boolean isProbablyBalanced() {
-        // If the gyro reading is greater than negative half the buffer, and less than positive half
+        // If the gyro reading is greater than negative half the buffer, and less than
+        // positive half
         // the buffer, then it's maybe balanced!
         double halfOfMargianOfError = Constants.BALANCING_MARGAIN_OF_ERROR / 2.0;
 
@@ -100,4 +102,3 @@ public class AutonBalance extends AutonomousAction {
     }
 
 }
-
