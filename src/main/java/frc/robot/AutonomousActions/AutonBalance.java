@@ -33,7 +33,6 @@ public class AutonBalance extends AutonomousAction {
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
 
-            gyro.calibrate();
             if (movementDirection == MovementDirection.FORWARDS) {
                 spinMotorsAtSpeed(Constants.ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION);
             } else {
