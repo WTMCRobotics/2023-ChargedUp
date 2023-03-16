@@ -72,6 +72,7 @@ public class Robot extends TimedRobot {
   private VideoSink videoFrontServer;
 
   RobotMotors motors;
+  private SendableChooser<String> testOptions = new SendableChooser<>();
 
   /*
    * m This function is run when the robot is first started up and should be used for any
@@ -151,6 +152,13 @@ public class Robot extends TimedRobot {
     videoArmServer.setSource(armCamera);
     videoFrontServer = CameraServer.getServer();
     videoFrontServer.setSource(frontFacingCamera);
+
+    testOptions.setDefaultOption("Get Arm to starting position", "armCalibrate");
+    // testOptions.addOption("Calibrate Arm", "armCalibrate");
+    testOptions.addOption("Test Mechanics", "testMechanics");
+    SmartDashboard.putData("Test mode action", testOptions);
+
+    robotGyroscope.calibrate();
     // Constants.bottomArmLimitSwitch = new
     // DigitalInput(Constants.bottomArmLimitSwitchID);
 
@@ -275,7 +283,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     armController.setEncoderPosition(0.0);
-    robotGyroscope.calibrate();
 
   }
 
@@ -308,30 +315,37 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {}
 
-  AutonMovement resetMovement;
+  AutonMovement resetMovement = null;
 
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    /*
-     * System.out.println("calibrain't arm"); ArrayDeque<AutonomousAction> resetQueue = new
-     * ArrayDeque<>(); resetQueue.add(new AutonArmCalibrate(true)); resetQueue.add(new
-     * AutonMoveGribber(GribberState.OPENING));
-     * 
-     * resetMovement = new AutonMovement(motors, resetQueue);
-     */
+    if (testOptions.getSelected().equals("armCalibrate")) {
+      System.out.println("calibrating and resseting arm");
+      ArrayDeque<AutonomousAction> resetQueue = new ArrayDeque<>();
+      resetQueue.add(new AutonArmCalibrate(true));
+      resetQueue.add(new AutonMoveGribber(GribberState.OPENING));
+      resetMovement = new AutonMovement(motors, resetQueue);
+    } else if (testOptions.getSelected().equals("testMechanics")) {
+      System.out.println("Testing mechanics, check console for test info.");
+      MechanicsTest mechanicsTest = new MechanicsTest(motors);
+      mechanicsTest.testMechanics();
+    }
+
     // armController.set(-0.60);
     // RobotMotors motors = new RobotMotors(frontLeft, frontRight, backLeft,
     // backRight,
     // gribberController, armController);
-    MechanicsTest mechanicsTest = new MechanicsTest(motors);
-    mechanicsTest.testMechanics();
+    // MechanicsTest mechanicsTest = new MechanicsTest(motors);
+    // mechanicsTest.testMechanics();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    // resetMovement.autonomousEveryFrame();
+    if (resetMovement != null) {
+      resetMovement.autonomousEveryFrame();
+    }
   }
 
   /** This function is called once when the robot is first started up. */
