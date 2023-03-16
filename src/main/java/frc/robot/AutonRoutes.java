@@ -36,7 +36,7 @@ public class AutonRoutes {
         actionQueue.add(new AutonMoveForward(-5, 3));
         actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.PICKING_UP),
                 new AutonMoveForward(-10, 3)));
-        actionQueue.add(new AutonBalance(MovementDirection.FORWARDS));
+        // actionQueue.add(new AutonBalance(MovementDirection.FORWARDS, robot));
         return actionQueue;
     }
 
@@ -48,8 +48,8 @@ public class AutonRoutes {
         actionQueue.add(new AutonMoveForward(3, 1));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING));
         actionQueue.add(new AutonMoveForward(-5, 3));
-        actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.PICKING_UP),
-                new AutonBalance(MovementDirection.BACKWARDS)));
+        // actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.PICKING_UP),
+        // new AutonBalance(MovementDirection.BACKWARDS)));
         return actionQueue;
     }
 

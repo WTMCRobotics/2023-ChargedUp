@@ -10,19 +10,25 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
+import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousActions.AutonArmCalibrate;
+import frc.robot.AutonomousActions.AutonBalance;
 import frc.robot.AutonomousActions.AutonMoveArm;
 import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
 import frc.robot.AutonomousActions.AutonMultiAction;
+import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
 import frc.robot.InputtedGuitarControls.ArmPosition;
 import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.motor.MotorController;
@@ -58,7 +64,7 @@ public class Robot extends TimedRobot {
   private InputtedDriverControls inputtedControls;
   private InputtedGuitarControls guitarControls;
 
-  private Gyro robotGyroscope;
+  private AHRS robotGyroscope;
 
   private LidarProxy lidarSensor;
 
@@ -133,8 +139,8 @@ public class Robot extends TimedRobot {
 
     System.out.println("SYOUST WORKING");
 
-    lidarSensor = new LidarProxy(SerialPort.Port.kMXP);
-    System.out.println("The disatnce is " + lidarSensor.get());
+    // lidarSensor = new LidarProxy(SerialPort.Port.kMXP);
+    // System.out.println("The disatnce is " + lidarSensor.get());
 
     // hopefully after testing we can remove this
     mecanumDriveTrain.setSafetyEnabled(false);
@@ -145,7 +151,6 @@ public class Robot extends TimedRobot {
     videoArmServer.setSource(armCamera);
     videoFrontServer = CameraServer.getServer();
     videoFrontServer.setSource(frontFacingCamera);
-
     // Constants.bottomArmLimitSwitch = new
     // DigitalInput(Constants.bottomArmLimitSwitchID);
 
@@ -181,6 +186,7 @@ public class Robot extends TimedRobot {
     }
     SmartDashboard.putNumber("Arm Encoder Pos", armController.getEncoderPosition() * 360);
     SmartDashboard.putNumber("Eheel Encoder Pos", frontLeft.getEncoderPosition());
+    SmartDashboard.putNumber("Robot pitch", robotGyroscope.getRoll());
 
   }
 
@@ -219,12 +225,13 @@ public class Robot extends TimedRobot {
 
         ArrayDeque<AutonomousAction> manualActions = new ArrayDeque<>();
         // manualActions.add(new AutonMoveForward(6, 2));
-        manualActions.add(new AutonArmCalibrate(true));
+        // manualActions.add(new AutonArmCalibrate(true));
         // manualActions.add(new AutonMoveArm(ArmPosition.PLACING_MIDDLE));
         // manualActions.add(new AutonMoveGribber(GribberState.OPENING));
         // manualActions.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.FLIP_CONE),
         // new AutonMoveGribber(GribberState.CLOSING)));
-        manualActions.add(new AutonMoveForward(-3, 1));
+        // manualActions.add(new AutonMoveForward(-3, 1));
+        manualActions.add(new AutonBalance(MovementDirection.BACKWARDS, robotGyroscope));
         System.out.println("Manual action!");
         selectedRoute = manualActions;
         break;

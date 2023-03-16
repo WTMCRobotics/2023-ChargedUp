@@ -11,19 +11,21 @@ public class AutonBalance extends AutonomousAction {
     MovementDirection movementDirection;
     private boolean isFirstTimeRunning;
     private RobotMotors motors;
-    private AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private AHRS gyro;
     private boolean wasUnbalanced = false;
     private double currentDebounceTime = 0;
     private double currentBalanceDebouceTime = 0;
 
     /**
-     * Used to automatically balance the robot on the charging station, within a
-     * certain degree.
+     * Used to automatically balance the robot on the charging station, within a certain degree.
      * 
      * @param position Whether to start the robot moving forwards, or backwards
      */
-    public AutonBalance(MovementDirection movementDirection) {
+    public AutonBalance(MovementDirection movementDirection, AHRS gyro) {
+        System.out.println("Balnce thingy");
+        this.gyro = gyro;
         this.movementDirection = movementDirection;
+        this.isFirstTimeRunning = true;
         this.wasUnbalanced = false;
     }
 
@@ -45,6 +47,7 @@ public class AutonBalance extends AutonomousAction {
         if (!this.isProbablyBalanced()) {
             currentDebounceTime += .02;
             if (currentDebounceTime >= Constants.BEING_UNBALANCED_DEBOUNCE_TIME) {
+                System.out.println("It is not balance rn!");
                 if (movementDirection == MovementDirection.FORWARDS) {
                     spinMotorsAtSpeed(Constants.ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION);
                 } else {
@@ -61,6 +64,7 @@ public class AutonBalance extends AutonomousAction {
         if (wasUnbalanced && isProbablyBalanced()) {
             currentBalanceDebouceTime += .02;
             if (currentBalanceDebouceTime > Constants.BALANCING_DEBOUNCE_TIME) {
+                System.out.println("Yea it all balanced");
                 motors.stopDriveMotors();
                 gyro.close();
                 return true;
@@ -78,13 +82,13 @@ public class AutonBalance extends AutonomousAction {
     }
 
     private void spinMotorsAtSpeed(double speed) {
-        MecanumDriveWheelSpeeds wheelSpeeds = new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
-        spinMotors(wheelSpeeds, motors, true);
+        MecanumDriveWheelSpeeds wheelSpeeds =
+                new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
+        spinMotors(wheelSpeeds, motors, false);
     }
 
     /**
-     * Returns whether the robot is currently balanced or not. Is it accurate?
-     * Maybe.
+     * Returns whether the robot is currently balanced or not. Is it accurate? Maybe.
      * 
      * @return Whether or not the robot is balanced or not (probably)
      */
@@ -94,7 +98,7 @@ public class AutonBalance extends AutonomousAction {
         // the buffer, then it's maybe balanced!
         double halfOfMargianOfError = Constants.BALANCING_MARGAIN_OF_ERROR / 2.0;
 
-        return -halfOfMargianOfError <= gyro.getPitch() && gyro.getPitch() <= halfOfMargianOfError;
+        return -halfOfMargianOfError <= gyro.getRoll() && gyro.getRoll() <= halfOfMargianOfError;
     }
 
     public enum MovementDirection {

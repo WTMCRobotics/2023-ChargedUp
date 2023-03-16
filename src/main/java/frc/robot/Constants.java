@@ -46,7 +46,7 @@ public final class Constants {
          */
         public static final double BALANCING_DEBOUNCE_TIME = 0.1;
         /** The margain of error, in degrees, while balancing */
-        public static final double BALANCING_MARGAIN_OF_ERROR = 6.0;
+        public static final double BALANCING_MARGAIN_OF_ERROR = 1;
 
         public static final float robotWidth = 32;
         /** the length of the robot in inches */
