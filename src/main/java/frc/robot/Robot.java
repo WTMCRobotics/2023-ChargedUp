@@ -148,6 +148,11 @@ public class Robot extends TimedRobot {
 
     UsbCamera frontFacingCamera = CameraServer.startAutomaticCapture("Front Camera", 1);
     UsbCamera armCamera = CameraServer.startAutomaticCapture("Arm Camera", 0);
+    armCamera.setFPS(16);
+    frontFacingCamera.setFPS(16);
+    armCamera.setResolution(196, 108);
+    frontFacingCamera.setResolution(196, 108);
+
     videoArmServer = CameraServer.getServer();
     videoArmServer.setSource(armCamera);
     videoFrontServer = CameraServer.getServer();
