@@ -33,13 +33,13 @@ public class InputtedGuitarControls {
             gribberController.set(0);
             return;
         }
-        if (gribberState == GribberState.OPENING) {
-            gribberController.set(.90);
+        if (gribberState == GribberState.CLOSING) {
+            gribberController.set(-.90);
 
         }
 
-        if (gribberState == GribberState.CLOSING) {
-            gribberController.set(-.40);
+        if (gribberState == GribberState.OPENING) {
+            gribberController.set(.40);
         }
     }
 
@@ -168,11 +168,11 @@ public class InputtedGuitarControls {
             lightColor = LightColor.CONE;
         }
         if (guitar.getStartButtonPressed()) {
-            gribberState = GribberState.OPENING;
+            gribberState = GribberState.CLOSING;
             timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
         if (guitar.getBackButtonPressed()) {
-            gribberState = GribberState.CLOSING;
+            gribberState = GribberState.OPENING;
             timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
     }

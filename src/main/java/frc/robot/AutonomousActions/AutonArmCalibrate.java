@@ -21,7 +21,7 @@ public class AutonArmCalibrate extends AutonomousAction {
         if (isFirstTimeRunning) {
             motors.getArmMotor().set(-0.50);
             if (closeGribber) {
-                motors.getGribberMotor().set(0.50);
+                motors.getGribberMotor().set(-0.65);
             }
             isFirstTimeRunning = false;
             return false;

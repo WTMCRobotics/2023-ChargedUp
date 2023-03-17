@@ -33,7 +33,8 @@ public class AutonMoveForward extends AutonomousAction {
     @Override
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
-            System.out.println("Attempting to move forward");
+            System.out.println("Attempting to move forward Enocer position is "
+                    + motors.getFrontLeftMotor().getEncoderPosition());
             if (targetDistance < 0) {
                 targetDistance *= -1;
                 speed *= -1;
@@ -47,7 +48,7 @@ public class AutonMoveForward extends AutonomousAction {
 
             spinMotors(wheelSpeeds, motors, false);
             // Get the individual wheel speeds
-            System.out.println("Ressetting encoder values to 0!");
+            System.out.println("Ressettingfront left  motor encoder values to 0!");
             motors.getFrontLeftMotor().setEncoderPosition(0);
             isFirstTimeRunning = false;
             return false;

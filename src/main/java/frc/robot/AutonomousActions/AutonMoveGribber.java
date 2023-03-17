@@ -26,11 +26,11 @@ public class AutonMoveGribber extends AutonomousAction {
         if (isFirstTimeRunning) {
             if (position == GribberState.OPENING) {
                 System.out.println("Should be opening at " + Timer.getFPGATimestamp());
-                motors.getGribberMotor().set(-.45);
+                motors.getGribberMotor().set(.45);
                 targetedTimeStamp = Timer.getFPGATimestamp() + 1;
             } else if (position == GribberState.CLOSING) {
                 System.out.println("Should be closing at " + Timer.getFPGATimestamp());
-                motors.getGribberMotor().set(.6);
+                motors.getGribberMotor().set(-.6);
                 targetedTimeStamp = Timer.getFPGATimestamp() + .8;
             } else {
                 System.out.println("ruh row " + position);
@@ -39,8 +39,8 @@ public class AutonMoveGribber extends AutonomousAction {
             return false;
         }
         if (Timer.getFPGATimestamp() > targetedTimeStamp) {
-            System.out.println(
-                    "Girbber finsihed because " + Timer.getFPGATimestamp() + " is greater than " + targetedTimeStamp);
+            System.out.println("Girbber finsihed because " + Timer.getFPGATimestamp()
+                    + " is greater than " + targetedTimeStamp);
             motors.getGribberMotor().set(0);
             return true;
         }

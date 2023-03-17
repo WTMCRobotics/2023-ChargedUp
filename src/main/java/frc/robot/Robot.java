@@ -10,34 +10,27 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
-import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
-import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
-import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
-import edu.wpi.first.wpilibj.interfaces.Accelerometer;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousActions.AutonArmCalibrate;
 import frc.robot.AutonomousActions.AutonBalance;
-import frc.robot.AutonomousActions.AutonMoveArm;
-import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
-import frc.robot.AutonomousActions.AutonMultiAction;
 import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
-import frc.robot.InputtedGuitarControls.ArmPosition;
 import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -75,7 +68,8 @@ public class Robot extends TimedRobot {
   private SendableChooser<String> testOptions = new SendableChooser<>();
 
   /*
-   * m This function is run when the robot is first started up and should be used for any
+   * m This function is run when the robot is first started up and should be used
+   * for any
    * initialization code.
    */
   @Override
@@ -100,8 +94,7 @@ public class Robot extends TimedRobot {
         MotorController.Type.Talon);
     xboxController = new XboxController(0);
 
-    armController =
-        MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
+    armController = MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
 
     gribberController = MotorControllerFactory.create(this, Constants.GRIBBER_MOTOR_ID,
         MotorController.Type.SparkMax);
@@ -128,8 +121,7 @@ public class Robot extends TimedRobot {
 
     inputtedControls = new InputtedDriverControls(xboxController);
 
-    guitarControls =
-        new InputtedGuitarControls(guitarXboxController, armController, gribberController);
+    guitarControls = new InputtedGuitarControls(guitarXboxController, armController, gribberController);
 
     // Deadzone
     mecanumDriveTrain.setDeadband(0.04);
@@ -158,9 +150,10 @@ public class Robot extends TimedRobot {
     videoFrontServer = CameraServer.getServer();
     videoFrontServer.setSource(frontFacingCamera);
 
-    testOptions.setDefaultOption("Get Arm to starting position", "armCalibrate");
+    testOptions.setDefaultOption("Move arm to starting position", "armCalibrate");
     // testOptions.addOption("Calibrate Arm", "armCalibrate");
     testOptions.addOption("Test Mechanics", "testMechanics");
+    testOptions.addOption("Move arm to transport position", "armTransport");
     SmartDashboard.putData("Test mode action", testOptions);
 
     robotGyroscope.calibrate();
@@ -184,17 +177,22 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+   * This function is called every 20 ms, no matter the mode. Use this for items
+   * like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
    *
    * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard
    * integrated updating.
    */
   @Override
   public void robotPeriodic() {
     // Reset encoder value and stop motor, to prevent arm from over extending
-    if (motors.getArmMotor().getEncoderPosition() > 0.1 && motors.getArmMotor().getReverseLimit()) {
+    if (motors.getArmMotor().getReverseLimit()) {
+      if (armController.getEncoderPosition() > 0) {
+        System.out.println("Limit switch reset!");
+      }
       armController.setEncoderPosition(0.0);
     }
     SmartDashboard.putNumber("Arm Encoder Pos", armController.getEncoderPosition() * 360);
@@ -206,14 +204,20 @@ public class Robot extends TimedRobot {
   AutonMovement auton;
 
   /**
-   * This autonomous (along with the chooser code above) shows how to select between different
-   * autonomous modes using the dashboard. The sendable chooser code works with the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-   * uncomment the getString line to get the auto name from the text box below the Gyro
+   * This autonomous (along with the chooser code above) shows how to select
+   * between different
+   * autonomous modes using the dashboard. The sendable chooser code works with
+   * the Java
+   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the
+   * chooser code and
+   * uncomment the getString line to get the auto name from the text box below the
+   * Gyro
    *
    * <p>
-   * You can add additional auto modes by adding additional comparisons to the switch structure
-   * below with additional strings. If using the SendableChooser make sure to add them to the
+   * You can add additional auto modes by adding additional comparisons to the
+   * switch structure
+   * below with additional strings. If using the SendableChooser make sure to add
+   * them to the
    * chooser code above as well.
    */
 
@@ -223,10 +227,10 @@ public class Robot extends TimedRobot {
     ArrayDeque<AutonomousAction> selectedRoute;
     switch (autoSelected) {
       case "PlaceLeaveCommunityBalance":
-        selectedRoute = AutonRoutes.placeLeaveCommunityThenBalance();
+        selectedRoute = AutonRoutes.placeLeaveCommunityThenBalance(robotGyroscope);
         break;
       case "PlaceBalance":
-        selectedRoute = AutonRoutes.placeThenBalance();
+        selectedRoute = AutonRoutes.placeThenBalance(robotGyroscope);
         break;
       case "PlaceLeaveCommunity":
         selectedRoute = AutonRoutes.placeObjectAndLeaveCommunity();
@@ -241,10 +245,11 @@ public class Robot extends TimedRobot {
         // manualActions.add(new AutonArmCalibrate(true));
         // manualActions.add(new AutonMoveArm(ArmPosition.PLACING_MIDDLE));
         // manualActions.add(new AutonMoveGribber(GribberState.OPENING));
-        // manualActions.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.FLIP_CONE),
+        // manualActions.add(new AutonMultiAction(new
+        // AutonMoveArm(ArmPosition.FLIP_CONE),
         // new AutonMoveGribber(GribberState.CLOSING)));
         // manualActions.add(new AutonMoveForward(-3, 1));
-        manualActions.add(new AutonBalance(MovementDirection.BACKWARDS, robotGyroscope));
+        manualActions.add(new AutonBalance(MovementDirection.FORWARDS, robotGyroscope));
         System.out.println("Manual action!");
         selectedRoute = manualActions;
         break;
@@ -287,8 +292,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    armController.setEncoderPosition(0.0);
-
   }
 
   /** This function is called periodically during operator control. */
@@ -313,23 +316,28 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   /** This function is called periodically when disabled. */
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   AutonMovement resetMovement = null;
 
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    if (testOptions.getSelected().equals("armCalibrate")) {
+    if (testOptions.getSelected().equals("armCalibrate")
+        || testOptions.getSelected().equals("armTransport")) {
       System.out.println("calibrating and resseting arm");
       ArrayDeque<AutonomousAction> resetQueue = new ArrayDeque<>();
       resetQueue.add(new AutonArmCalibrate(true));
-      resetQueue.add(new AutonMoveGribber(GribberState.OPENING));
+      if (testOptions.getSelected().equals("armCalibrate")) {
+        resetQueue.add(new AutonMoveGribber(GribberState.OPENING));
+      }
       resetMovement = new AutonMovement(motors, resetQueue);
     } else if (testOptions.getSelected().equals("testMechanics")) {
       System.out.println("Testing mechanics, check console for test info.");
@@ -361,5 +369,6 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }
