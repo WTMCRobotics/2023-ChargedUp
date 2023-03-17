@@ -4,7 +4,6 @@ import com.kauailabs.navx.frc.AHRS;
 import frc.robot.AutonomousAction;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.SPI;
 import frc.robot.RobotMotors;
 
 public class AutonBalance extends AutonomousAction {
@@ -17,7 +16,8 @@ public class AutonBalance extends AutonomousAction {
     private double currentBalanceDebouceTime = 0;
 
     /**
-     * Used to automatically balance the robot on the charging station, within a certain degree.
+     * Used to automatically balance the robot on the charging station, within a
+     * certain degree.
      * 
      * @param position Whether to start the robot moving forwards, or backwards
      */
@@ -28,6 +28,8 @@ public class AutonBalance extends AutonomousAction {
         this.isFirstTimeRunning = true;
         this.wasUnbalanced = false;
     }
+
+    // FRONT SIDE OF ROBOT UPWARDS = Roll goes positive
 
     @Override
     public boolean executeAndIsDone() {
@@ -60,16 +62,25 @@ public class AutonBalance extends AutonomousAction {
             currentDebounceTime = 0;
         }
 
-        if (wasUnbalanced && isProbablyBalanced()) {
-            currentBalanceDebouceTime += .02;
-            if (currentBalanceDebouceTime > Constants.BALANCING_DEBOUNCE_TIME) {
-                System.out.println("Yea it all balanced");
-                motors.stopDriveMotors();
-                gyro.close();
-                return true;
+        if (wasUnbalanced) {
+            if (gyro.getRoll() > Constants.BALANCING_MARGAIN_OF_ERROR_ON_STATION) {
+                spinMotorsAtSpeed(Constants.ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION);
+            } else if (gyro.getRoll() < -Constants.BALANCING_MARGAIN_OF_ERROR_ON_STATION) {
+                spinMotorsAtSpeed(-Constants.ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION);
+            } else {
+                spinMotorsAtSpeed(0.0);
             }
-        } else {
-            currentBalanceDebouceTime = 0;
+
+            if (isProbablyBalanced()) {
+                currentBalanceDebouceTime += .02;
+                if (currentBalanceDebouceTime > Constants.BALANCING_DEBOUNCE_TIME) {
+                    System.out.println("Yea it all balanced");
+                    motors.stopDriveMotors();
+                    return true;
+                }
+            } else {
+                currentBalanceDebouceTime = 0;
+            }
         }
 
         return false;
@@ -81,13 +92,13 @@ public class AutonBalance extends AutonomousAction {
     }
 
     private void spinMotorsAtSpeed(double speed) {
-        MecanumDriveWheelSpeeds wheelSpeeds =
-                new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
+        MecanumDriveWheelSpeeds wheelSpeeds = new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
         spinMotors(wheelSpeeds, motors, false);
     }
 
     /**
-     * Returns whether the robot is currently balanced or not. Is it accurate? Maybe.
+     * Returns whether the robot is currently balanced or not. Is it accurate?
+     * Maybe.
      * 
      * @return Whether or not the robot is balanced or not (probably)
      */
