@@ -1,7 +1,6 @@
 package frc.robot.AutonomousActions;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import frc.robot.AutonomousAction;
 import frc.robot.RobotMotors;
@@ -15,9 +14,10 @@ public class AutonMoveForward extends AutonomousAction {
     /**
      * Moves a specified distance at a specified speed.
      * 
-     * @param distance The distance to move, measure in feet. Positive is forward, negative is
-     *        backwards.
-     * @param speed The speed to move at, in feet per second.
+     * @param distance The distance to move, measure in feet. Positive is forward,
+     *                 negative is
+     *                 backwards.
+     * @param speed    The speed to move at, in feet per second.
      */
     public AutonMoveForward(double distance, double speed) {
         this.targetDistance = distance;
@@ -44,7 +44,6 @@ public class AutonMoveForward extends AutonomousAction {
             ChassisSpeeds chassisSpeeds = new ChassisSpeeds(speed, 0, 0);
 
             MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
-
 
             spinMotors(wheelSpeeds, motors, false);
             // Get the individual wheel speeds

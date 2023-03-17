@@ -45,7 +45,7 @@ public class AutonBalance extends AutonomousAction {
             return false;
         }
 
-        if (!this.isProbablyBalanced()) {
+        if (!this.isProbablyBalanced() && !wasUnbalanced) {
             currentDebounceTime += .02;
             if (currentDebounceTime >= Constants.BEING_UNBALANCED_DEBOUNCE_TIME) {
                 System.out.println("It is not balance rn!");

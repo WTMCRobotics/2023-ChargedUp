@@ -35,7 +35,7 @@ public final class Constants {
         public static final double ARM_MOVE_DOWN_SPEED = .5;
         /** The speed in which to move the robot while balancing, in m/s */
         public static final double ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION = .5;
-        public static final double ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION = .25;
+        public static final double ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION = .375;
         /**
          * The amount of time in seconds the robot has to be unbalanced for for it to
          * change to it's
@@ -47,7 +47,7 @@ public final class Constants {
          * considered
          * balanced
          */
-        public static final double BALANCING_DEBOUNCE_TIME = 1.0;
+        public static final double BALANCING_DEBOUNCE_TIME = 1;
         /** The margain of error, in degrees, while balancing */
         public static final double BALANCING_MARGAIN_OF_ERROR = 1;
         /** The margain of error while on the platform, in degrees, while balancing */

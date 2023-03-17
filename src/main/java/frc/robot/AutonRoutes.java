@@ -7,6 +7,7 @@ import frc.robot.AutonomousActions.AutonMoveArm;
 import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
 import frc.robot.AutonomousActions.AutonMultiAction;
+import frc.robot.AutonomousActions.AutonWait;
 import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
 import frc.robot.InputtedGuitarControls.ArmPosition;
 import frc.robot.InputtedGuitarControls.GribberState;
@@ -19,9 +20,11 @@ public class AutonRoutes {
         actions.add(new AutonMoveGribber(GribberState.CLOSING));
         actions.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
         actions.add(new AutonMoveForward(2, 1.25));
+        actions.add(new AutonWait(0.5));
         actions.add(new AutonMoveGribber(GribberState.OPENING));
-        actions.add(new AutonMoveForward(-3, 2));
-        actions.add(new AutonMultiAction(new AutonMoveForward(-3, 2), new AutonMoveArm(ArmPosition.PICKING_UP),
+
+        actions.add(new AutonMoveForward(-4, 2));
+        actions.add(new AutonMultiAction(new AutonMoveForward(-4, 2), new AutonMoveArm(ArmPosition.PICKING_UP),
                 new AutonMoveGribber(GribberState.CLOSING)));
         return actions;
     }
@@ -32,7 +35,9 @@ public class AutonRoutes {
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING));
         actionQueue.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
         actionQueue.add(new AutonMoveForward(2, 1.25));
+        actionQueue.add(new AutonWait(0.5));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING));
+
         actionQueue.add(new AutonMoveForward(-1, 2));
         actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.FLIP_CONE),
                 new AutonMoveForward(-5, 1.5), new AutonMoveGribber(GribberState.CLOSING)));
@@ -46,9 +51,13 @@ public class AutonRoutes {
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING));
         actionQueue.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
         actionQueue.add(new AutonMoveForward(2, 1.25));
+        actionQueue.add(new AutonWait(0.5));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING));
+
         actionQueue.add(new AutonMoveForward(-1.5, 2));
+
         actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.PICKING_UP),
+                new AutonMoveGribber(GribberState.CLOSING),
                 new AutonBalance(MovementDirection.BACKWARDS, robotGyro)));
         return actionQueue;
     }

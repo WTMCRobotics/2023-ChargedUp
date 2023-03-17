@@ -124,11 +124,13 @@ public class Robot extends TimedRobot {
     guitarControls = new InputtedGuitarControls(guitarXboxController, armController, gribberController);
 
     // Deadzone
-    mecanumDriveTrain.setDeadband(0.04);
+    mecanumDriveTrain.setDeadband(0.08);
 
     robotGyroscope = new AHRS(SPI.Port.kMXP);
 
     armController.setEncoderPosition(0.0);
+
+    frontLeft.setEncoderPosition(0.0);
 
     System.out.println("SYOUST WORKING");
 
@@ -249,7 +251,7 @@ public class Robot extends TimedRobot {
         // AutonMoveArm(ArmPosition.FLIP_CONE),
         // new AutonMoveGribber(GribberState.CLOSING)));
         // manualActions.add(new AutonMoveForward(-3, 1));
-        manualActions.add(new AutonBalance(MovementDirection.FORWARDS, robotGyroscope));
+        manualActions.add(new AutonBalance(MovementDirection.BACKWARDS, robotGyroscope));
         System.out.println("Manual action!");
         selectedRoute = manualActions;
         break;
@@ -308,9 +310,9 @@ public class Robot extends TimedRobot {
       Constants.LED_RED.pulse(.02);
     }
 
-    mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY(),
-        inputtedControls.getLeftJoystickX(), inputtedControls.getTurnAmount(),
-        robotGyroscope.getRotation2d().times(-1));
+    mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY() * -1,
+        inputtedControls.getLeftJoystickX() * -1, inputtedControls.getTurnAmount(),
+        robotGyroscope.getRotation2d());
 
   }
 
