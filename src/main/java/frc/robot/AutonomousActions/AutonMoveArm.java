@@ -14,8 +14,9 @@ public class AutonMoveArm extends AutonomousAction {
     /**
      * Moves the arm to the specified position
      * 
-     * @param position The position to move the arm to. Either PICKING_UP, PICKING_MIDDLE,
-     *        PLACING_TOP
+     * @param position The position to move the arm to. Either PICKING_UP,
+     *                 PICKING_MIDDLE,
+     *                 PLACING_TOP
      */
     public AutonMoveArm(ArmPosition position) {
         this.isFirstTimeRunning = true;
@@ -32,17 +33,20 @@ public class AutonMoveArm extends AutonomousAction {
         if (isFirstTimeRunning) {
             System.out.println("Setting motor power!");
             switch (position) {
-                case PICKING_UP:
-                    AutoMoveArmPickingUp();
+                case PLACING_TOP:
+                    AutoMoveArmPlaceTop();
                     break;
                 case PLACING_MIDDLE:
                     AutoMoveArmPlaceMiddle();
                     break;
-                case PLACING_TOP:
-                    AutoMoveArmPlaceTop();
+                case INTAKE:
+                    AutoIntake();
                     break;
                 case FLIP_CONE:
                     AutoMoveArmFlipCone();
+                    break;
+                case PICKING_UP:
+                    AutoMoveArmPickingUp();
                     break;
                 default:
                     break;
@@ -74,6 +78,19 @@ public class AutonMoveArm extends AutonomousAction {
             motors.getArmMotor().set(-0.8);
         }
         targetArmDegree = Constants.ARM_PICK_UP_POSITION;
+    }
+
+    public void AutoIntake() {
+        if (motors.getArmMotor()
+                .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_INTAKE_POSITION)) {
+            motors.getArmMotor().set(0.8);
+        }
+        if (motors.getArmMotor()
+                .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_INTAKE_POSITION)
+                        + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
+            motors.getArmMotor().set(-0.8);
+        }
+        targetArmDegree = Constants.ARM_INTAKE_POSITION;
     }
 
     public void AutoMoveArmPlaceTop() {

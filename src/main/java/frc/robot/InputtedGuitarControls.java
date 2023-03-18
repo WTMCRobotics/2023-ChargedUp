@@ -30,7 +30,7 @@ public class InputtedGuitarControls {
     private void moveGribberController() {
         // TODO: Overthrow Brazilian government
         if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
-            gribberController.set(0);
+            gribberController.set(-.10);
             return;
         }
         if (gribberState == GribberState.CLOSING) {
@@ -95,6 +95,19 @@ public class InputtedGuitarControls {
                 armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             }
             return;
+        } else if (position == ArmPosition.INTAKE) {
+            if (armController.getEncoderPosition() < degreesToEncoderPosition(
+                    Constants.ARM_INTAKE_POSITION) - encoderBuffer) {
+                armController.set(Constants.ARM_MOVE_UP_SPEED);
+            }
+            if (armController.getEncoderPosition() > degreesToEncoderPosition(
+                    Constants.ARM_INTAKE_POSITION) + encoderBuffer) {
+                // if (Constants.bottomArmLimitSwitch.get()) {
+                // return;
+                // }
+                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
+            }
+            return;
 
         } else if (position == ArmPosition.FLIP_CONE) {
             if (armController.getEncoderPosition() < degreesToEncoderPosition(
@@ -150,22 +163,26 @@ public class InputtedGuitarControls {
             position = ArmPosition.PLACING_MIDDLE;
             pressedCount++;
         }
-        if (guitar.getYButton()) {
+        if (guitar.getYButtonPressed()) {
+            position = ArmPosition.INTAKE;
+        }
+        if (guitar.getXButton()) {
             position = ArmPosition.FLIP_CONE;
             pressedCount++;
         }
-        if (guitar.getXButtonPressed()) {
+        if (guitar.getLeftBumperPressed()) {
             position = ArmPosition.PICKING_UP;
         }
 
         if (pressedCount > 1) {
             position = storedArmPosition;
         }
-        if (guitar.getPOV() == 0) {
+        if (guitar.getLeftTriggerAxis() < 0.49) {
             lightColor = LightColor.CUBE;
-        }
-        if (guitar.getPOV() == 180) {
+        } else if (guitar.getLeftTriggerAxis() > 0.51) {
             lightColor = LightColor.CONE;
+        } else {
+            lightColor = LightColor.NONE;
         }
         if (guitar.getStartButtonPressed()) {
             gribberState = GribberState.CLOSING;
@@ -211,7 +228,7 @@ public class InputtedGuitarControls {
      * The three postions you can move the arm to
      */
     public static enum ArmPosition {
-        PICKING_UP, FLIP_CONE, PLACING_TOP, PLACING_MIDDLE, MANUAL
+        PICKING_UP, FLIP_CONE, PLACING_TOP, PLACING_MIDDLE, INTAKE, MANUAL
     }
 
     public static enum LightColor {

@@ -14,6 +14,7 @@ public class AutonBalance extends AutonomousAction {
     private boolean wasUnbalanced = false;
     private double currentDebounceTime = 0;
     private double currentBalanceDebouceTime = 0;
+    private double timeUntilSlow;
 
     /**
      * Used to automatically balance the robot on the charging station, within a
@@ -28,6 +29,9 @@ public class AutonBalance extends AutonomousAction {
         this.isFirstTimeRunning = true;
         this.wasUnbalanced = false;
     }
+
+    // Bottom slab = 11 & 12 degrees
+    // Bigger panel = 15 degrees
 
     // FRONT SIDE OF ROBOT UPWARDS = Roll goes positive
 
@@ -106,9 +110,13 @@ public class AutonBalance extends AutonomousAction {
         // If the gyro reading is greater than negative half the buffer, and less than
         // positive half
         // the buffer, then it's maybe balanced!
-        double halfOfMargianOfError = Constants.BALANCING_MARGAIN_OF_ERROR / 2.0;
+        double halfOfMargianOfError = Constants.BALANCING_MARGAIN_OF_ERROR;
+        double gyroRoll = gyro.getRoll();
+        // System.out.println(
+        // "The robot is balanced, because " + (-halfOfMargianOfError) + " is less than
+        // or equal to " + gyroRoll);
 
-        return -halfOfMargianOfError <= gyro.getRoll() && gyro.getRoll() <= halfOfMargianOfError;
+        return gyro.getRoll() >= -halfOfMargianOfError && gyro.getRoll() <= halfOfMargianOfError;
     }
 
     public enum MovementDirection {

@@ -12,6 +12,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -78,6 +79,7 @@ public class Robot extends TimedRobot {
     chooser.setDefaultOption("Default Auto", kDefaultAuto);
     chooser.addOption("Place object, leave community, and balance", "PlaceLeaveCommunityBalance");
     chooser.addOption("Place object and balance", "PlaceBalance");
+    chooser.addOption("Place object", "justPlace");
     chooser.addOption("Place object and leave community", "PlaceLeaveCommunity");
     chooser.addOption("Leave community", "LeaveCommunity");
     chooser.addOption("Declare manually in code", "manualInCode");
@@ -105,6 +107,7 @@ public class Robot extends TimedRobot {
     frontRight.setBrakeMode(true);
     backLeft.setBrakeMode(true);
     backRight.setBrakeMode(true);
+    gribberController.setBrakeMode(true);
 
     frontRight.setInverted(true);
     backRight.setInverted(true);
@@ -240,6 +243,9 @@ public class Robot extends TimedRobot {
       case "LeaveCommunity":
         selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
         break;
+      case "justPlace":
+        selectedRoute = AutonRoutes.placeObject();
+        break;
       case "manualInCode":
 
         ArrayDeque<AutonomousAction> manualActions = new ArrayDeque<>();
@@ -302,17 +308,25 @@ public class Robot extends TimedRobot {
     // Turn Purple if Cube
     guitarControls.doEveryFrame();
     if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CUBE) {
-      Constants.LED_GREEN.pulse(.02);
-      Constants.LED_RED.pulse(.02);
+      Constants.LED_GREEN.set(true);
+      Constants.LED_RED.set(true);
       // Turn Yellow-ish Green if Cone
     } else if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CONE) {
-      Constants.LED_BLUE.pulse(.02);
-      Constants.LED_RED.pulse(.02);
+      Constants.LED_BLUE.set(true);
+      Constants.LED_RED.set(true);
+    } else {
+      Constants.LED_BLUE.set(false);
+      Constants.LED_RED.set(false);
+      Constants.LED_GREEN.set(false);
     }
 
-    mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY() * -1,
-        inputtedControls.getLeftJoystickX() * -1, inputtedControls.getTurnAmount(),
-        robotGyroscope.getRotation2d());
+    /*
+     * mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY() * -1,
+     * inputtedControls.getLeftJoystickX() * -1, inputtedControls.getTurnAmount(),
+     * robotGyroscope.getRotation2d());
+     */
+    mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY(),
+        inputtedControls.getLeftJoystickX(), inputtedControls.getTurnAmount());
 
   }
 

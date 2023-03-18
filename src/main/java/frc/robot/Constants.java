@@ -30,28 +30,28 @@ public final class Constants {
         public static Translation2d BACK_RIGHT_WHEEL_LOCATION = new Translation2d(-10.75, -10.5);
 
         // zero through one
-        public static final double ARM_MOVE_UP_SPEED = .8;
+        public static final double ARM_MOVE_UP_SPEED = 1;
         // zero through one
-        public static final double ARM_MOVE_DOWN_SPEED = .5;
+        public static final double ARM_MOVE_DOWN_SPEED = .6;
         /** The speed in which to move the robot while balancing, in m/s */
-        public static final double ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION = .5;
-        public static final double ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION = .375;
+        public static final double ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION = 0.6;
+        public static final double ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION = .275;
         /**
          * The amount of time in seconds the robot has to be unbalanced for for it to
          * change to it's
          * "unbalanced" state
          */
-        public static final double BEING_UNBALANCED_DEBOUNCE_TIME = .02;
+        public static final double BEING_UNBALANCED_DEBOUNCE_TIME = .5;
         /**
          * The amount of time in seconds the robot has to be balanced for for it to be
          * considered
          * balanced
          */
-        public static final double BALANCING_DEBOUNCE_TIME = 1;
+        public static final double BALANCING_DEBOUNCE_TIME = .15;
         /** The margain of error, in degrees, while balancing */
         public static final double BALANCING_MARGAIN_OF_ERROR = 1;
         /** The margain of error while on the platform, in degrees, while balancing */
-        public static final double BALANCING_MARGAIN_OF_ERROR_ON_STATION = 2;
+        public static final double BALANCING_MARGAIN_OF_ERROR_ON_STATION = 5;
 
         public static final float robotWidth = 32;
         /** the length of the robot in inches */
@@ -68,7 +68,12 @@ public final class Constants {
          * for placing
          * cubes/cones on the middle level
          */
-        public static final double ARM_PLACE_MIDDLE_POSITION = 80;
+        public static final double ARM_PLACE_MIDDLE_POSITION = 60;
+        /**
+         * The postition in degrees from the starting position that the arm should go to
+         * intake cubes
+         */
+        public static final double ARM_INTAKE_POSITION = 25;
         /**
          * The postition in degrees from the starting position that the arm should go to
          * for
@@ -97,9 +102,9 @@ public final class Constants {
         /** Pixy LEDs - red */
         public static final int LED_RED_ID = 0;
         /** Pixy LEDs - green */
-        public static final int LED_GREEN_ID = 1;
+        public static final int LED_GREEN_ID = 2;
         /** Pixy LEDs - blue */
-        public static final int LED_BLUE_ID = 2;
+        public static final int LED_BLUE_ID = 1;
 
         // Binary Sensors
         /** Pixy LEDs - red */
