@@ -14,7 +14,6 @@ public class AutonBalance extends AutonomousAction {
     private boolean wasUnbalanced = false;
     private double currentDebounceTime = 0;
     private double currentBalanceDebouceTime = 0;
-    private double timeUntilSlow;
 
     /**
      * Used to automatically balance the robot on the charging station, within a
