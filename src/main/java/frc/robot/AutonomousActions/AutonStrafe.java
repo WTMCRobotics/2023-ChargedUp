@@ -1,5 +1,7 @@
 package frc.robot.AutonomousActions;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Timer;
@@ -8,50 +10,58 @@ import frc.robot.RobotMotors;
 
 public class AutonStrafe extends AutonomousAction {
 
-    boolean isFirstTimeRunning;
     private double speed;
-    private double distance;
-    private double targetedTimeStamp;
+    private boolean isFirstTimeRunning;
     private RobotMotors motors;
-
+    private double targetDistance;
+    protected AHRS navX;
 
     /**
-     * Strafes a specified distance at a specified speed.
-     * <p>
-     * WARNING! This just doesn't really work, it will kinda move, not at the correct speed, and not
-     * very well either. Maybe just rotate and move instead!
+     * Moves a specified distance at a specified speed.
      * 
-     * @param distance The distance to strafe, measure in feet.
-     * @param speed The speed to move at, in feet per second.
+     * @param distance The distance to move, measure in feet. Positive is forward,
+     *                 negative is
+     *                 backwards.
+     * @param speed    The speed to move at, in feet per second.
      */
-    public AutonStrafe(double distance, double speed) {
-        this.distance = distance;
+    public AutonStrafe(double distance, double speed, AHRS navX) {
+        this.targetDistance = distance;
         this.speed = speed;
         this.isFirstTimeRunning = true;
+        this.navX = navX;
     }
 
+    @Override
+    public void passMotors(RobotMotors motors) {
+        this.motors = motors;
+    }
+
+    @Override
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
-            distance *= 2;
-            if (distance < 0) {
-                distance *= -1;
+            navX.resetDisplacement();
+            System.out.println("Attempting to move forward Encoder position is "
+                    + motors.getFrontLeftMotor().getEncoderPosition());
+            if (targetDistance < 0) {
+                targetDistance *= -1;
                 speed *= -1;
             }
             // Convert from f/s to m/s
             speed /= 3.281;
-
             ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, speed, 0);
 
             MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
-            // Get the individual wheel speeds
-            spinMotors(wheelSpeeds, motors);
 
-            // Timer.delay(distance / Math.abs(speed));
-            targetedTimeStamp = distance / Math.abs(speed) + Timer.getFPGATimestamp();
+            spinMotors(wheelSpeeds, motors, false);
+            // Get the individual wheel speeds
+            System.out.println("Ressettingfront left and middle and forward motor encoder values to 0!");
             isFirstTimeRunning = false;
             return false;
         }
-        if (Timer.getFPGATimestamp() > targetedTimeStamp) {
+
+        if (Math.abs(getFeetTraveledForward()) >= Math.abs(targetDistance)) {
+            System.out.println("The robot has moved enough, as " + getFeetTraveledForward()
+                    + " is greater than " + targetDistance);
             motors.stopDriveMotors();
             return true;
         }
@@ -59,9 +69,8 @@ public class AutonStrafe extends AutonomousAction {
 
     }
 
-    @Override
-    public void passMotors(RobotMotors motors) {
-        this.motors = motors;
+    private double getFeetTraveledForward() {
+        return navX.getDisplacementX() / 3.281;
     }
 
 }

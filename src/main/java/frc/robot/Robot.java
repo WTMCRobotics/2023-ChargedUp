@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousActions.AutonArmCalibrate;
 import frc.robot.AutonomousActions.AutonBalance;
+import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
 import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
 import frc.robot.InputtedGuitarControls.GribberState;
@@ -131,6 +132,8 @@ public class Robot extends TimedRobot {
 
     robotGyroscope = new AHRS(SPI.Port.kMXP);
 
+    AutonRoutes.setupAHRS(robotGyroscope);
+
     armController.setEncoderPosition(0.0);
 
     frontLeft.setEncoderPosition(0.0);
@@ -235,7 +238,7 @@ public class Robot extends TimedRobot {
         selectedRoute = AutonRoutes.placeLeaveCommunityThenBalance(robotGyroscope);
         break;
       case "PlaceBalance":
-        selectedRoute = AutonRoutes.placeThenBalance(robotGyroscope);
+        selectedRoute = AutonRoutes.placeThenBalance();
         break;
       case "PlaceLeaveCommunity":
         selectedRoute = AutonRoutes.placeObjectAndLeaveCommunity();
@@ -257,7 +260,9 @@ public class Robot extends TimedRobot {
         // AutonMoveArm(ArmPosition.FLIP_CONE),
         // new AutonMoveGribber(GribberState.CLOSING)));
         // manualActions.add(new AutonMoveForward(-3, 1));
-        manualActions.add(new AutonBalance(MovementDirection.BACKWARDS, robotGyroscope));
+        // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS,
+        // robotGyroscope));
+        manualActions.add(new AutonMoveForward(3, 0.5, robotGyroscope));
         System.out.println("Manual action!");
         selectedRoute = manualActions;
         break;

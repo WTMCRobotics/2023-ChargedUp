@@ -80,6 +80,7 @@ public class AutonMoveArm extends AutonomousAction {
         targetArmDegree = Constants.ARM_PICK_UP_POSITION;
     }
 
+    // does something (probably)
     public void AutoIntake() {
         if (motors.getArmMotor()
                 .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_INTAKE_POSITION)) {

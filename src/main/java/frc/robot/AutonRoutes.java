@@ -13,17 +13,22 @@ import frc.robot.InputtedGuitarControls.ArmPosition;
 import frc.robot.InputtedGuitarControls.GribberState;
 
 public class AutonRoutes {
+    private static AHRS navX;
+
+    public static void setupAHRS(AHRS navx) {
+        navX = navx;
+    }
 
     public static ArrayDeque<AutonomousAction> placeObjectAndLeaveCommunity() {
         ArrayDeque<AutonomousAction> actions = new ArrayDeque<>();
         // actions.add(new AutonArmCalibrate(false));
         actions.add(new AutonMoveGribber(GribberState.CLOSING));
         actions.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
-        actions.add(new AutonMoveForward(2, 1.25));
+        actions.add(new AutonMoveForward(2, 1.25, navX));
         actions.add(new AutonWait(0.5));
         actions.add(new AutonMoveGribber(GribberState.OPENING));
 
-        actions.add(new AutonMoveForward(-11, 2));
+        actions.add(new AutonMoveForward(-11, 2, navX));
         actions.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.PICKING_UP),
                 new AutonMoveGribber(GribberState.CLOSING)));
         return actions;
@@ -34,7 +39,7 @@ public class AutonRoutes {
         // actions.add(new AutonArmCalibrate(false));
         actions.add(new AutonMoveGribber(GribberState.CLOSING));
         actions.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
-        actions.add(new AutonMoveForward(2, 1.25));
+        actions.add(new AutonMoveForward(2, 1.25, navX));
         actions.add(new AutonWait(0.5));
         actions.add(new AutonMoveGribber(GribberState.OPENING));
         return actions;
@@ -45,43 +50,43 @@ public class AutonRoutes {
         // actionQueue.add(new AutonArmCalibrate(false));
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING));
         actionQueue.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
-        actionQueue.add(new AutonMoveForward(2, 1.25));
+        actionQueue.add(new AutonMoveForward(2, 1.25, navX));
         actionQueue.add(new AutonWait(0.5));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING));
 
-        actionQueue.add(new AutonMoveForward(-1, 2));
+        actionQueue.add(new AutonMoveForward(-1, 2, navX));
         actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.FLIP_CONE),
-                new AutonMoveForward(-5, 1.5), new AutonMoveGribber(GribberState.CLOSING)));
+                new AutonMoveForward(-5, 1.5, navX), new AutonMoveGribber(GribberState.CLOSING)));
         actionQueue.add(new AutonBalance(MovementDirection.FORWARDS, robotGyro));
         return actionQueue;
     }
 
-    public static ArrayDeque<AutonomousAction> placeThenBalance(AHRS robotGyro) {
+    public static ArrayDeque<AutonomousAction> placeThenBalance() {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<AutonomousAction>();
         // actionQueue.add(new AutonArmCalibrate(false));
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING));
         actionQueue.add(new AutonMoveArm(ArmPosition.PLACING_TOP));
-        actionQueue.add(new AutonMoveForward(2, 1.25));
+        actionQueue.add(new AutonMoveForward(2, 1.25, navX));
         actionQueue.add(new AutonWait(0.5));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING));
 
-        actionQueue.add(new AutonMoveForward(-1.5, 2));
+        actionQueue.add(new AutonMoveForward(-1.5, 2, navX));
 
         actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.PICKING_UP),
                 new AutonMoveGribber(GribberState.CLOSING),
-                new AutonBalance(MovementDirection.BACKWARDS, robotGyro)));
+                new AutonBalance(MovementDirection.BACKWARDS, navX)));
         return actionQueue;
     }
 
     public static ArrayDeque<AutonomousAction> leaveCommunityWhilstFacingWall() {
         ArrayDeque<AutonomousAction> actions = new ArrayDeque<>();
-        actions.add(new AutonMoveForward(-6, 2));
+        actions.add(new AutonMoveForward(-6, 2, navX));
         return actions;
     }
 
     public static ArrayDeque<AutonomousAction> leaveCommunityWhilstFacingEnemySide() {
         ArrayDeque<AutonomousAction> actions = new ArrayDeque<>();
-        actions.add(new AutonMoveForward(6, 2));
+        actions.add(new AutonMoveForward(6, 2, navX));
         return actions;
     }
 }

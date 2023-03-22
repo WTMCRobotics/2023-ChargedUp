@@ -1,5 +1,7 @@
 package frc.robot.AutonomousActions;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import frc.robot.AutonomousAction;
@@ -10,6 +12,7 @@ public class AutonMoveForward extends AutonomousAction {
     private boolean isFirstTimeRunning;
     private RobotMotors motors;
     private double targetDistance;
+    protected AHRS navX;
 
     /**
      * Moves a specified distance at a specified speed.
@@ -19,10 +22,11 @@ public class AutonMoveForward extends AutonomousAction {
      *                 backwards.
      * @param speed    The speed to move at, in feet per second.
      */
-    public AutonMoveForward(double distance, double speed) {
+    public AutonMoveForward(double distance, double speed, AHRS navX) {
         this.targetDistance = distance;
         this.speed = speed;
         this.isFirstTimeRunning = true;
+        this.navX = navX;
     }
 
     @Override
@@ -33,8 +37,8 @@ public class AutonMoveForward extends AutonomousAction {
     @Override
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
-            System.out.println("Attempting to move forward Enocer position is "
-                    + motors.getFrontLeftMotor().getEncoderPosition());
+            navX.resetDisplacement();
+
             if (targetDistance < 0) {
                 targetDistance *= -1;
                 speed *= -1;
@@ -47,14 +51,12 @@ public class AutonMoveForward extends AutonomousAction {
 
             spinMotors(wheelSpeeds, motors, false);
             // Get the individual wheel speeds
-            System.out.println("Ressettingfront left  motor encoder values to 0!");
-            motors.getFrontLeftMotor().setEncoderPosition(0);
             isFirstTimeRunning = false;
             return false;
         }
 
-        if (Math.abs(getFeetTraveled()) >= Math.abs(targetDistance)) {
-            System.out.println("The robot has moved enough, as " + getFeetTraveled()
+        if (Math.abs(getFeetTraveledForward()) >= Math.abs(targetDistance)) {
+            System.out.println("The robot has moved enough, as " + getFeetTraveledForward()
                     + " is greater than " + targetDistance);
             motors.stopDriveMotors();
             return true;
@@ -63,8 +65,8 @@ public class AutonMoveForward extends AutonomousAction {
 
     }
 
-    private double getFeetTraveled() {
-        return motors.getFrontLeftMotor().getEncoderPosition() * (8.0 * Math.PI / 12.0);
+    private double getFeetTraveledForward() {
+        return navX.getDisplacementY() / 3.281;
     }
 
 }
