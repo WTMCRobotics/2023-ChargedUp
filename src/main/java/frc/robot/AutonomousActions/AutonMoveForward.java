@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousAction;
 import frc.robot.RobotMotors;
 
@@ -13,14 +14,14 @@ public class AutonMoveForward extends AutonomousAction {
     private RobotMotors motors;
     private double targetDistance;
     protected AHRS navX;
+    private double distanceMoved = 0;
 
     /**
      * Moves a specified distance at a specified speed.
      * 
-     * @param distance The distance to move, measure in feet. Positive is forward,
-     *                 negative is
-     *                 backwards.
-     * @param speed    The speed to move at, in feet per second.
+     * @param distance The distance to move, measure in feet. Positive is forward, negative is
+     *        backwards.
+     * @param speed The speed to move at, in feet per second.
      */
     public AutonMoveForward(double distance, double speed, AHRS navX) {
         this.targetDistance = distance;
@@ -66,7 +67,10 @@ public class AutonMoveForward extends AutonomousAction {
     }
 
     private double getFeetTraveledForward() {
-        return navX.getDisplacementY() / 3.281;
+        // return navX.getDisplacementX() * 3.281;
+        this.distanceMoved += (Math.abs(navX.getVelocityX()) / 50) * 3.281 * 1.714;
+        SmartDashboard.putNumber("feet moved along the NavX xaxis", this.distanceMoved);
+        return this.distanceMoved;
     }
 
 }

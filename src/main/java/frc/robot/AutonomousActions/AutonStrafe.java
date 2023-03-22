@@ -19,10 +19,9 @@ public class AutonStrafe extends AutonomousAction {
     /**
      * Moves a specified distance at a specified speed.
      * 
-     * @param distance The distance to move, measure in feet. Positive is forward,
-     *                 negative is
-     *                 backwards.
-     * @param speed    The speed to move at, in feet per second.
+     * @param distance The distance to move, measure in feet. Positive is forward, negative is
+     *        backwards.
+     * @param speed The speed to move at, in feet per second.
      */
     public AutonStrafe(double distance, double speed, AHRS navX) {
         this.targetDistance = distance;
@@ -54,13 +53,14 @@ public class AutonStrafe extends AutonomousAction {
 
             spinMotors(wheelSpeeds, motors, false);
             // Get the individual wheel speeds
-            System.out.println("Ressettingfront left and middle and forward motor encoder values to 0!");
+            System.out.println(
+                    "Ressettingfront left and middle and forward motor encoder values to 0!");
             isFirstTimeRunning = false;
             return false;
         }
 
-        if (Math.abs(getFeetTraveledForward()) >= Math.abs(targetDistance)) {
-            System.out.println("The robot has moved enough, as " + getFeetTraveledForward()
+        if (Math.abs(getFeetTraveledSideways()) >= Math.abs(targetDistance)) {
+            System.out.println("The robot has moved enough, as " + getFeetTraveledSideways()
                     + " is greater than " + targetDistance);
             motors.stopDriveMotors();
             return true;
@@ -69,8 +69,8 @@ public class AutonStrafe extends AutonomousAction {
 
     }
 
-    private double getFeetTraveledForward() {
-        return navX.getDisplacementX() / 3.281;
+    private double getFeetTraveledSideways() {
+        return navX.getDisplacementY() * 3.281;
     }
 
 }
