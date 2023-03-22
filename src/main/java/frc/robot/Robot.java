@@ -255,7 +255,7 @@ public class Robot extends TimedRobot {
         // manualActions.add(new AutonMoveForward(-3, 1));
         // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS,
         // robotGyroscope));
-        manualActions.add(new AutonMoveForward(3, 1, robotGyroscope));
+        manualActions.add(new AutonMoveForward(2, 1));
         System.out.println("Manual action!");
         selectedRoute = manualActions;
         break;

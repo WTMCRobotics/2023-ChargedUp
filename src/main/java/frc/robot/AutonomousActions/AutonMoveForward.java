@@ -1,10 +1,7 @@
 package frc.robot.AutonomousActions;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousAction;
 import frc.robot.RobotMotors;
 
@@ -13,8 +10,6 @@ public class AutonMoveForward extends AutonomousAction {
     private boolean isFirstTimeRunning;
     private RobotMotors motors;
     private double targetDistance;
-    protected AHRS navX;
-    private double distanceMoved = 0;
 
     /**
      * Moves a specified distance at a specified speed.
@@ -23,11 +18,10 @@ public class AutonMoveForward extends AutonomousAction {
      *        backwards.
      * @param speed The speed to move at, in feet per second.
      */
-    public AutonMoveForward(double distance, double speed, AHRS navX) {
+    public AutonMoveForward(double distance, double speed) {
         this.targetDistance = distance;
         this.speed = speed;
         this.isFirstTimeRunning = true;
-        this.navX = navX;
     }
 
     @Override
@@ -38,8 +32,8 @@ public class AutonMoveForward extends AutonomousAction {
     @Override
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
-            navX.resetDisplacement();
-
+            System.out.println("Attempting to move forward Enocer position is "
+                    + motors.getFrontLeftMotor().getEncoderPosition());
             if (targetDistance < 0) {
                 targetDistance *= -1;
                 speed *= -1;
@@ -52,12 +46,17 @@ public class AutonMoveForward extends AutonomousAction {
 
             spinMotors(wheelSpeeds, motors, false);
             // Get the individual wheel speeds
+            System.out.println("Ressettingfront left  motor encoder values to 0!");
+            motors.getFrontLeftMotor().setEncoderPosition(0);
+            motors.getFrontRightMotor().setEncoderPosition(0);
+            motors.getBackLeftMotor().setEncoderPosition(0);
+            motors.getBackRightMotor().setEncoderPosition(0);
             isFirstTimeRunning = false;
             return false;
         }
 
-        if (Math.abs(getFeetTraveledForward()) >= Math.abs(targetDistance)) {
-            System.out.println("The robot has moved enough, as " + getFeetTraveledForward()
+        if (Math.abs(getFeetTraveled()) >= Math.abs(targetDistance)) {
+            System.out.println("The robot has moved enough, as " + getFeetTraveled()
                     + " is greater than " + targetDistance);
             motors.stopDriveMotors();
             return true;
@@ -66,11 +65,14 @@ public class AutonMoveForward extends AutonomousAction {
 
     }
 
-    private double getFeetTraveledForward() {
-        // return navX.getDisplacementX() * 3.281;
-        this.distanceMoved += (Math.abs(navX.getVelocityX()) / 50) * 3.281 * 1.714;
-        SmartDashboard.putNumber("feet moved along the NavX xaxis", this.distanceMoved);
-        return this.distanceMoved;
+    private double getFeetTraveled() {
+        return ((Math.abs(motors.getFrontLeftMotor().getEncoderPosition()) * (8.0 * Math.PI / 12.0)
+                + Math.abs(motors.getFrontRightMotor().getEncoderPosition())
+                        * (8.0 * Math.PI / 12.0)
+                + Math.abs(motors.getBackLeftMotor().getEncoderPosition()) * (8.0 * Math.PI / 12.0)
+                + Math.abs(motors.getBackRightMotor().getEncoderPosition())
+                        * (8.0 * Math.PI / 12.0))
+                / 4) + 1;
     }
 
 }
