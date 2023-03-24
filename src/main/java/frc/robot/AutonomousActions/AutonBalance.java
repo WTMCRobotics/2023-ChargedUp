@@ -16,17 +16,17 @@ public class AutonBalance extends AutonomousAction {
     private double currentBalanceDebouceTime = 0;
 
     /**
-     * Used to automatically balance the robot on the charging station, within a
-     * certain degree.
+     * Used to automatically balance the robot on the charging station, within a certain degree.
      * 
      * @param position Whether to start the robot moving forwards, or backwards
      */
-    public AutonBalance(MovementDirection movementDirection, AHRS gyro) {
+    public AutonBalance(MovementDirection movementDirection, AHRS gyro, RobotMotors motors) {
         System.out.println("Balnce thingy");
         this.gyro = gyro;
         this.movementDirection = movementDirection;
         this.isFirstTimeRunning = true;
         this.wasUnbalanced = false;
+        this.motors = motors;
     }
 
     // Bottom slab = 11 & 12 degrees
@@ -51,7 +51,7 @@ public class AutonBalance extends AutonomousAction {
         if (!this.isProbablyBalanced() && !wasUnbalanced) {
             currentDebounceTime += .02;
             if (currentDebounceTime >= Constants.BEING_UNBALANCED_DEBOUNCE_TIME) {
-                System.out.println("It is not balance rn!");
+                System.out.println("It is not balanced rn!");
                 if (movementDirection == MovementDirection.FORWARDS) {
                     spinMotorsAtSpeed(Constants.ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION);
                 } else {
@@ -89,19 +89,14 @@ public class AutonBalance extends AutonomousAction {
         return false;
     }
 
-    @Override
-    public void passMotors(RobotMotors motors) {
-        this.motors = motors;
-    }
-
     private void spinMotorsAtSpeed(double speed) {
-        MecanumDriveWheelSpeeds wheelSpeeds = new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
+        MecanumDriveWheelSpeeds wheelSpeeds =
+                new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
         spinMotors(wheelSpeeds, motors, false);
     }
 
     /**
-     * Returns whether the robot is currently balanced or not. Is it accurate?
-     * Maybe.
+     * Returns whether the robot is currently balanced or not. Is it accurate? Maybe.
      * 
      * @return Whether or not the robot is balanced or not (probably)
      */
@@ -109,13 +104,12 @@ public class AutonBalance extends AutonomousAction {
         // If the gyro reading is greater than negative half the buffer, and less than
         // positive half
         // the buffer, then it's maybe balanced!
-        double halfOfMargianOfError = Constants.BALANCING_MARGAIN_OF_ERROR;
-        double gyroRoll = gyro.getRoll();
         // System.out.println(
         // "The robot is balanced, because " + (-halfOfMargianOfError) + " is less than
         // or equal to " + gyroRoll);
 
-        return gyro.getRoll() >= -halfOfMargianOfError && gyro.getRoll() <= halfOfMargianOfError;
+        return gyro.getRoll() >= -Constants.BALANCING_MARGIN_OF_ERROR
+                && gyro.getRoll() <= Constants.BALANCING_MARGIN_OF_ERROR;
     }
 
     public enum MovementDirection {

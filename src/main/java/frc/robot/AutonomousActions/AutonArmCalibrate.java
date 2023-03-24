@@ -12,9 +12,10 @@ public class AutonArmCalibrate extends AutonomousAction {
     /**
      * Attempts to calibrate the arm by moving it to the bottom position
      */
-    public AutonArmCalibrate(boolean closeGribber) {
+    public AutonArmCalibrate(boolean closeGribber, RobotMotors motors) {
         this.isFirstTimeRunning = true;
         this.closeGribber = closeGribber;
+        this.motors = motors;
     }
 
     public boolean executeAndIsDone() {
@@ -35,11 +36,6 @@ public class AutonArmCalibrate extends AutonomousAction {
         }
         return false;
 
-    }
-
-    @Override
-    public void passMotors(RobotMotors motors) {
-        this.motors = motors;
     }
 
 }

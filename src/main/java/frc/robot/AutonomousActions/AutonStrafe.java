@@ -4,7 +4,6 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.AutonomousAction;
 import frc.robot.RobotMotors;
 
@@ -23,15 +22,11 @@ public class AutonStrafe extends AutonomousAction {
      *        backwards.
      * @param speed The speed to move at, in feet per second.
      */
-    public AutonStrafe(double distance, double speed, AHRS navX) {
+    public AutonStrafe(double distance, double speed, AHRS navX, RobotMotors motors) {
         this.targetDistance = distance;
         this.speed = speed;
         this.isFirstTimeRunning = true;
         this.navX = navX;
-    }
-
-    @Override
-    public void passMotors(RobotMotors motors) {
         this.motors = motors;
     }
 
@@ -54,7 +49,7 @@ public class AutonStrafe extends AutonomousAction {
             spinMotors(wheelSpeeds, motors, false);
             // Get the individual wheel speeds
             System.out.println(
-                    "Ressettingfront left and middle and forward motor encoder values to 0!");
+                    "Resettingfront left and middle and forward motor encoder values to 0!");
             isFirstTimeRunning = false;
             return false;
         }

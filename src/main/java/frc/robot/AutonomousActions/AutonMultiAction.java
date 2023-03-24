@@ -2,13 +2,10 @@ package frc.robot.AutonomousActions;
 
 
 import frc.robot.AutonomousAction;
-import frc.robot.RobotMotors;
 
 
 public class AutonMultiAction extends AutonomousAction {
     private AutonomousAction[] allActions;
-    private boolean isFirstTimeRunning = true;
-    private RobotMotors motors;
 
     /**
      * Makes multiple actions run at the exact same time, and will only be counted as completed
@@ -23,19 +20,8 @@ public class AutonMultiAction extends AutonomousAction {
     }
 
     @Override
-    public void passMotors(RobotMotors motors) {
-        this.motors = motors;
-    }
-
-    @Override
     public boolean executeAndIsDone() {
-        if (isFirstTimeRunning) {
-            for (AutonomousAction action : allActions) {
-                action.passMotors(motors);
-            }
-            isFirstTimeRunning = false;
-            return false;
-        }
+
         boolean isAllDone = true;
         for (AutonomousAction action : allActions) {
             if (!action.executeAndIsDone()) {

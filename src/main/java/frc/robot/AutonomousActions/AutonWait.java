@@ -2,7 +2,6 @@ package frc.robot.AutonomousActions;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.AutonomousAction;
-import frc.robot.RobotMotors;
 
 /**
  * testestsetets
@@ -21,11 +20,6 @@ public class AutonWait extends AutonomousAction {
     public AutonWait(double secondsToDelay) {
         delay = secondsToDelay;
         this.isFirstTimeRunning = true;
-    }
-
-    @Override
-    public void passMotors(RobotMotors motors) {
-        // I have brain damage
     }
 
     @Override

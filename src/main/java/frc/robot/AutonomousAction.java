@@ -11,8 +11,6 @@ public abstract class AutonomousAction {
 
     public abstract boolean executeAndIsDone();
 
-    public abstract void passMotors(RobotMotors motors);
-
     public void spinMotors(MecanumDriveWheelSpeeds wheelSpeeds, RobotMotors motors) {
 
         double frontLefSpeed = wheelSpeeds.frontLeftMetersPerSecond;

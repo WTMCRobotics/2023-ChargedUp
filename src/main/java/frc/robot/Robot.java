@@ -12,16 +12,13 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousActions.AutonArmCalibrate;
-import frc.robot.AutonomousActions.AutonBalance;
 import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
-import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
 import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
@@ -57,8 +54,6 @@ public class Robot extends TimedRobot {
   private InputtedGuitarControls guitarControls;
 
   private AHRS robotGyroscope;
-
-  private LidarProxy lidarSensor;
 
   private VideoSink videoArmServer;
   private VideoSink videoFrontServer;
@@ -129,8 +124,6 @@ public class Robot extends TimedRobot {
     mecanumDriveTrain.setDeadband(0.08);
 
     robotGyroscope = new AHRS(SPI.Port.kMXP);
-
-    AutonRoutes.setupAHRS(robotGyroscope);
 
     armController.setEncoderPosition(0.0);
 
@@ -224,23 +217,24 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    AutonRoutes autonRoutes = new AutonRoutes(robotGyroscope, this.motors);
     autoSelected = chooser.getSelected();
     ArrayDeque<AutonomousAction> selectedRoute;
     switch (autoSelected) {
       case "PlaceLeaveCommunityBalance":
-        selectedRoute = AutonRoutes.placeLeaveCommunityThenBalance(robotGyroscope);
+        selectedRoute = autonRoutes.placeLeaveCommunityThenBalance(robotGyroscope);
         break;
       case "PlaceBalance":
-        selectedRoute = AutonRoutes.placeThenBalance();
+        selectedRoute = autonRoutes.placeThenBalance();
         break;
       case "PlaceLeaveCommunity":
-        selectedRoute = AutonRoutes.placeObjectAndLeaveCommunity();
+        selectedRoute = autonRoutes.placeObjectAndLeaveCommunity();
         break;
       case "LeaveCommunity":
-        selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
+        selectedRoute = autonRoutes.leaveCommunityWhilstFacingWall();
         break;
       case "justPlace":
-        selectedRoute = AutonRoutes.placeObject();
+        selectedRoute = autonRoutes.placeObject();
         break;
       case "manualInCode":
 
@@ -255,13 +249,13 @@ public class Robot extends TimedRobot {
         // manualActions.add(new AutonMoveForward(-3, 1));
         // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS,
         // robotGyroscope));
-        manualActions.add(new AutonMoveForward(2, 1));
+        manualActions.add(new AutonMoveForward(2, 1, this.motors));
         System.out.println("Manual action!");
         selectedRoute = manualActions;
         break;
 
       default:
-        selectedRoute = AutonRoutes.leaveCommunityWhilstFacingWall();
+        selectedRoute = autonRoutes.leaveCommunityWhilstFacingWall();
     }
     System.out.println("Auto selected: " + autoSelected);
 
@@ -345,9 +339,9 @@ public class Robot extends TimedRobot {
         || testOptions.getSelected().equals("armTransport")) {
       System.out.println("calibrating and resseting arm");
       ArrayDeque<AutonomousAction> resetQueue = new ArrayDeque<>();
-      resetQueue.add(new AutonArmCalibrate(true));
+      resetQueue.add(new AutonArmCalibrate(true, this.motors));
       if (testOptions.getSelected().equals("armCalibrate")) {
-        resetQueue.add(new AutonMoveGribber(GribberState.OPENING));
+        resetQueue.add(new AutonMoveGribber(GribberState.OPENING, this.motors));
       }
       resetMovement = new AutonMovement(motors, resetQueue);
     } else if (testOptions.getSelected().equals("testMechanics")) {
@@ -374,11 +368,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {
-    System.out.println("I know wherer you live oliver");
-  }
+  public void simulationInit() {}
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+
+  }
 }

@@ -18,21 +18,17 @@ public class AutonMoveForward extends AutonomousAction {
      *        backwards.
      * @param speed The speed to move at, in feet per second.
      */
-    public AutonMoveForward(double distance, double speed) {
+    public AutonMoveForward(double distance, double speed, RobotMotors motors) {
         this.targetDistance = distance;
         this.speed = speed;
         this.isFirstTimeRunning = true;
-    }
-
-    @Override
-    public void passMotors(RobotMotors motors) {
         this.motors = motors;
     }
 
     @Override
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
-            System.out.println("Attempting to move forward Enocer position is "
+            System.out.println("Attempting to move forward Encoder position is "
                     + motors.getFrontLeftMotor().getEncoderPosition());
             if (targetDistance < 0) {
                 targetDistance *= -1;
@@ -46,7 +42,7 @@ public class AutonMoveForward extends AutonomousAction {
 
             spinMotors(wheelSpeeds, motors, false);
             // Get the individual wheel speeds
-            System.out.println("Ressettingfront left  motor encoder values to 0!");
+            System.out.println("Resettingfront left  motor encoder values to 0!");
             motors.getFrontLeftMotor().setEncoderPosition(0);
             motors.getFrontRightMotor().setEncoderPosition(0);
             motors.getBackLeftMotor().setEncoderPosition(0);
