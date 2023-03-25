@@ -12,7 +12,8 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Timer; // TODO check if our unused imports are still unused, then get
+                                    // rid of them if they are
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -344,31 +345,70 @@ public class Robot extends TimedRobot {
     // I - Integral - Over time, how extra will it push based on how long it's been since we've been
     // close to the target
     // D - Derivative - How quickly we will slow down after we hit the target
-    frontLeft.setPID(Constants.PRACTICE_ROBOT_GAINS);
-    backLeft.setPID(Constants.PRACTICE_ROBOT_GAINS);
-    frontRight.setPID(Constants.PRACTICE_ROBOT_GAINS);
-    backRight.setPID(Constants.PRACTICE_ROBOT_GAINS);
-    frontLeft.setDistance(12);
-    backLeft.setDistance(12);
-    frontRight.setDistance(12);
-    backRight.setDistance(12);
+    initializeMotionMagicMaster(frontRight, Constants.PRACTICE_ROBOT_GAINS);
+    initializeMotionMagicMaster(frontLeft, Constants.PRACTICE_ROBOT_GAINS);
+    initializeMotionMagicMaster(backLeft, Constants.PRACTICE_ROBOT_GAINS);
+    initializeMotionMagicMaster(backRight, Constants.PRACTICE_ROBOT_GAINS);
+    robotGyroscope.reset();
+    System.out.println("The motor power is " + frontLeft.get());
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
     if (resetMovement != null) {
+      System.out.println("autonEveryFrameS");
       resetMovement.autonomousEveryFrame();
     }
+    frontLeft.setDistance(12);
+    backLeft.setDistance(12);
+    frontRight.setDistance(12);
+    backRight.setDistance(12);
   }
+
+
 
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
-    System.out.println("I know wherer you live oliver");
+
   }
 
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
+
+  public void initializeMotionMagicMaster(MotorController motorController, Gains gains) {
+    /* Factory default hardware to prevent unexpected behavior */
+    motorController.reset();
+
+    /* Configure Sensor Source for Primary PID */
+    motorController.setSensorSource();
+
+    /*
+     * set deadband to super small 0.001 (0.1 %). The default deadband is 0.04 (4 %)
+     */
+    motorController.setNeutralDeadband(0.001);
+
+    /**
+     * Configure Talon SRX Output and Sensor direction accordingly Invert Motor to have green LEDs
+     * when driving Talon Forward / Requesting Positive Output Phase sensor to have positive
+     * increment when driving Talon Forward (Green LED)
+     */
+
+    /* Set relevant frame periods to be at least as fast as periodic rate */
+    motorController.setStatusFramePeriod(10);
+
+    /* Set the peak and nominal outputs */
+    motorController.setOutputLimits(0, 0, 1, -1);
+
+    /* Set Motion Magic gains in slot0 - see documentation */
+    motorController.setPID(gains);
+
+    /* Set acceleration and vcruise velocity - see documentation */
+    motorController.setMotionSpeed(15000, 6000);
+
+    /* Zero the sensor once on robot boot up */
+    motorController.setEncoderPosition(0);
+  }
 }
