@@ -106,32 +106,6 @@ public final class Constants {
         /** Pixy LEDs - blue */
         public static final DigitalOutput LED_BLUE = new DigitalOutput(LED_BLUE_ID);
 
-        // ##########################################
-        // talon related constants and variables
-        // ##########################################
-
-        // can bus IDs. Can be found in Phoenix Tuner
-        public static final int LEFT_MASTER_ID = 25;
-        public static final MotorController.Type LEFT_MASTER_TYPE = Type.Talon;
-        public static final int LEFT_SLAVE_ID = 26;
-        public static final MotorController.Type LEFT_SLAVE_TYPE = Type.Talon;
-        public static final int RIGHT_MASTER_ID = 27;
-        public static final MotorController.Type RIGHT_MASTER_TYPE = Type.Talon;
-        public static final int RIGHT_SLAVE_ID = 28;
-        public static final MotorController.Type RIGHT_SLAVE_TYPE = Type.Talon;
-        public static final int INTAKE_ID = 8;
-        public static final MotorController.Type INTAKE_TYPE = Type.SparkMax;
-        public static final int LIFT_ID = 9;
-        public static final MotorController.Type LIFT_TYPE = Type.SparkMax;
-        public static final int TURRET_ROTATION_ID = 5;
-        public static final MotorController.Type TURRET_ROTATION_TYPE = Type.SparkMax;
-        public static final int TURRET_SHOOTER_ID = 4;
-        public static final MotorController.Type TURRET_SHOOTER_TYPE = Type.SparkMax;
-        public static final int TURRET_INTAKE_ID = 3;
-        public static final MotorController.Type TURRET_INTAKE_TYPE = Type.SparkMax;
-        public static final int TURRET_HOOD_ID = 2;
-        public static final MotorController.Type TURRET_HOOD_TYPE = Type.SparkMax;
-
         /**
          * the number of ticks in a full rotation (Talon only - Spark stores it onboard)
          */
@@ -154,71 +128,8 @@ public final class Constants {
                         new Gains(0.004, 0.003, 0.001, 0.0, 0, 0.0);
         public static final Gains COMPETITION_ROTATION_GAINS =
                         new Gains(0.06, 0.003, 0.001, 0.0, 0, 0.0);
-        public static final Gains TURRET_ROTATION_GAINS = new Gains(0.002, 0, 0, 0, 0, 1.0);
-        public static final Gains TURRET_HOOD_GAINS = new Gains(3, 0.005, 0.003, 0, 0, 1);
         public static final Constraints ROTATIONAL_GAIN_CONSTRAINTS =
                         new Constraints(Double.POSITIVE_INFINITY, 20); // m/s
                                                                        // and
                                                                        // m/s^2
-
-        // ##########################################
-        // intake and popper related constants and variables
-        // ##########################################
-
-        /* the maximum number of balls that can be held */
-        public static final int MAX_BALLS = 3;
-
-        // the speed of the intake motor. Accepts values between 1 and -1.
-        public static final double INTAKE_SPEED_IN = 1;
-        public static final double INTAKE_SPEED_OUT = -1;
-
-        // the speed of the turret intake motor. Accepts values between 0 and 1.
-        public static final double TURRET_INTAKE_SPEED = 1;
-
-        // the speed of the turret hood motor. Accepts values between 0 and 1.
-        public static final double TURRET_HOOD_SPEED = 0.3;
-
-        // the speed of the lift motor. Accepts values between 0 and 1.
-        public static final double LIFT_SPEED = 0.75;
-
-        /** the number of cycles that a ball interrupts the sensor for when passing */
-        public static final int INTAKE_COUNTER_COUNT_TIME = 3;
-        /** the number of cycles that constitutes a popper jam */
-        public static final int POPPER_COUNTER_JAM_TIME = 20;
-
-        public static final double TURRET_ROTATION_ANGLE = 9.33;
-        public static final double TURRET_ROTATION_SPEED = 0.5;
-
-        // Controller button IDs
-
-        /** the mapping of the start button on a xbox controller */
-        public static final int START = 7;
-        /** the mapping of the select button on a xbox controller */
-        public static final int SELECT = 8;
-        /** the mapping of the A button on a xbox controller */
-        public static final int A_BUTTON = 1;
-        /** the mapping of the A button on a xbox controller */
-        public static final int B_BUTTON = 2;
-        /** the mapping of the A button on a xbox controller */
-        public static final int X_BUTTON = 3;
-        /** the mapping of the A button on a xbox controller */
-        public static final int Y_BUTTON = 4;
-        /** the mapping of the right shoulder on a xbox controller */
-        public static final int R_STICK = 10;
-        /** the mapping of the left shoulder on a xbox controller */
-        public static final int L_STICK = 9;
-        /** the mapping of the right shoulder on a xbox controller */
-        public static final int R_SHOULDER = 6;
-        /** the mapping of the left shoulder on a xbox controller */
-        public static final int L_SHOULDER = 5;
-
-        // ##########################################
-        // Pneumatics related constants
-        // ##########################################
-
-        public static final int PCM_DRAWBRIDGE_IN = 1;
-        public static final int PCM_DRAWBRIDGE_OUT = 0;
-        public static final int PCM_RATCHET = 2;
-
-        public static final String[] galacticSearchNames = {"Red A", "Blue A", "Red B", "Blue B"};
 }
