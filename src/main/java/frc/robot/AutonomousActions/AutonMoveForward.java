@@ -18,14 +18,10 @@ public class AutonMoveForward extends AutonomousAction {
      *        backwards.
      * @param speed The speed to move at, in feet per second.
      */
-    public AutonMoveForward(double distance, double speed) {
+    public AutonMoveForward(double distance, double speed, RobotMotors motors) {
         this.targetDistance = distance;
         this.speed = speed;
         this.isFirstTimeRunning = true;
-    }
-
-    @Override
-    public void passMotors(RobotMotors motors) {
         this.motors = motors;
     }
 
@@ -46,8 +42,11 @@ public class AutonMoveForward extends AutonomousAction {
 
             spinMotors(wheelSpeeds, motors, false);
             // Get the individual wheel speeds
-            System.out.println("Resetting front left motor encoder values to 0!");
+            System.out.println("Resettingfront left  motor encoder values to 0!");
             motors.getFrontLeftMotor().setEncoderPosition(0);
+            motors.getFrontRightMotor().setEncoderPosition(0);
+            motors.getBackLeftMotor().setEncoderPosition(0);
+            motors.getBackRightMotor().setEncoderPosition(0);
             isFirstTimeRunning = false;
             return false;
         }
@@ -63,7 +62,13 @@ public class AutonMoveForward extends AutonomousAction {
     }
 
     private double getFeetTraveled() {
-        return motors.getFrontLeftMotor().getEncoderPosition() * (8.0 * Math.PI / 12.0);
+        return ((Math.abs(motors.getFrontLeftMotor().getEncoderPosition()) * (8.0 * Math.PI / 12.0)
+                + Math.abs(motors.getFrontRightMotor().getEncoderPosition())
+                        * (8.0 * Math.PI / 12.0)
+                + Math.abs(motors.getBackLeftMotor().getEncoderPosition()) * (8.0 * Math.PI / 12.0)
+                + Math.abs(motors.getBackRightMotor().getEncoderPosition())
+                        * (8.0 * Math.PI / 12.0))
+                / 4) + 1;
     }
 
 }
