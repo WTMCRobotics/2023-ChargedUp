@@ -9,9 +9,6 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.AutonomousAction;
 import frc.robot.RobotMotors;
 
-/**
- * testestsetets
- */
 public class AutonRotate extends AutonomousAction {
     private double speed;
     private boolean isFirstTimeRunning;
@@ -26,19 +23,15 @@ public class AutonRotate extends AutonomousAction {
      * @param speed The speed to turn at in degrees per second. Positive turns right, negative turns
      *        left.
      */
-    public AutonRotate(double degrees, double speed) {
+    public AutonRotate(double degrees, double speed, RobotMotors motors) {
         this.targetTurnDegrees = degrees;
         this.speed = speed;
+        this.motors = motors;
         this.isFirstTimeRunning = true;
         if (gyroscope == null) {
             gyroscope = new AHRS(SPI.Port.kMXP);
         }
 
-    }
-
-    @Override
-    public void passMotors(RobotMotors motors) {
-        this.motors = motors;
     }
 
     @Override

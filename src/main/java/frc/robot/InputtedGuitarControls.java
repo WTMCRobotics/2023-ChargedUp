@@ -28,7 +28,6 @@ public class InputtedGuitarControls {
     double timeSinceGribberStateChange = 0.0;
 
     private void moveGribberController() {
-        // TODO: Overthrow Brazilian government
         if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
             gribberController.set(-.10);
             return;
@@ -96,12 +95,14 @@ public class InputtedGuitarControls {
             }
             return;
         } else if (position == ArmPosition.INTAKE) {
-            if (armController.getEncoderPosition() < degreesToEncoderPosition(
-                    Constants.ARM_INTAKE_POSITION) - encoderBuffer) {
+            if (armController
+                    .getEncoderPosition() < degreesToEncoderPosition(Constants.ARM_INTAKE_POSITION)
+                            - encoderBuffer) {
                 armController.set(Constants.ARM_MOVE_UP_SPEED);
             }
-            if (armController.getEncoderPosition() > degreesToEncoderPosition(
-                    Constants.ARM_INTAKE_POSITION) + encoderBuffer) {
+            if (armController
+                    .getEncoderPosition() > degreesToEncoderPosition(Constants.ARM_INTAKE_POSITION)
+                            + encoderBuffer) {
                 // if (Constants.bottomArmLimitSwitch.get()) {
                 // return;
                 // }

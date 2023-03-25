@@ -8,8 +8,7 @@ import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorController.Type;
 
 public final class Constants {
-        private Constants() {
-        }
+        private Constants() {}
 
         public static final double MAX_ARM_UP_DEGREES = 108;
 
@@ -37,19 +36,17 @@ public final class Constants {
         public static final double ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION = 0.6;
         public static final double ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION = .275;
         /**
-         * The amount of time in seconds the robot has to be unbalanced for for it to
-         * change to it's
+         * The amount of time in seconds the robot has to be unbalanced for for it to change to it's
          * "unbalanced" state
          */
         public static final double BEING_UNBALANCED_DEBOUNCE_TIME = .5;
         /**
-         * The amount of time in seconds the robot has to be balanced for for it to be
-         * considered
+         * The amount of time in seconds the robot has to be balanced for for it to be considered
          * balanced
          */
         public static final double BALANCING_DEBOUNCE_TIME = .15;
         /** The margain of error, in degrees, while balancing */
-        public static final double BALANCING_MARGAIN_OF_ERROR = 1;
+        public static final double BALANCING_MARGIN_OF_ERROR = 1;
         /** The margain of error while on the platform, in degrees, while balancing */
         public static final double BALANCING_MARGAIN_OF_ERROR_ON_STATION = 6;
 
@@ -58,38 +55,33 @@ public final class Constants {
         public static final float robotLength = 38;
 
         /**
-         * The postition in degrees from the starting position that the arm should go to
-         * for placing
+         * The postition in degrees from the starting position that the arm should go to for placing
          * cubes/cones on the top level
          */
         public static final double ARM_PLACE_TOP_POSITION = 97;
         /**
-         * The postition in degrees from the starting position that the arm should go to
-         * for placing
+         * The postition in degrees from the starting position that the arm should go to for placing
          * cubes/cones on the middle level
          */
         public static final double ARM_PLACE_MIDDLE_POSITION = 60;
         /**
-         * The postition in degrees from the starting position that the arm should go to
-         * intake cubes
+         * The postition in degrees from the starting position that the arm should go to intake
+         * cubes
          */
         public static final double ARM_INTAKE_POSITION = 25;
         /**
-         * The postition in degrees from the starting position that the arm should go to
-         * for
+         * The postition in degrees from the starting position that the arm should go to for
          * flipping a cone over
          */
         public static final double ARM_FLIP_CONE_POSITION = 10;
         /**
-         * The postition in degrees from the starting position that the arm should go to
-         * for picking
+         * The postition in degrees from the starting position that the arm should go to for picking
          * up objects
          */
         public static final double ARM_PICK_UP_POSITION = 0;
 
         /**
-         * The postition in degrees from the starting position that the arm should go to
-         * for picking
+         * The postition in degrees from the starting position that the arm should go to for picking
          * up objects
          */
         public static final double ARM_POSITION_BUFFER_DEGREES = 4;
@@ -156,14 +148,18 @@ public final class Constants {
 
         // PID constants
         public static final Gains PRACTICE_ROBOT_GAINS = new Gains(0.2, 0.00035, 1.5, 0.2, 0, 1.0);
-        public static final Gains COMPETITION_ROBOT_GAINS = new Gains(0.35, 0.00001, 100, 0.2, 0, 1.0);
-        public static final Gains PRACTICE_ROTATION_GAINS = new Gains(0.004, 0.003, 0.001, 0.0, 0, 0.0);
-        public static final Gains COMPETITION_ROTATION_GAINS = new Gains(0.06, 0.003, 0.001, 0.0, 0, 0.0);
+        public static final Gains COMPETITION_ROBOT_GAINS =
+                        new Gains(0.35, 0.00001, 100, 0.2, 0, 1.0);
+        public static final Gains PRACTICE_ROTATION_GAINS =
+                        new Gains(0.004, 0.003, 0.001, 0.0, 0, 0.0);
+        public static final Gains COMPETITION_ROTATION_GAINS =
+                        new Gains(0.06, 0.003, 0.001, 0.0, 0, 0.0);
         public static final Gains TURRET_ROTATION_GAINS = new Gains(0.002, 0, 0, 0, 0, 1.0);
         public static final Gains TURRET_HOOD_GAINS = new Gains(3, 0.005, 0.003, 0, 0, 1);
-        public static final Constraints ROTATIONAL_GAIN_CONSTRAINTS = new Constraints(Double.POSITIVE_INFINITY, 20); // m/s
-                                                                                                                     // and
-                                                                                                                     // m/s^2
+        public static final Constraints ROTATIONAL_GAIN_CONSTRAINTS =
+                        new Constraints(Double.POSITIVE_INFINITY, 20); // m/s
+                                                                       // and
+                                                                       // m/s^2
 
         // ##########################################
         // intake and popper related constants and variables
@@ -224,5 +220,5 @@ public final class Constants {
         public static final int PCM_DRAWBRIDGE_OUT = 0;
         public static final int PCM_RATCHET = 2;
 
-        public static final String[] galacticSearchNames = { "Red A", "Blue A", "Red B", "Blue B" };
+        public static final String[] galacticSearchNames = {"Red A", "Blue A", "Red B", "Blue B"};
 }

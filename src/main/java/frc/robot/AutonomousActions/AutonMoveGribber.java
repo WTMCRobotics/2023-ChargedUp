@@ -16,9 +16,10 @@ public class AutonMoveGribber extends AutonomousAction {
      * 
      * @param position the state to move the gribber, either OPENING, or CLOSING
      */
-    public AutonMoveGribber(GribberState position) {
+    public AutonMoveGribber(GribberState position, RobotMotors motors) {
         this.position = position;
         isFirstTimeRunning = true;
+        this.motors = motors;
     }
 
     @Override
@@ -45,11 +46,6 @@ public class AutonMoveGribber extends AutonomousAction {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void passMotors(RobotMotors motors) {
-        this.motors = motors;
     }
 
 }
