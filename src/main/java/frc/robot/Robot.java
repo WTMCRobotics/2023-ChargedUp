@@ -26,15 +26,16 @@ import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the The VM
- * is configured to automatically run this class, and to call the functions corresponding to each
- * mode, as described in the TimedRobot documentation. If you change the name of this class or the
- * package after creating this project, you must also update the build.gradle file in the project.
+ * The Virtual Machine(VM) is configured to automatically run this class, and to call the functions
+ * corresponding to each mode, as described in the TimedRobot documentation. If you change the name
+ * of this class or the package after creating this project, you must also update the build.gradle
+ * file in the The VM is configured to automatically run this class, and to call the functions
+ * corresponding to each mode, as described in the TimedRobot documentation. If you change the name
+ * of this class or the package after creating this project, you must also update the build.gradle
+ * file in the project.
  */
 public class Robot extends TimedRobot {
-  public double circumference = 8 * Math.PI;
+  public double circumference = 8 * Math.PI; // TODO: make a constant
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String autoSelected;
@@ -65,11 +66,15 @@ public class Robot extends TimedRobot {
   RobotMotors motors;
   private SendableChooser<String> testOptions = new SendableChooser<>();
 
+
+  double inches = 24;// TODO remove this later
+  public static double maxAcceleration = 5;// TODO remove this later
   /*
    * m This function is run when the robot is first started up and should be used for any m This
    * function is run when the robot is first started up and should be used for any initialization
    * code.
    */
+
   @Override
   public void robotInit() {
 
@@ -81,6 +86,14 @@ public class Robot extends TimedRobot {
     chooser.addOption("Leave community", "LeaveCommunity");
     chooser.addOption("Declare manually in code", "manualInCode");
     SmartDashboard.putData("Auton Routes", chooser);
+    SmartDashboard.putNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
+    SmartDashboard.putNumber("Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
+    SmartDashboard.putNumber("Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
+    SmartDashboard.putNumber("Max acceleration", maxAcceleration);
+    // SmartDashboard.putNumber("rotationProportion", rotationGains.P);
+    // SmartDashboard.putNumber("rotationIntegral", rotationGains.I);
+    // SmartDashboard.putNumber("rotationDerivative", rotationGains.D);
+
 
     // Assuming the motors are talons, if not, switch to Spark
     frontLeft = MotorControllerFactory.create(this, Constants.FRONT_LEFT_MOTOR_ID,
@@ -93,8 +106,6 @@ public class Robot extends TimedRobot {
         MotorController.Type.Talon);
     xboxController = new XboxController(0);
 
-    armController =
-        MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
     armController =
         MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
 
@@ -138,7 +149,7 @@ public class Robot extends TimedRobot {
 
     frontLeft.setEncoderPosition(0.0);
 
-    System.out.println("SYOUST WORKING");
+    System.out.println("SYSOUST WORKING");
 
     // lidarSensor = new LidarProxy(SerialPort.Port.kMXP);
     // System.out.println("The disatnce is " + lidarSensor.get());
@@ -348,13 +359,26 @@ public class Robot extends TimedRobot {
 
   @Override
 
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    Constants.BUMPERLESS_ROBOT_GAINS.P =
+        SmartDashboard.getNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
+    Constants.BUMPERLESS_ROBOT_GAINS.I =
+        SmartDashboard.getNumber("Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
+    Constants.BUMPERLESS_ROBOT_GAINS.D =
+        SmartDashboard.getNumber("Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
+    inches = SmartDashboard.getNumber("inches to move", inches);
+    maxAcceleration = SmartDashboard.getNumber("max acceleration", maxAcceleration);
+  }
 
   AutonMovement resetMovement = null;
 
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
+    frontLeft.setEncoderInverted(true);
+    frontRight.setEncoderInverted(true);
+    backLeft.setEncoderInverted(true);
+    backRight.setEncoderInverted(true);
     // if (testOptions.getSelected().equals("armCalibrate")
     // || testOptions.getSelected().equals("armTransport")) {
     // System.out.println("calibrating and ressseting arm");
@@ -373,10 +397,10 @@ public class Robot extends TimedRobot {
     // I - Integral - Over time, how extra will it push based on how long it's been since we've been
     // close to the target
     // D - Derivative - How quickly we will slow down after we hit the target
-    initializeMotionMagicMaster(frontRight, Constants.PRACTICE_ROBOT_GAINS);
-    initializeMotionMagicMaster(frontLeft, Constants.PRACTICE_ROBOT_GAINS);
-    initializeMotionMagicMaster(backLeft, Constants.PRACTICE_ROBOT_GAINS);
-    initializeMotionMagicMaster(backRight, Constants.PRACTICE_ROBOT_GAINS);
+    initializeMotionMagicMaster(frontRight, Constants.BUMPERLESS_ROBOT_GAINS);
+    initializeMotionMagicMaster(frontLeft, Constants.BUMPERLESS_ROBOT_GAINS);
+    initializeMotionMagicMaster(backLeft, Constants.BUMPERLESS_ROBOT_GAINS);
+    initializeMotionMagicMaster(backRight, Constants.BUMPERLESS_ROBOT_GAINS);
     robotGyroscope.reset();
     System.out.println("The motor power is " + frontLeft.get());
   }
@@ -388,10 +412,7 @@ public class Robot extends TimedRobot {
       System.out.println("autonEveryFrameS");
       resetMovement.autonomousEveryFrame();
     }
-    frontLeft.setDistance(12);
-    backLeft.setDistance(12);
-    frontRight.setDistance(12);
-    backRight.setDistance(12);
+    moveInches(inches);
   }
 
 
@@ -438,5 +459,50 @@ public class Robot extends TimedRobot {
 
     /* Zero the sensor once on robot boot up */
     motorController.setEncoderPosition(0);
+  }
+
+  /**
+   * move a distance in s straight line
+   * 
+   * @param inches the distance in inches to move forward (use negative number to go backward)
+   * 
+   * @return true when done
+   */
+  public boolean moveInches(double inches) {
+    double distanceMarginOfError = 1;
+    frontLeft.setDistance(inches);
+    backLeft.setDistance(inches);
+    frontRight.setDistance(inches);
+    backRight.setDistance(inches);
+    System.out.println("FL encoder position:" + frontLeft.getEncoderPosition());
+    System.out.println("FL motor power:" + frontLeft.get());
+    System.out.println("BL encoder position:" + backLeft.getEncoderPosition());
+    System.out.println("BL motorpower:" + backLeft.get());
+    System.out.println("FR encoder position:" + frontRight.getEncoderPosition());
+    System.out.println("FR motorpower:" + frontRight.get());
+    System.out.println("BR encoder position:" + backRight.getEncoderPosition());
+    System.out.println("BR motorpower:" + backRight.get() + "\n");
+    return false;
+    // System.out.println((Math.abs(frontLeft.getEncoderPosition() - (inches / circumference))
+    // - distanceMarginOfError) + " "
+    // + (Math.abs(frontLeft.getActiveTrajectoryVelocity()) < (1.0 / circumference) * 10) + " "
+    // + (Math.abs(frontRight.getEncoderPosition() - (inches / circumference))
+    // - distanceMarginOfError)
+    // + " " + (Math.abs(frontRight.getActiveTrajectoryVelocity()) < (1.0 / circumference) * 10));
+    // if (Math.abs(frontLeft.getEncoderPosition() - (inches / circumference)) <
+    // distanceMarginOfError
+    // && Math.abs(frontLeft.getActiveTrajectoryVelocity()) < (1.0 / circumference) * 10
+    // && Math
+    // .abs(frontRight.getEncoderPosition() - (inches / circumference)) < distanceMarginOfError
+    // && Math.abs(frontRight.getActiveTrajectoryVelocity()) < (1.0 / circumference) * 10) {
+    // System.out.println("done");
+    // frontRight.setPercentOutput(0);
+    // backRight.setPercentOutput(0);
+    // frontLeft.setPercentOutput(0);
+    // backLeft.setPercentOutput(0);
+    // return true;
+    // } else {
+    // return false;
+    // }
   }
 }

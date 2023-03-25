@@ -81,7 +81,7 @@ public final class Constants {
         public static final double ARM_PICK_UP_POSITION = 0;
 
         /**
-         * The postition in degrees from the starting position that the arm should go to for picking
+         * The position in degrees from the starting position that the arm should go to for picking
          * up objects
          */
         public static final double ARM_POSITION_BUFFER_DEGREES = 4;
@@ -121,12 +121,12 @@ public final class Constants {
         public static final int TIMEOUT_MS = 30;
 
         // PID constants
-        public static final Gains PRACTICE_ROBOT_GAINS = new Gains(0.2, 0.00035, 1.5, 0.2, 0, 1.0);
-        public static final Gains COMPETITION_ROBOT_GAINS =
+        public static final Gains BUMPERLESS_ROBOT_GAINS = new Gains(0, 0, 0, 0, 0, 0.15);
+        public static final Gains WITH_BUMPER_ROBOT_GAINS =
                         new Gains(0.35, 0.00001, 100, 0.2, 0, 1.0);
-        public static final Gains PRACTICE_ROTATION_GAINS =
+        public static final Gains BUMPERLESS_ROTATION_GAINS =
                         new Gains(0.004, 0.003, 0.001, 0.0, 0, 0.0);
-        public static final Gains COMPETITION_ROTATION_GAINS =
+        public static final Gains WITH_BUMPER_ROTATION_GAINS =
                         new Gains(0.06, 0.003, 0.001, 0.0, 0, 0.0);
         public static final Constraints ROTATIONAL_GAIN_CONSTRAINTS =
                         new Constraints(Double.POSITIVE_INFINITY, 20); // m/s

@@ -100,6 +100,7 @@ public class TalonMotorController implements MotorController {
         controller.config_kI(Constants.SLOT_IDX, I, Constants.TIMEOUT_MS);
         controller.config_kD(Constants.SLOT_IDX, D, Constants.TIMEOUT_MS);
         controller.config_kF(Constants.SLOT_IDX, F, Constants.TIMEOUT_MS);
+        controller.configSetParameter(null, F, 0, 0);
     }
 
     @Override
