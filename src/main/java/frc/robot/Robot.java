@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonomousActions.AutonArmCalibrate;
 import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
+import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
 import frc.robot.InputtedGuitarControls.GribberState;
+import frc.robot.MoveInches.MoveInchesDirection;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
 
@@ -412,7 +414,7 @@ public class Robot extends TimedRobot {
       System.out.println("autonEveryFrameS");
       resetMovement.autonomousEveryFrame();
     }
-    moveInches(inches);
+    MoveInches.moveInches(MoveInchesDirection.FORWARD, inches, motors);
   }
 
 
@@ -461,48 +463,5 @@ public class Robot extends TimedRobot {
     motorController.setEncoderPosition(0);
   }
 
-  /**
-   * move a distance in s straight line
-   * 
-   * @param inches the distance in inches to move forward (use negative number to go backward)
-   * 
-   * @return true when done
-   */
-  public boolean moveInches(double inches) {
-    double distanceMarginOfError = 1;
-    frontLeft.setDistance(inches);
-    backLeft.setDistance(inches);
-    frontRight.setDistance(inches);
-    backRight.setDistance(inches);
-    System.out.println("FL encoder position:" + frontLeft.getEncoderPosition());
-    System.out.println("FL motor power:" + frontLeft.get());
-    System.out.println("BL encoder position:" + backLeft.getEncoderPosition());
-    System.out.println("BL motorpower:" + backLeft.get());
-    System.out.println("FR encoder position:" + frontRight.getEncoderPosition());
-    System.out.println("FR motorpower:" + frontRight.get());
-    System.out.println("BR encoder position:" + backRight.getEncoderPosition());
-    System.out.println("BR motorpower:" + backRight.get() + "\n");
-    return false;
-    // System.out.println((Math.abs(frontLeft.getEncoderPosition() - (inches / circumference))
-    // - distanceMarginOfError) + " "
-    // + (Math.abs(frontLeft.getActiveTrajectoryVelocity()) < (1.0 / circumference) * 10) + " "
-    // + (Math.abs(frontRight.getEncoderPosition() - (inches / circumference))
-    // - distanceMarginOfError)
-    // + " " + (Math.abs(frontRight.getActiveTrajectoryVelocity()) < (1.0 / circumference) * 10));
-    // if (Math.abs(frontLeft.getEncoderPosition() - (inches / circumference)) <
-    // distanceMarginOfError
-    // && Math.abs(frontLeft.getActiveTrajectoryVelocity()) < (1.0 / circumference) * 10
-    // && Math
-    // .abs(frontRight.getEncoderPosition() - (inches / circumference)) < distanceMarginOfError
-    // && Math.abs(frontRight.getActiveTrajectoryVelocity()) < (1.0 / circumference) * 10) {
-    // System.out.println("done");
-    // frontRight.setPercentOutput(0);
-    // backRight.setPercentOutput(0);
-    // frontLeft.setPercentOutput(0);
-    // backLeft.setPercentOutput(0);
-    // return true;
-    // } else {
-    // return false;
-    // }
-  }
+
 }
