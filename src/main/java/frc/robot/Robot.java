@@ -12,17 +12,11 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer; // TODO check if our unused imports are still unused, then get
-                                    // rid of them if they are
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.AutonomousActions.AutonArmCalibrate;
 import frc.robot.AutonomousActions.AutonMoveForward;
-import frc.robot.AutonomousActions.AutonMoveGribber;
-import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
-import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.MoveInches.MoveInchesDirection;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
@@ -37,7 +31,6 @@ import frc.robot.motor.MotorControllerFactory;
  * file in the project.
  */
 public class Robot extends TimedRobot {
-  public double circumference = 8 * Math.PI; // TODO: make a constant
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String autoSelected;

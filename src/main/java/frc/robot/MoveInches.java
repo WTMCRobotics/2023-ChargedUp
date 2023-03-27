@@ -35,18 +35,7 @@ public class MoveInches {
             motors.getFrontRightMotor().setDistance(-inches);
             motors.getBackRightMotor().setDistance(inches);
         }
-        // System.out
-        // .println("FL encoder position:" + motors.getFrontLeftMotor().getEncoderPosition());
-        // System.out.println("FL motor power:" + motors.getFrontLeftMotor().get());
-        // System.out.println("BL encoder position:" +
-        // motors.getBackLeftMotor().getEncoderPosition());
-        // System.out.println("BL motorpower:" + motors.getBackLeftMotor().get());
-        // System.out
-        // .println("FR encoder position:" + motors.getFrontRightMotor().getEncoderPosition());
-        // System.out.println("FR motorpower:" + motors.getFrontRightMotor().get());
-        // System.out
-        // .println("BR encoder position:" + motors.getBackRightMotor().getEncoderPosition());
-        // System.out.println("BR motorpower:" + motors.getBackRightMotor().get() + "\n");
+
         return false;
 
     }

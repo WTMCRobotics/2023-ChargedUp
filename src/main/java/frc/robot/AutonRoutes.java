@@ -23,7 +23,6 @@ public class AutonRoutes {
 
     public ArrayDeque<AutonomousAction> placeObjectAndLeaveCommunity() {
         ArrayDeque<AutonomousAction> actions = new ArrayDeque<>();
-        // actions.add(new AutonArmCalibrate(false));
         actions.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
         actions.add(new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors));
         actions.add(new AutonMoveForward(2, 1.25, this.motors));
@@ -38,7 +37,6 @@ public class AutonRoutes {
 
     public ArrayDeque<AutonomousAction> placeObject() {
         ArrayDeque<AutonomousAction> actions = new ArrayDeque<>();
-        // actions.add(new AutonArmCalibrate(false));
         actions.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
         actions.add(new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors));
         actions.add(new AutonMoveForward(2, 1.25, this.motors));
@@ -49,7 +47,6 @@ public class AutonRoutes {
 
     public ArrayDeque<AutonomousAction> placeLeaveCommunityThenBalance(AHRS robotGyro) {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<AutonomousAction>();
-        // actionQueue.add(new AutonArmCalibrate(false));
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
         actionQueue.add(new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors));
         actionQueue.add(new AutonMoveForward(2, 1.25, this.motors));
@@ -66,7 +63,6 @@ public class AutonRoutes {
 
     public ArrayDeque<AutonomousAction> placeThenBalance() {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<AutonomousAction>();
-        // actionQueue.add(new AutonArmCalibrate(false));
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
         actionQueue.add(new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors));
         actionQueue.add(new AutonMoveForward(2, 1.25, this.motors));

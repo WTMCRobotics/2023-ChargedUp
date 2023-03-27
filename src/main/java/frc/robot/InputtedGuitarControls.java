@@ -75,9 +75,6 @@ public class InputtedGuitarControls {
             }
             if (armController.getEncoderPosition() > degreesToEncoderPosition(
                     Constants.ARM_PLACE_TOP_POSITION) + encoderBuffer) {
-                // if (Constants.bottomArmLimitSwitch.get()) {
-                // return;
-                // }
                 armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             }
             return;
@@ -88,9 +85,7 @@ public class InputtedGuitarControls {
             }
             if (armController.getEncoderPosition() > degreesToEncoderPosition(
                     Constants.ARM_PLACE_MIDDLE_POSITION) + encoderBuffer) {
-                // if (Constants.bottomArmLimitSwitch.get()) {
-                // return;
-                // }
+
                 armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             }
             return;
@@ -103,9 +98,7 @@ public class InputtedGuitarControls {
             if (armController
                     .getEncoderPosition() > degreesToEncoderPosition(Constants.ARM_INTAKE_POSITION)
                             + encoderBuffer) {
-                // if (Constants.bottomArmLimitSwitch.get()) {
-                // return;
-                // }
+
                 armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             }
             return;
@@ -117,9 +110,7 @@ public class InputtedGuitarControls {
             }
             if (armController.getEncoderPosition() > degreesToEncoderPosition(
                     Constants.ARM_FLIP_CONE_POSITION) + encoderBuffer) {
-                // if (Constants.bottomArmLimitSwitch.get()) {
-                // return;
-                // }
+
                 armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             }
         } else if (position == ArmPosition.PICKING_UP) {
@@ -131,9 +122,7 @@ public class InputtedGuitarControls {
             if (armController
                     .getEncoderPosition() > degreesToEncoderPosition(Constants.ARM_PICK_UP_POSITION)
                             + encoderBuffer) {
-                // if (Constants.bottomArmLimitSwitch.get()) {
-                // return;
-                // }
+
                 armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             }
         }

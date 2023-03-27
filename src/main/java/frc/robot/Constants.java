@@ -4,8 +4,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
-import frc.robot.motor.MotorController;
-import frc.robot.motor.MotorController.Type;
 
 public final class Constants {
         private Constants() {}
@@ -89,6 +87,8 @@ public final class Constants {
         // Digital IO related constants
         // ##########################################
 
+
+        public final static double WHEEL_CIRCUMFERENCE_INCHES = 8 * Math.PI;
         // DIO IDs
 
         /** Pixy LEDs - red */

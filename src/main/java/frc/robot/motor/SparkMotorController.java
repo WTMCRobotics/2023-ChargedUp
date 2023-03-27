@@ -9,7 +9,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-
+import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class SparkMotorController implements MotorController {
@@ -47,7 +47,7 @@ public class SparkMotorController implements MotorController {
 
     @Override
     public void setDistance(double inches) {
-        pid.setReference(inches / robot.circumference, ControlType.kSmartMotion);
+        pid.setReference(inches / Constants.WHEEL_CIRCUMFERENCE_INCHES, ControlType.kSmartMotion);
     }
 
     @Override

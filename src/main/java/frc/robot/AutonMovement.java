@@ -44,31 +44,9 @@ public class AutonMovement {
     public AutonMovement(RobotMotors motors, ArrayDeque<AutonomousAction> actionList) {
         this.actionList = actionList;
         this.motors = motors;
-        // this.gyroscope = new AHRS(SPI.Port.kMXP);
 
     }
 
-    /*
-     * public void AutoMoveArmPickingUp() { if (motors.getArmMotor().getEncoderPosition() <
-     * degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) { motors.getArmMotor().set(0.25); }
-     * if (motors.getArmMotor().getEncoderPosition() >
-     * degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION) +
-     * degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-     * motors.getArmMotor().set(-0.25); } targetArmDegree = Constants.ARM_PICK_UP_POSITION; }
-     * 
-     * public void AutoMoveArmPlaceTop() { if (motors.getArmMotor().getEncoderPosition() <
-     * degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION)) { motors.getArmMotor().set(0.25); }
-     * if (motors.getArmMotor().getEncoderPosition() >
-     * degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSTION) +
-     * degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-     * motors.getArmMotor().set(-0.25); } }
-     * 
-     * public void AutoMoveArmPlaceMiddle() { if (motors.getArmMotor().getEncoderPosition() <
-     * degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION)) {
-     * motors.getArmMotor().set(0.25); } if (motors.getArmMotor().getEncoderPosition() >
-     * degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSTION) +
-     * degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-     * motors.getArmMotor().set(-0.25); } }
-     */
+
 
 }

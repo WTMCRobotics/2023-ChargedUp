@@ -39,7 +39,7 @@ public class TalonMotorController implements MotorController {
     @Override
     public void setDistance(double inches) {
         controller.set(ControlMode.MotionMagic,
-                inches * Constants.encoderRotation / robot.circumference);
+                inches * Constants.encoderRotation / Constants.WHEEL_CIRCUMFERENCE_INCHES);
     }
 
     @Override
