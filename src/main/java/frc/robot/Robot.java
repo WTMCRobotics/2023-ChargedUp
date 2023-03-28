@@ -115,7 +115,6 @@ public class Robot extends TimedRobot {
 
     gribberController = MotorControllerFactory.create(this, Constants.GRIBBER_MOTOR_ID,
         MotorController.Type.SparkMax);
-    gribberController.setInverted(true);
 
     guitarXboxController = new XboxController(1);
 
