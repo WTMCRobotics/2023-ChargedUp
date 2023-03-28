@@ -166,7 +166,7 @@ public class TalonMotorController implements MotorController {
 
     @Override
     public void disable() {
-        // TODO: add motor disable for Talon
+        // 6eTODO: add motor disable for Talon
     }
 
 
