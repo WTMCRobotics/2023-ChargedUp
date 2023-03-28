@@ -25,15 +25,17 @@ public class MoveInches {
             motors.getFrontRightMotor().setDistance(-inches);
             motors.getBackRightMotor().setDistance(-inches);
         } else if (direction == MoveInchesDirection.LEFT) {
-            motors.getFrontLeftMotor().setDistance(-inches);
-            motors.getBackLeftMotor().setDistance(inches);
-            motors.getFrontRightMotor().setDistance(inches);
-            motors.getBackRightMotor().setDistance(-inches);
-        } else if (direction == MoveInchesDirection.BACKWARD) {
-            motors.getFrontLeftMotor().setDistance(inches);
-            motors.getBackLeftMotor().setDistance(-inches);
-            motors.getFrontRightMotor().setDistance(-inches);
-            motors.getBackRightMotor().setDistance(inches);
+            final double strafingInches = inches * Math.sqrt(2);
+            motors.getFrontLeftMotor().setDistance(-strafingInches);
+            motors.getBackLeftMotor().setDistance(strafingInches);
+            motors.getFrontRightMotor().setDistance(strafingInches);
+            motors.getBackRightMotor().setDistance(-strafingInches);
+        } else if (direction == MoveInchesDirection.RIGHT) {
+            final double strafingInches = inches * Math.sqrt(2);
+            motors.getFrontLeftMotor().setDistance(strafingInches);
+            motors.getBackLeftMotor().setDistance(-strafingInches);
+            motors.getFrontRightMotor().setDistance(-strafingInches);
+            motors.getBackRightMotor().setDistance(strafingInches);
         }
 
         return false;

@@ -9,7 +9,7 @@ public class Gains {
 	public double D;
 	public final double F;
 	public final int IZONE;
-	public final double PEAK_OUTPUT;
+	public double PEAK_OUTPUT;
 
 	public Gains(double p, double i, double d, double f, int izone, double peakOutput) {
 		P = p;

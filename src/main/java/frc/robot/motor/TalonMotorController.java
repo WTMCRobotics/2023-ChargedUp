@@ -1,5 +1,6 @@
 package frc.robot.motor;
 
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -91,6 +92,10 @@ public class TalonMotorController implements MotorController {
         controller.configNominalOutputReverse(nominalReverse, Constants.TIMEOUT_MS);
         controller.configPeakOutputForward(peakForward, Constants.TIMEOUT_MS);
         controller.configPeakOutputReverse(peakReverse, Constants.TIMEOUT_MS);
+        // controller.configMotionAcceleration(2096);
+        // controller.configMotionSCurveStrength(1);
+        // controller.configSetParameter(ParamEnum.eMaxAccKg, peakReverse, 0, 0);
+        // controller.configSetParameter(ParamEnum.eConfigAccelScalar, peakReverse, 0, 0)
     }
 
     @Override
@@ -100,7 +105,6 @@ public class TalonMotorController implements MotorController {
         controller.config_kI(Constants.SLOT_IDX, I, Constants.TIMEOUT_MS);
         controller.config_kD(Constants.SLOT_IDX, D, Constants.TIMEOUT_MS);
         controller.config_kF(Constants.SLOT_IDX, F, Constants.TIMEOUT_MS);
-        controller.configSetParameter(null, F, 0, 0);
     }
 
     @Override

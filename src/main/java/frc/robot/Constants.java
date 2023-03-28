@@ -121,7 +121,9 @@ public final class Constants {
         public static final int TIMEOUT_MS = 30;
 
         // PID constants
-        public static final Gains BUMPERLESS_ROBOT_GAINS = new Gains(0, 0, 0, 0, 0, 0.15);
+        public static final double MARGIN_OF_ERROR_INCHES = 1;
+        public static double ACCELERATION = 400;
+        public static final Gains BUMPERLESS_ROBOT_GAINS = new Gains(0.75, 0, 0, 0, 0, 1);
         public static final Gains WITH_BUMPER_ROBOT_GAINS =
                         new Gains(0.35, 0.00001, 100, 0.2, 0, 1.0);
         public static final Gains BUMPERLESS_ROTATION_GAINS =

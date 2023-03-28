@@ -60,10 +60,11 @@ public class Robot extends TimedRobot {
 
   RobotMotors motors;
   private SendableChooser<String> testOptions = new SendableChooser<>();
+  private final SendableChooser<String> autonDirection = new SendableChooser<>();
+  MoveInchesDirection autonMoveInchesDirection = MoveInchesDirection.FORWARD;
 
 
   double inches = 24;// TODO remove this later
-  public static double maxAcceleration = 5;// TODO remove this later
   /*
    * m This function is run when the robot is first started up and should be used for any m This
    * function is run when the robot is first started up and should be used for any initialization
@@ -84,11 +85,14 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
     SmartDashboard.putNumber("Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
     SmartDashboard.putNumber("Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
-    SmartDashboard.putNumber("Max acceleration", maxAcceleration);
-    // SmartDashboard.putNumber("rotationProportion", rotationGains.P);
-    // SmartDashboard.putNumber("rotationIntegral", rotationGains.I);
-    // SmartDashboard.putNumber("rotationDerivative", rotationGains.D);
-
+    SmartDashboard.putNumber("Peak Output", Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT);
+    SmartDashboard.putNumber("Acceleration", Constants.ACCELERATION);
+    autonDirection.setDefaultOption("Forward", "FORWARD");
+    autonDirection.addOption("Forward", "FORWARD");
+    autonDirection.addOption("Backward", "BACKWARD");
+    autonDirection.addOption("Left", "LEFT");
+    autonDirection.addOption("Right", "RIGHT");
+    SmartDashboard.putData("Direction", autonDirection);
 
     // Assuming the motors are talons, if not, switch to Spark
     frontLeft = MotorControllerFactory.create(this, Constants.FRONT_LEFT_MOTOR_ID,
@@ -106,6 +110,7 @@ public class Robot extends TimedRobot {
 
     gribberController = MotorControllerFactory.create(this, Constants.GRIBBER_MOTOR_ID,
         MotorController.Type.SparkMax);
+    gribberController.setInverted(true);
 
     guitarXboxController = new XboxController(1);
 
@@ -362,7 +367,9 @@ public class Robot extends TimedRobot {
     Constants.BUMPERLESS_ROBOT_GAINS.D =
         SmartDashboard.getNumber("Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
     inches = SmartDashboard.getNumber("inches to move", inches);
-    maxAcceleration = SmartDashboard.getNumber("max acceleration", maxAcceleration);
+    Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT =
+        SmartDashboard.getNumber("Peak Output", Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT);
+    Constants.ACCELERATION = SmartDashboard.getNumber("Acceleration", Constants.ACCELERATION);
   }
 
   AutonMovement resetMovement = null;
@@ -398,6 +405,7 @@ public class Robot extends TimedRobot {
     initializeMotionMagicMaster(backRight, Constants.BUMPERLESS_ROBOT_GAINS);
     robotGyroscope.reset();
     System.out.println("The motor power is " + frontLeft.get());
+    autonMoveInchesDirection = MoveInchesDirection.valueOf(autonDirection.getSelected());
   }
 
   /** This function is called periodically during test mode. */
@@ -407,7 +415,7 @@ public class Robot extends TimedRobot {
       System.out.println("autonEveryFrameS");
       resetMovement.autonomousEveryFrame();
     }
-    MoveInches.moveInches(MoveInchesDirection.FORWARD, inches, motors);
+    MoveInches.moveInches(autonMoveInchesDirection, inches, motors);
   }
 
 
@@ -444,13 +452,13 @@ public class Robot extends TimedRobot {
     motorController.setStatusFramePeriod(10);
 
     /* Set the peak and nominal outputs */
-    motorController.setOutputLimits(0, 0, 1, -1);
+    motorController.setOutputLimits(0, 0, gains.PEAK_OUTPUT, -gains.PEAK_OUTPUT);
 
     /* Set Motion Magic gains in slot0 - see documentation */
     motorController.setPID(gains);
 
     /* Set acceleration and vcruise velocity - see documentation */
-    motorController.setMotionSpeed(15000, 6000);
+    motorController.setMotionSpeed(15000, Constants.ACCELERATION);
 
     /* Zero the sensor once on robot boot up */
     motorController.setEncoderPosition(0);
