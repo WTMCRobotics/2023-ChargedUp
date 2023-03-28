@@ -18,10 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.AutonomousActions.AutonArmCalibrate;
-import frc.robot.AutonomousActions.AutonMoveForward;
 import frc.robot.AutonomousActions.AutonMoveGribber;
 import frc.robot.AutonomousActions.AutonMoveInches;
-import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
 import frc.robot.AutonomousActions.AutonMoveInches.MoveInchesDirection;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
@@ -292,7 +290,7 @@ public class Robot extends TimedRobot {
         // manualActions.add(new AutonMoveForward(-3, 1));
         // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS,
         // robotGyroscope));
-        manualActions.add(new AutonMoveForward(2, 1, this.motors));
+
         System.out.println("Manual action!");
         selectedRoute = manualActions;
         break;
