@@ -4,18 +4,14 @@ import frc.robot.AutonomousAction;
 import frc.robot.Constants;
 import frc.robot.RobotMotors;
 
-public class MoveInches extends AutonomousAction {
+public class AutonMoveInches extends AutonomousAction {
 
 
     MoveInchesDirection direction;
     double inches;
     RobotMotors motors;
-
-    public MoveInches(MoveInchesDirection direction, double inches, RobotMotors motors) {
-        this.direction = direction;
-        this.inches = inches;
-        this.motors = motors;
-    }
+    boolean isFirstTimeRunning;
+    final double rootTwo = Math.sqrt(2);
 
     /**
      * move a distance in s straight line
@@ -26,7 +22,20 @@ public class MoveInches extends AutonomousAction {
      * @param motors the motors in which to move
      * @return true when done
      */
+
+    public AutonMoveInches(MoveInchesDirection direction, double inches, RobotMotors motors) {
+        this.direction = direction;
+        this.inches = inches;
+        this.motors = motors;
+        this.isFirstTimeRunning = true;
+    }
+
+
     public boolean executeAndIsDone() {
+        if (isFirstTimeRunning) {
+            resetDriveTrainEncoders();
+            isFirstTimeRunning = false;
+        }
         if (direction == MoveInchesDirection.FORWARD) {
             motors.getFrontLeftMotor().setDistance(inches);
             motors.getBackLeftMotor().setDistance(inches);
@@ -38,13 +47,13 @@ public class MoveInches extends AutonomousAction {
             motors.getFrontRightMotor().setDistance(-inches);
             motors.getBackRightMotor().setDistance(-inches);
         } else if (direction == MoveInchesDirection.LEFT) {
-            final double strafingInches = inches * Math.sqrt(2);
+            final double strafingInches = inches * rootTwo;
             motors.getFrontLeftMotor().setDistance(-strafingInches);
             motors.getBackLeftMotor().setDistance(strafingInches);
             motors.getFrontRightMotor().setDistance(strafingInches);
             motors.getBackRightMotor().setDistance(-strafingInches);
         } else if (direction == MoveInchesDirection.RIGHT) {
-            final double strafingInches = inches * Math.sqrt(2);
+            final double strafingInches = inches * rootTwo;
             motors.getFrontLeftMotor().setDistance(strafingInches);
             motors.getBackLeftMotor().setDistance(-strafingInches);
             motors.getFrontRightMotor().setDistance(-strafingInches);
@@ -81,6 +90,11 @@ public class MoveInches extends AutonomousAction {
         FORWARD, BACKWARD, LEFT, RIGHT
     }
 
-
+    private void resetDriveTrainEncoders() {
+        motors.getFrontLeftMotor().setEncoderPosition(0.0);
+        motors.getFrontRightMotor().setEncoderPosition(0.0);
+        motors.getBackRightMotor().setEncoderPosition(0.0);
+        motors.getBackLeftMotor().setEncoderPosition(0.0);
+    }
 
 }
