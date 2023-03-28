@@ -16,8 +16,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.InputtedGuitarControls.GribberState;
+import frc.robot.AutonomousActions.AutonArmCalibrate;
 import frc.robot.AutonomousActions.AutonMoveForward;
-import frc.robot.MoveInches.MoveInchesDirection;
+import frc.robot.AutonomousActions.AutonMoveGribber;
+import frc.robot.AutonomousActions.AutonMoveInches;
+import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
+import frc.robot.AutonomousActions.AutonMoveInches.MoveInchesDirection;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
 
@@ -173,7 +178,18 @@ public class Robot extends TimedRobot {
     // testOptions.addOption("Calibrate Arm", "armCalibrate");
     testOptions.addOption("Test Mechanics", "testMechanics");
     testOptions.addOption("Move arm to transport position", "armTransport");
+    testOptions.addOption("Move robot via PID manually", "movePIDManually");
     SmartDashboard.putData("Test mode action", testOptions);
+
+    frontLeft.setEncoderInverted(true);
+    frontRight.setEncoderInverted(true);
+    backLeft.setEncoderInverted(true);
+    backRight.setEncoderInverted(true);
+
+    initializeMotionMagicMaster(frontRight, Constants.BUMPERLESS_ROBOT_GAINS);
+    initializeMotionMagicMaster(frontLeft, Constants.BUMPERLESS_ROBOT_GAINS);
+    initializeMotionMagicMaster(backLeft, Constants.BUMPERLESS_ROBOT_GAINS);
+    initializeMotionMagicMaster(backRight, Constants.BUMPERLESS_ROBOT_GAINS);
 
     robotGyroscope.calibrate();
     // Constants.bottomArmLimitSwitch = new
@@ -377,45 +393,40 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    frontLeft.setEncoderInverted(true);
-    frontRight.setEncoderInverted(true);
-    backLeft.setEncoderInverted(true);
-    backRight.setEncoderInverted(true);
-    // if (testOptions.getSelected().equals("armCalibrate")
-    // || testOptions.getSelected().equals("armTransport")) {
-    // System.out.println("calibrating and ressseting arm");
-    // ArrayDeque<AutonomousAction> resetQueue = new ArrayDeque<>();
-    // resetQueue.add(new AutonArmCalibrate(true));
-    // if (testOptions.getSelected().equals("armCalibrate")) {
-    // resetQueue.add(new AutonMoveGribber(GribberState.OPENING));
-    // }
-    // resetMovement = new AutonMovement(motors, resetQueue);
-    // } else if (testOptions.getSelected().equals("testMechanics")) {
-    // System.out.println("Testing mechanics, check console for test info.");
-    // MechanicsTest mechanicsTest = new MechanicsTest(motors);
-    // mechanicsTest.testMechanics();
-    // }
+
+    if (testOptions.getSelected().equals("armCalibrate")
+        || testOptions.getSelected().equals("armTransport")) {
+      System.out.println("calibrating and ressseting arm");
+      ArrayDeque<AutonomousAction> resetQueue = new ArrayDeque<>();
+      resetQueue.add(new AutonArmCalibrate(true, motors));
+      if (testOptions.getSelected().equals("armCalibrate")) {
+        resetQueue.add(new AutonMoveGribber(GribberState.OPENING, motors));
+      }
+      resetMovement = new AutonMovement(motors, resetQueue);
+    } else if (testOptions.getSelected().equals("testMechanics")) {
+      System.out.println("Testing mechanics, check console for test info.");
+      MechanicsTest mechanicsTest = new MechanicsTest(motors);
+      mechanicsTest.testMechanics();
+    } else if (testOptions.getSelected().equals("movePIDManually")) {
+      ArrayDeque<AutonomousAction> resetQueue = new ArrayDeque<>();
+      resetQueue.add(new AutonMoveInches(MoveInchesDirection.FORWARD, inches, motors));
+      resetMovement = new AutonMovement(motors, resetQueue);
+    }
     // P - Proportional - How fast it approaches the target
     // I - Integral - Over time, how extra will it push based on how long it's been since we've been
     // close to the target
     // D - Derivative - How quickly we will slow down after we hit the target
-    initializeMotionMagicMaster(frontRight, Constants.BUMPERLESS_ROBOT_GAINS);
-    initializeMotionMagicMaster(frontLeft, Constants.BUMPERLESS_ROBOT_GAINS);
-    initializeMotionMagicMaster(backLeft, Constants.BUMPERLESS_ROBOT_GAINS);
-    initializeMotionMagicMaster(backRight, Constants.BUMPERLESS_ROBOT_GAINS);
-    robotGyroscope.reset();
-    System.out.println("The motor power is " + frontLeft.get());
-    autonMoveInchesDirection = MoveInchesDirection.valueOf(autonDirection.getSelected());
+
+
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
     if (resetMovement != null) {
-      System.out.println("autonEveryFrameS");
       resetMovement.autonomousEveryFrame();
     }
-    MoveInches.moveInches(autonMoveInchesDirection, inches, motors);
+    // AutonMoveInches.moveInches(autonMoveInchesDirection, inches, motors);
   }
 
 
