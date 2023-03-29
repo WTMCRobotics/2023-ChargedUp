@@ -59,9 +59,11 @@ public class AutonBalance extends AutonomousAction {
             double calculatedValue = balancePID.calculate(gyro.getRoll(), 0);
             System.out.println("PID Woohoo! " + calculatedValue);
             if (movementDirection == MovementDirection.BACKWARDS) {
-                this.spinMotorsAtSpeed(-calculatedValue);
+                // this.spinMotorsAtSpeed(-calculatedValue);
+                setVelocity(-90 * calculatedValue);
             } else {
-                this.spinMotorsAtSpeed(calculatedValue);
+                // this.spinMotorsAtSpeed(calculatedValue);
+                setVelocity(90 * calculatedValue);
             }
         } else {
             if (movementDirection == MovementDirection.BACKWARDS) {
@@ -116,6 +118,13 @@ public class AutonBalance extends AutonomousAction {
         // MecanumDriveWheelSpeeds wheelSpeeds =
         // new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
         // spinMotors(wheelSpeeds, motors, false);
+    }
+
+    private void setVelocity(double rpm) {
+        motors.getFrontLeftMotor().setVelocity(rpm);
+        motors.getFrontRightMotor().setVelocity(rpm);
+        motors.getBackLeftMotor().setVelocity(rpm);
+        motors.getBackRightMotor().setVelocity(rpm);
     }
 
     /**

@@ -101,6 +101,7 @@ public class Robot extends TimedRobot {
     autonDirection.addOption("Left", "LEFT");
     autonDirection.addOption("Right", "RIGHT");
     SmartDashboard.putData("Direction", autonDirection);
+    SmartDashboard.putNumber("Max balancing RPM", Constants.BALANCING_MAX_RPM);
 
     // Assuming the motors are talons, if not, switch to Spark
     frontLeft = MotorControllerFactory.create(this, Constants.FRONT_LEFT_MOTOR_ID,
@@ -386,6 +387,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.getNumber("Balance Integral", Constants.BALANCING_GAINS.I);
     Constants.BALANCING_GAINS.D =
         SmartDashboard.getNumber("Balance Derivative", Constants.BALANCING_GAINS.D);
+    Constants.BALANCING_MAX_RPM =
+        SmartDashboard.getNumber("Max balancing RPM", Constants.BALANCING_MAX_RPM);
 
 
     Constants.BUMPERLESS_ROBOT_GAINS.P =
