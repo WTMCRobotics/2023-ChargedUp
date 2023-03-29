@@ -22,7 +22,8 @@ public class AutonRoutes {
         navX = navx;
     }
 
-    public ArrayDeque<AutonomousAction> placeObjectAndLeaveCommunity() {
+    // TODO correct inches value for all auton routes
+    public ArrayDeque<AutonomousAction> placeObjectStrafeLeftLeaveCommunity() {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<>();
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
         actionQueue.add(new AutonMoveInches(MoveInchesDirection.BACKWARD, 24, this.motors));
@@ -30,6 +31,23 @@ public class AutonRoutes {
                 new AutonMoveInches(MoveInchesDirection.FORWARD, 16, this.motors)));
         actionQueue.add(new AutonWait(0.5));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING, this.motors));
+        actionQueue.add(new AutonMoveInches(MoveInchesDirection.LEFT, 12, this.motors));
+
+        actionQueue.add(new AutonMoveInches(MoveInchesDirection.BACKWARD, 72, this.motors));
+        actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.PICKING_UP, this.motors),
+                new AutonMoveGribber(GribberState.CLOSING, this.motors)));
+        return actionQueue;
+    }
+
+    public ArrayDeque<AutonomousAction> placeObjectStrafeRightLeaveCommunity() {
+        ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<>();
+        actionQueue.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
+        actionQueue.add(new AutonMoveInches(MoveInchesDirection.BACKWARD, 24, this.motors));
+        actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors),
+                new AutonMoveInches(MoveInchesDirection.FORWARD, 16, this.motors)));
+        actionQueue.add(new AutonWait(0.5));
+        actionQueue.add(new AutonMoveGribber(GribberState.OPENING, this.motors));
+        actionQueue.add(new AutonMoveInches(MoveInchesDirection.RIGHT, 12, this.motors));
 
         actionQueue.add(new AutonMoveInches(MoveInchesDirection.BACKWARD, 72, this.motors));
         actionQueue.add(new AutonMultiAction(new AutonMoveArm(ArmPosition.PICKING_UP, this.motors),

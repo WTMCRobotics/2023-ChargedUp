@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String autoSelected;
-  private final SendableChooser<String> chooser = new SendableChooser<>();
+  private final SendableChooser<String> autonRouteChooser = new SendableChooser<>();
 
   private MotorController frontLeft;
   private MotorController frontRight;
@@ -79,22 +79,26 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    chooser.addOption("Place object, leave community, and balance", "PlaceLeaveCommunityBalance");
-    chooser.addOption("Place object and balance", "PlaceBalance");
-    chooser.addOption("Place object", "justPlace");
-    chooser.addOption("Place object and leave community", "PlaceLeaveCommunity");
-    chooser.addOption("Leave community", "LeaveCommunity");
-    chooser.addOption("Declare manually in code", "manualInCode");
-    SmartDashboard.putData("Auton Routes", chooser);
+    autonRouteChooser.setDefaultOption("Default Auto", kDefaultAuto);
+    autonRouteChooser.addOption("Place object, leave community, and balance",
+        "PlaceLeaveCommunityBalance");
+    autonRouteChooser.addOption("Place object and balance", "PlaceBalance");
+    autonRouteChooser.addOption("Place object", "justPlace");
+    autonRouteChooser.addOption("Place object, strafe LEFT, and leave community",
+        "PlaceStrafeLeftLeaveCommunity");
+    autonRouteChooser.addOption("Place object, strafe RIGHT, and leave community",
+        "PlaceStrafeRightLeaveCommunity");
+    autonRouteChooser.addOption("Leave community", "LeaveCommunity");
+    autonRouteChooser.addOption("Declare manually in code", "manualInCode");
+    SmartDashboard.putData("Auton Routes", autonRouteChooser);
     SmartDashboard.putNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
     SmartDashboard.putNumber("Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
     SmartDashboard.putNumber("Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
-    SmartDashboard.putNumber("Balance Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
-    SmartDashboard.putNumber("Balance Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
-    SmartDashboard.putNumber("Balance Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
     SmartDashboard.putNumber("Peak Output", Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT);
-    SmartDashboard.putNumber("Acceleration", Constants.ACCELERATION);
+    SmartDashboard.putNumber("Max Auton Acceleration", Constants.ACCELERATION);
+    SmartDashboard.putNumber("Balance Proportion", Constants.BALANCING_GAINS.P);
+    SmartDashboard.putNumber("Balance Integral", Constants.BALANCING_GAINS.I);
+    SmartDashboard.putNumber("Balance Derivative", Constants.BALANCING_GAINS.D);
     autonDirection.setDefaultOption("Forward", "FORWARD");
     autonDirection.addOption("Forward", "FORWARD");
     autonDirection.addOption("Backward", "BACKWARD");
@@ -229,17 +233,18 @@ public class Robot extends TimedRobot {
     // Reset encoder value and stop motor, to prevent arm from over extending
     if (motors.getArmMotor().getReverseLimit()) {
       if (armController.getEncoderPosition() > 0) {
-        System.out.println("Limit switch reset!");
+        System.out.println("Arm Limit switch reset!");
       }
       armController.setEncoderPosition(0.0);
     }
+    if (gribberController.getForwardLimit()) {
+      if (gribberController.getEncoderPosition() < 0) {
+        System.out.println("Gribber Limit switch reset!");
+      }
+      gribberController.setEncoderPosition(0.0);
+    }
     // SmartDashboard.putNumber("Arm Encoder Pos", armController.getEncoderPosition() * 360);
-    // SmartDashboard.putNumber("Eheel Encoder Pos", frontLeft.getEncoderPosition());
-    SmartDashboard.putNumber("Robot X Displacement", robotGyroscope.getDisplacementX() * 3.281);
-    SmartDashboard.putNumber("Robot Y Displacement", robotGyroscope.getDisplacementY() * 3.281);
-    SmartDashboard.putNumber("Robot roll", robotGyroscope.getRoll());
-    SmartDashboard.putNumber("navX X velocity", robotGyroscope.getVelocityX() * 3.281);
-    SmartDashboard.putNumber("navX Y velocity", robotGyroscope.getVelocityY() * 3.281);
+    // SmartDashboard.putNumber("Wheel Encoder Pos", frontLeft.getEncoderPosition());
   }
 
   AutonMovement auton;
@@ -265,7 +270,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     AutonRoutes autonRoutes = new AutonRoutes(robotGyroscope, this.motors);
-    autoSelected = chooser.getSelected();
+    autoSelected = autonRouteChooser.getSelected();
     ArrayDeque<AutonomousAction> selectedRoute;
     switch (autoSelected) {
       case "PlaceLeaveCommunityBalance":
@@ -274,8 +279,11 @@ public class Robot extends TimedRobot {
       case "PlaceBalance":
         selectedRoute = autonRoutes.placeThenBalance();
         break;
-      case "PlaceLeaveCommunity":
-        selectedRoute = autonRoutes.placeObjectAndLeaveCommunity();
+      case "PlaceStrafeLeftLeaveCommunity":
+        selectedRoute = autonRoutes.placeObjectStrafeLeftLeaveCommunity();
+        break;
+      case "PlaceStrafeRightLeaveCommunity":
+        selectedRoute = autonRoutes.placeObjectStrafeRightLeaveCommunity();
         break;
       case "LeaveCommunity":
         selectedRoute = autonRoutes.leaveCommunityWhilstFacingWall();
@@ -400,7 +408,8 @@ public class Robot extends TimedRobot {
     inches = SmartDashboard.getNumber("inches to move", inches);
     Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT =
         SmartDashboard.getNumber("Peak Output", Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT);
-    Constants.ACCELERATION = SmartDashboard.getNumber("Acceleration", Constants.ACCELERATION);
+    Constants.ACCELERATION =
+        SmartDashboard.getNumber("Max Auton Acceleration", Constants.ACCELERATION);
   }
 
   AutonMovement resetMovement = null;
@@ -411,7 +420,7 @@ public class Robot extends TimedRobot {
 
     if (testOptions.getSelected().equals("armCalibrate")
         || testOptions.getSelected().equals("armTransport")) {
-      System.out.println("calibrating and ressseting arm");
+      System.out.println("calibrating and resetting arm");
       ArrayDeque<AutonomousAction> resetQueue = new ArrayDeque<>();
       resetQueue.add(new AutonArmCalibrate(true, motors));
       if (testOptions.getSelected().equals("armCalibrate")) {
