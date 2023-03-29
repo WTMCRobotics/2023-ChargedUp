@@ -348,10 +348,12 @@ public class Robot extends TimedRobot {
     if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CUBE) {
       Constants.LED_GREEN.set(true);
       Constants.LED_RED.set(true);
+      Constants.LED_BLUE.set(false);
       // Turn Yellow-ish Green if Cone
     } else if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CONE) {
       Constants.LED_BLUE.set(true);
       Constants.LED_RED.set(true);
+      Constants.LED_GREEN.set(false);
     } else {
       Constants.LED_BLUE.set(false);
       Constants.LED_RED.set(false);
