@@ -1,5 +1,6 @@
 package frc.robot.AutonomousActions;
 
+import java.lang.constant.DirectMethodHandleDesc;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.AutonomousAction;
 import frc.robot.Constants;
@@ -7,6 +8,7 @@ import frc.robot.Gains;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMotors;
 
 public class AutonBalance extends AutonomousAction {
@@ -47,16 +49,27 @@ public class AutonBalance extends AutonomousAction {
     @Override
     public boolean executeAndIsDone() {
 
-        if (!this.isProbablyBalanced() && !wasUnbalanced) {
+        if (!wasUnbalanced && !this.isProbablyBalanced()) {
             System.out.println("We unbalanced");
             wasUnbalanced = true;
         }
 
         if (wasUnbalanced) {
-            double calculatedValue = balancePID.calculate(gyro.getRoll());
-            this.spinMotorsAtSpeed(calculatedValue);
+            System.out.println("was unbalance PID LOOP");
+            double calculatedValue = balancePID.calculate(gyro.getRoll(), 0);
+            System.out.println("PID Woohoo! " + calculatedValue);
+            if (movementDirection == MovementDirection.BACKWARDS) {
+                this.spinMotorsAtSpeed(-calculatedValue);
+            } else {
+                this.spinMotorsAtSpeed(calculatedValue);
+            }
         } else {
-            this.spinMotorsAtSpeed(Constants.ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION);
+            if (movementDirection == MovementDirection.BACKWARDS) {
+                this.spinMotorsAtSpeed(
+                        -Constants.ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION);
+            } else {
+                spinMotorsAtSpeed(Constants.ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION);
+            }
         }
 
         /*
@@ -94,10 +107,15 @@ public class AutonBalance extends AutonomousAction {
         return false;
     }
 
+
     private void spinMotorsAtSpeed(double speed) {
-        MecanumDriveWheelSpeeds wheelSpeeds =
-                new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
-        spinMotors(wheelSpeeds, motors, false);
+        motors.getFrontLeftMotor().set(speed);
+        motors.getFrontRightMotor().set(speed);
+        motors.getBackLeftMotor().set(speed);
+        motors.getBackRightMotor().set(speed);
+        // MecanumDriveWheelSpeeds wheelSpeeds =
+        // new MecanumDriveWheelSpeeds(speed, speed, speed, speed);
+        // spinMotors(wheelSpeeds, motors, false);
     }
 
     /**
@@ -112,9 +130,13 @@ public class AutonBalance extends AutonomousAction {
         // System.out.println(
         // "The robot is balanced, because " + (-halfOfMargianOfError) + " is less than
         // or equal to " + gyroRoll);
-
-        return gyro.getRoll() >= -Constants.BALANCING_MARGIN_OF_ERROR
+        boolean isProbablyBalanced = gyro.getRoll() >= -Constants.BALANCING_MARGIN_OF_ERROR
                 && gyro.getRoll() <= Constants.BALANCING_MARGIN_OF_ERROR;
+        if (!isProbablyBalanced) {
+            System.out.println("The robot is unbalance, as " + gyro.getRoll()
+                    + " is mor ethan -3, and less and than 3 ");
+        }
+        return isProbablyBalanced;
     }
 
     public enum MovementDirection {

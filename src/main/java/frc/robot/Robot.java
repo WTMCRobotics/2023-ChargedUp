@@ -18,8 +18,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.InputtedGuitarControls.GribberState;
 import frc.robot.AutonomousActions.AutonArmCalibrate;
+import frc.robot.AutonomousActions.AutonBalance;
 import frc.robot.AutonomousActions.AutonMoveGribber;
 import frc.robot.AutonomousActions.AutonMoveInches;
+import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
 import frc.robot.AutonomousActions.AutonMoveInches.MoveInchesDirection;
 import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
@@ -88,6 +90,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
     SmartDashboard.putNumber("Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
     SmartDashboard.putNumber("Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
+    SmartDashboard.putNumber("Balance Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
+    SmartDashboard.putNumber("Balance Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
+    SmartDashboard.putNumber("Balance Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
     SmartDashboard.putNumber("Peak Output", Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT);
     SmartDashboard.putNumber("Acceleration", Constants.ACCELERATION);
     autonDirection.setDefaultOption("Forward", "FORWARD");
@@ -231,7 +236,7 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("Eheel Encoder Pos", frontLeft.getEncoderPosition());
     SmartDashboard.putNumber("Robot X Displacement", robotGyroscope.getDisplacementX() * 3.281);
     SmartDashboard.putNumber("Robot Y Displacement", robotGyroscope.getDisplacementY() * 3.281);
-    SmartDashboard.putNumber("Robot pitch", robotGyroscope.getRoll());
+    SmartDashboard.putNumber("Robot roll", robotGyroscope.getRoll());
     SmartDashboard.putNumber("navX X velocity", robotGyroscope.getVelocityX() * 3.281);
     SmartDashboard.putNumber("navX Y velocity", robotGyroscope.getVelocityY() * 3.281);
   }
@@ -290,7 +295,7 @@ public class Robot extends TimedRobot {
         // manualActions.add(new AutonMoveForward(-3, 1));
         // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS,
         // robotGyroscope));
-
+        manualActions.add(new AutonBalance(MovementDirection.BACKWARDS, robotGyroscope, motors));
         System.out.println("Manual action!");
         selectedRoute = manualActions;
         break;
@@ -373,6 +378,14 @@ public class Robot extends TimedRobot {
   @Override
 
   public void disabledPeriodic() {
+    Constants.BALANCING_GAINS.P =
+        SmartDashboard.getNumber("Balance Proportion", Constants.BALANCING_GAINS.P);
+    Constants.BALANCING_GAINS.I =
+        SmartDashboard.getNumber("Balance Integral", Constants.BALANCING_GAINS.I);
+    Constants.BALANCING_GAINS.D =
+        SmartDashboard.getNumber("Balance Derivative", Constants.BALANCING_GAINS.D);
+
+
     Constants.BUMPERLESS_ROBOT_GAINS.P =
         SmartDashboard.getNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
     Constants.BUMPERLESS_ROBOT_GAINS.I =
