@@ -33,12 +33,12 @@ public class InputtedGuitarControls {
             return;
         }
         if (gribberState == GribberState.CLOSING) {
-            gribberController.set(-.90);
+            gribberController.set(-1);
 
         }
 
         if (gribberState == GribberState.OPENING) {
-            gribberController.set(.40);
+            gribberController.set(.60);
         }
     }
 
@@ -166,6 +166,9 @@ public class InputtedGuitarControls {
 
         if (pressedCount > 1) {
             position = storedArmPosition;
+        }
+        if (position != ArmPosition.MANUAL) {
+            System.out.println("THe position is " + position);
         }
         if (guitar.getLeftTriggerAxis() < 0.49) {
             lightColor = LightColor.CUBE;

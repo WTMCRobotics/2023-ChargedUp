@@ -47,7 +47,7 @@ public final class Constants {
         public static final double BALANCING_MARGIN_OF_ERROR = 8;
         /** The margain of error while on the platform, in degrees, while balancing */
         public static final double BALANCING_MARGIN_OF_ERROR_ON_STATION = 6;
-        public static double BALANCING_MAX_RPM = 90; // Unless the calculated value is more than 1
+        public static double BALANCING_MAX_RPM = 400; // Unless the calculated value is more than 1
 
         public static final float robotWidth = 32;
         /** the length of the robot in inches */
@@ -124,7 +124,8 @@ public final class Constants {
         // PID constants
         public static final double MARGIN_OF_ERROR_INCHES = 1;
         public static double ACCELERATION = 400;
-        public static final Gains BALANCING_GAINS = new Gains(.025, 0.0001, 0.0, 0.0, 0, .75);
+        public static final Gains ARM_GAINS = new Gains(.025, 0.0001, 0.0, 0.0, 0, 1);
+        public static final Gains BALANCING_GAINS = new Gains(.0205, 0.00001, 0.0, 0.0, 0, .75);
         public static final Gains BUMPERLESS_ROBOT_GAINS = new Gains(0.75, 0, 0, 0, 0, 1);
         public static final Gains WITH_BUMPER_ROBOT_GAINS =
                         new Gains(0.35, 0.00001, 100, 0.2, 0, 1.0);

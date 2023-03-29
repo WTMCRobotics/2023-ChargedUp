@@ -57,13 +57,13 @@ public class AutonBalance extends AutonomousAction {
         if (wasUnbalanced) {
             System.out.println("was unbalance PID LOOP");
             double calculatedValue = balancePID.calculate(gyro.getRoll(), 0);
-            System.out.println("PID Woohoo! " + calculatedValue);
+            System.out.println("PID Calculated Value! " + calculatedValue);
             if (movementDirection == MovementDirection.BACKWARDS) {
                 // this.spinMotorsAtSpeed(-calculatedValue);
-                setVelocity(-90 * calculatedValue);
+                setVelocity(-Constants.BALANCING_MAX_RPM * calculatedValue);
             } else {
                 // this.spinMotorsAtSpeed(calculatedValue);
-                setVelocity(90 * calculatedValue);
+                setVelocity(Constants.BALANCING_MAX_RPM * calculatedValue);
             }
         } else {
             if (movementDirection == MovementDirection.BACKWARDS) {

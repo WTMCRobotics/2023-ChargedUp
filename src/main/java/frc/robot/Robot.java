@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.InputtedGuitarControls.GribberState;
@@ -135,6 +137,8 @@ public class Robot extends TimedRobot {
     frontRight.setInverted(true);
     backRight.setInverted(true);
 
+    gribberController.setInverted(true);
+
     System.out.println("Working");
     // backLeft.setInverted(true);
     // backRight.setInverted(true);
@@ -154,6 +158,8 @@ public class Robot extends TimedRobot {
 
     // Deadzone
     mecanumDriveTrain.setDeadband(0.08);
+
+    gribberController.setEncoderPosition(0);
 
     robotGyroscope = new AHRS(SPI.Port.kMXP);
 
@@ -206,8 +212,8 @@ public class Robot extends TimedRobot {
 
     // driveTab.add("Gyro Reading",
     // robotGyroscope).withWidget(BuiltInWidgets.kGyro);
-    // driveTab.add("The Drive",
-    // mecanumDriveTrain).withWidget(BuiltInWidgets.kMecanumDrive);
+    // Shuffleboard.getTab("Drive").add("The Drive", mecanumDriveTrain)
+    // .withWidget(BuiltInWidgets.kMecanumDrive);
     // driveTab.add("Arm Encoder", ((SparkMotorController)
     // armController).getEncoderObject())
     // .withWidget(BuiltInWidgets.kEncoder);
@@ -238,10 +244,11 @@ public class Robot extends TimedRobot {
       armController.setEncoderPosition(0.0);
     }
     if (gribberController.getForwardLimit()) {
-      if (gribberController.getEncoderPosition() < 0) {
-        System.out.println("Gribber Limit switch reset!");
-      }
+      // if (gribberController.getEncoderPosition() < 0) {
+      System.out.println("Gribber Limit switch reset!");
+      // }S
       gribberController.setEncoderPosition(0.0);
+      SmartDashboard.putNumber("Gribber encoder", gribberController.getEncoderPosition());
     }
     // SmartDashboard.putNumber("Arm Encoder Pos", armController.getEncoderPosition() * 360);
     // SmartDashboard.putNumber("Wheel Encoder Pos", frontLeft.getEncoderPosition());
@@ -304,8 +311,9 @@ public class Robot extends TimedRobot {
         // manualActions.add(new AutonMoveForward(-3, 1));
         // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS,
         // robotGyroscope));
-        manualActions.add(new AutonBalance(MovementDirection.BACKWARDS, robotGyroscope, motors));
-        System.out.println("Manual action!");
+
+        // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS, robotGyroscope, motors));
+        manualActions.add(new AutonMoveInches(MoveInchesDirection.BACKWARD, 36, motors));
         selectedRoute = manualActions;
         break;
 
