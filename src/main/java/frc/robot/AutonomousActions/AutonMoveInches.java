@@ -101,7 +101,7 @@ public class AutonMoveInches extends AutonomousAction {
     }
 
     /**
-     * @returns The active trajectory velocity of all of the averaged motors
+     * @return The active trajectory velocity of all of the averaged motors
      */
     private double getAverageTrajectoryVelocity() {
         return (motors.getFrontLeftMotor().getActiveTrajectoryVelocity()
