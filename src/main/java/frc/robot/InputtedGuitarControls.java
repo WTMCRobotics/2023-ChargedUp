@@ -25,13 +25,13 @@ public class InputtedGuitarControls {
     private MotorController armController;
     private MotorController gribberController;
 
-    double timeSinceGribberStateChange = 0.0;
+    // double timeSinceGribberStateChange = 0.0;
 
     private void moveGribberController() {
-        if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
-            gribberController.set(-.10);
-            return;
-        }
+        // if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
+        // gribberController.set(-.10);
+        // return;
+        // }
         if (gribberState == GribberState.CLOSING) {
             gribberController.set(-1);
 
@@ -179,11 +179,11 @@ public class InputtedGuitarControls {
         }
         if (guitar.getStartButtonPressed()) {
             gribberState = GribberState.CLOSING;
-            timeSinceGribberStateChange = Timer.getFPGATimestamp();
+            // timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
         if (guitar.getBackButtonPressed()) {
             gribberState = GribberState.OPENING;
-            timeSinceGribberStateChange = Timer.getFPGATimestamp();
+            // timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
     }
 
