@@ -90,6 +90,11 @@ public class Robot extends TimedRobot {
         "PlaceStrafeLeftLeaveCommunity");
     autonRouteChooser.addOption("Place object, strafe RIGHT, and leave community",
         "PlaceStrafeRightLeaveCommunity");
+
+    autonRouteChooser.addOption("Balance while facing driver wall", "balanceWhileFacingWall");
+    autonRouteChooser.addOption("Balance while facing field", "balanceWhileFacingField");
+
+
     autonRouteChooser.addOption("Leave community", "LeaveCommunity");
     autonRouteChooser.addOption("Declare manually in code", "manualInCode");
     SmartDashboard.putData("Auton Routes", autonRouteChooser);
@@ -297,6 +302,19 @@ public class Robot extends TimedRobot {
         break;
       case "justPlace":
         selectedRoute = autonRoutes.placeObject();
+        break;
+      case "balanceWhileFacingWall":
+
+        ArrayDeque<AutonomousAction> balanceWallActions = new ArrayDeque<>();
+        balanceWallActions
+            .add(new AutonBalance(MovementDirection.BACKWARDS, robotGyroscope, motors));
+        selectedRoute = balanceWallActions;
+        break;
+      case "balanceWhileFacingField":
+        ArrayDeque<AutonomousAction> balanceFieldActions = new ArrayDeque<>();
+        balanceFieldActions
+            .add(new AutonBalance(MovementDirection.FORWARDS, robotGyroscope, motors));
+        selectedRoute = balanceFieldActions;
         break;
       case "manualInCode":
 
