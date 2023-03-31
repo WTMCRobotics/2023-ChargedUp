@@ -38,6 +38,8 @@ public final class Constants {
          * "unbalanced" state
          */
         public static final double BEING_UNBALANCED_DEBOUNCE_TIME = .5;
+
+        public static final double BALANCING_ACTIVATE_PID_MARGIN_OF_ERROR = 3;
         /**
          * The amount of time in seconds the robot has to be balanced for for it to be considered
          * balanced
@@ -48,6 +50,7 @@ public final class Constants {
         /** The margain of error while on the platform, in degrees, while balancing */
         public static final double BALANCING_MARGIN_OF_ERROR_ON_STATION = 6;
         public static double BALANCING_MAX_RPM = 400; // Unless the calculated value is more than 1
+        public static double START_PID_DELAY = 1.25;
 
         public static final float robotWidth = 32;
         /** the length of the robot in inches */
@@ -125,7 +128,9 @@ public final class Constants {
         public static final double MARGIN_OF_ERROR_INCHES = 1;
         public static double ACCELERATION = 400;
         public static final Gains ARM_GAINS = new Gains(.025, 0.0001, 0.0, 0.0, 0, 1);
-        public static final Gains BALANCING_GAINS = new Gains(.0205, 0.00001, 0.0, 0.0, 0, .75);
+        public static final Gains BALANCING_GAINS = new Gains(.0175, 0.00001, 0.0, 0.0, 0, .75);
+        public static final Gains PRACTICE_BALANCING_GAINS =
+                        new Gains(.0205, 0.00001, 0.0, 0.0, 0, .75);
         public static final Gains BUMPERLESS_ROBOT_GAINS = new Gains(0.75, 0, 0, 0, 0, 1);
         public static final Gains WITH_BUMPER_ROBOT_GAINS =
                         new Gains(0.35, 0.00001, 100, 0.2, 0, 1.0);

@@ -113,6 +113,7 @@ public class Robot extends TimedRobot {
     autonDirection.addOption("Right", "RIGHT");
     SmartDashboard.putData("Direction", autonDirection);
     SmartDashboard.putNumber("Max balancing RPM", Constants.BALANCING_MAX_RPM);
+    SmartDashboard.putNumber("PID Starting Delay", Constants.START_PID_DELAY);
 
     // Assuming the motors are talons, if not, switch to Spark
     frontLeft = MotorControllerFactory.create(this, Constants.FRONT_LEFT_MOTOR_ID,
@@ -253,7 +254,8 @@ public class Robot extends TimedRobot {
       System.out.println("Gribber Limit switch reset!");
       // }S
       gribberController.setEncoderPosition(0.0);
-      SmartDashboard.putNumber("Gribber encoder", gribberController.getEncoderPosition());
+      // SmartDashboard.putNumber("Gribber encoder", gribberController.getEncoderPosition());
+      SmartDashboard.putNumber("Roll", robotGyroscope.getRoll());
     }
     // SmartDashboard.putNumber("Arm Encoder Pos", armController.getEncoderPosition() * 360);
     // SmartDashboard.putNumber("Wheel Encoder Pos", frontLeft.getEncoderPosition());
@@ -436,6 +438,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.getNumber("Peak Output", Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT);
     Constants.ACCELERATION =
         SmartDashboard.getNumber("Max Auton Acceleration", Constants.ACCELERATION);
+    Constants.START_PID_DELAY =
+        SmartDashboard.getNumber("PID Starting Delay", Constants.START_PID_DELAY);
   }
 
   AutonMovement resetMovement = null;

@@ -8,18 +8,18 @@ import frc.robot.Gains;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMotors;
 
 public class AutonBalance extends AutonomousAction {
     MovementDirection movementDirection;
-    private boolean isFirstTimeRunning;
     private RobotMotors motors;
     private AHRS gyro;
-    private boolean wasUnbalanced = false;
-    private double currentDebounceTime = 0;
-    private double currentBalanceDebounceTime = 0;
+    private boolean PIDActivated = false;
+    private double highestRollReading;
     private ProfiledPIDController balancePID;
+    private double startPIDTime;
 
     /**
      * Used to automatically balance the robot on the charging station, within a certain degree.
@@ -30,12 +30,11 @@ public class AutonBalance extends AutonomousAction {
         System.out.println("Balnce thingy");
         this.gyro = gyro;
         this.movementDirection = movementDirection;
-        this.isFirstTimeRunning = true;
-        this.wasUnbalanced = false;
+        this.PIDActivated = false;
         this.motors = motors;
         // Max acceleration is not set in constants. set here
         final Constraints balanceConstraints =
-                new Constraints(Constants.BALANCING_GAINS.PEAK_OUTPUT, .75);
+                new Constraints(Constants.BALANCING_GAINS.PEAK_OUTPUT, .01);
         balancePID = new ProfiledPIDController(Constants.BALANCING_GAINS.P,
                 Constants.BALANCING_GAINS.I, Constants.BALANCING_GAINS.D, balanceConstraints);
         // balancePID.enableContinuousInput(currentDebounceTime, currentBalanceDebounceTime);
@@ -49,15 +48,19 @@ public class AutonBalance extends AutonomousAction {
     @Override
     public boolean executeAndIsDone() {
 
-        if (!wasUnbalanced && !this.isProbablyBalanced()) {
-            System.out.println("We unbalanced");
-            wasUnbalanced = true;
+        highestRollReading = Math.max(highestRollReading, Math.abs(gyro.getRoll()));
+
+        if (!PIDActivated && !isProbablyBalanced()) {
+            System.out.println("We are activating PID!1!1!!1");
+            PIDActivated = true;
+            this.startPIDTime = Timer.getFPGATimestamp() + Constants.START_PID_DELAY;
         }
 
-        if (wasUnbalanced) {
-            System.out.println("was unbalance PID LOOP");
+
+        if (PIDActivated && (Timer.getFPGATimestamp() >= startPIDTime)) {
+            // System.out.println("was unbalance PID LOOP");
             double calculatedValue = balancePID.calculate(gyro.getRoll(), 0);
-            System.out.println("PID Calculated Value! " + calculatedValue);
+            // System.out.println("PID Calculated Value! " + calculatedValue);
             if (movementDirection == MovementDirection.BACKWARDS) {
                 // this.spinMotorsAtSpeed(-calculatedValue);
                 setVelocity(-Constants.BALANCING_MAX_RPM * calculatedValue);
