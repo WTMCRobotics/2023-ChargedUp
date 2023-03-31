@@ -205,6 +205,8 @@ public class Robot extends TimedRobot {
     backLeft.setEncoderInverted(true);
     backRight.setEncoderInverted(true);
 
+
+
     initializeMotionMagicMaster(frontRight, Constants.BUMPERLESS_ROBOT_GAINS);
     initializeMotionMagicMaster(frontLeft, Constants.BUMPERLESS_ROBOT_GAINS);
     initializeMotionMagicMaster(backLeft, Constants.BUMPERLESS_ROBOT_GAINS);
@@ -382,20 +384,15 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     // Turn Purple if Cube
     guitarControls.doEveryFrame();
-    if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CUBE) {
-      Constants.LED_GREEN.set(true);
-      Constants.LED_RED.set(true);
-      Constants.LED_BLUE.set(false);
-      // Turn Yellow-ish Green if Cone
-    } else if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CONE) {
-      Constants.LED_BLUE.set(true);
-      Constants.LED_RED.set(true);
-      Constants.LED_GREEN.set(false);
-    } else {
-      Constants.LED_BLUE.set(false);
-      Constants.LED_RED.set(false);
-      Constants.LED_GREEN.set(false);
-    }
+    /*
+     * if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CUBE) {
+     * Constants.LED_GREEN.set(true); Constants.LED_RED.set(true); Constants.LED_BLUE.set(false); //
+     * Turn Yellow-ish Green if Cone } else if (guitarControls.lightColor ==
+     * InputtedGuitarControls.LightColor.CONE) { Constants.LED_BLUE.set(true);
+     * Constants.LED_RED.set(true); Constants.LED_GREEN.set(false); } else {
+     * Constants.LED_BLUE.set(false); Constants.LED_RED.set(false); Constants.LED_GREEN.set(false);
+     * }
+     */
 
     /*
      * mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY() * -1,
