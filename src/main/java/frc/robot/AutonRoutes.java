@@ -7,6 +7,7 @@ import frc.robot.AutonomousActions.AutonMoveArm;
 import frc.robot.AutonomousActions.AutonMoveGribber;
 import frc.robot.AutonomousActions.AutonMoveInches;
 import frc.robot.AutonomousActions.AutonMultiAction;
+import frc.robot.AutonomousActions.AutonSequentialAction;
 import frc.robot.AutonomousActions.AutonWait;
 import frc.robot.AutonomousActions.AutonBalance.MovementDirection;
 import frc.robot.AutonomousActions.AutonMoveInches.MoveInchesDirection;
@@ -29,7 +30,8 @@ public class AutonRoutes {
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
         actionQueue.add(new AutonMultiAction(
                 new AutonMoveInches(MoveInchesDirection.BACKWARD, 25, this.motors),
-                new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors)));
+                new AutonSequentialAction(new AutonWait(.5),
+                        new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors))));
         actionQueue.add(new AutonMoveInches(MoveInchesDirection.FORWARD, 25, this.motors));
         actionQueue.add(new AutonWait(0.5));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING, this.motors));
@@ -47,7 +49,8 @@ public class AutonRoutes {
         actionQueue.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
         actionQueue.add(new AutonMultiAction(
                 new AutonMoveInches(MoveInchesDirection.BACKWARD, 25, this.motors),
-                new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors)));
+                new AutonSequentialAction(new AutonWait(.5),
+                        new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors))));
         actionQueue.add(new AutonMoveInches(MoveInchesDirection.FORWARD, 25, this.motors));
         actionQueue.add(new AutonWait(0.5));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING, this.motors));
@@ -99,11 +102,10 @@ public class AutonRoutes {
      */
     public ArrayDeque<AutonomousAction> placeThenBalance() {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<AutonomousAction>();
-        actionQueue
-                .add(new AutonMultiAction(new AutonMoveGribber(GribberState.CLOSING, this.motors),
-                        new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors),
-                        new AutonMoveInches(MoveInchesDirection.BACKWARD, 25, this.motors)));
-        actionQueue.add(new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors));
+        actionQueue.add(new AutonMultiAction(new AutonMoveGribber(GribberState.CLOSING, motors),
+                new AutonMoveInches(MoveInchesDirection.BACKWARD, 25, this.motors),
+                new AutonSequentialAction(new AutonWait(.5),
+                        new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors))));
         actionQueue.add(new AutonMoveInches(MoveInchesDirection.FORWARD, 25, motors));
 
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING, this.motors));

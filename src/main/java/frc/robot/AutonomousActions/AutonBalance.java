@@ -53,7 +53,7 @@ public class AutonBalance extends AutonomousAction {
         if (!PIDActivated && !isProbablyBalanced()) {
             System.out.println("We are activating PID!1!1!!1");
             PIDActivated = true;
-            this.startPIDTime = Timer.getFPGATimestamp() + Constants.START_PID_DELAY;
+            this.startPIDTime = Timer.getFPGATimestamp() + Constants.ACTIVATE_PID_DELAY;
         }
 
 

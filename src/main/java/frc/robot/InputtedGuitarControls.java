@@ -33,7 +33,7 @@ public class InputtedGuitarControls {
                 gribberController.set(0);
                 // System.out.println("Set to 0");
             } else {
-                gribberController.set(-.50);
+                gribberController.set(-.70);
                 // System.out.println("Set to -30");
             }
             return;
