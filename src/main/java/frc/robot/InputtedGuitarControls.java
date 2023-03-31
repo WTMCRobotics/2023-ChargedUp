@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.motor.MotorController;
 
@@ -24,13 +25,19 @@ public class InputtedGuitarControls {
     private MotorController armController;
     private MotorController gribberController;
 
-    // double timeSinceGribberStateChange = 0.0;
+    double timeSinceGribberStateChange = 0.0;
 
     private void moveGribberController() {
-        // if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
-        // gribberController.set(-.10);
-        // return;
-        // }
+        if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
+            if (gribberState == GribberState.OPENING) {
+                gribberController.set(0);
+                // System.out.println("Set to 0");
+            } else {
+                gribberController.set(-.50);
+                // System.out.println("Set to -30");
+            }
+            return;
+        }
         if (gribberState == GribberState.CLOSING) {
             gribberController.set(-1);
 
@@ -178,11 +185,11 @@ public class InputtedGuitarControls {
         }
         if (guitar.getStartButtonPressed()) {
             gribberState = GribberState.CLOSING;
-            // timeSinceGribberStateChange = Timer.getFPGATimestamp();
+            timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
         if (guitar.getBackButtonPressed()) {
             gribberState = GribberState.OPENING;
-            // timeSinceGribberStateChange = Timer.getFPGATimestamp();
+            timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
     }
 
