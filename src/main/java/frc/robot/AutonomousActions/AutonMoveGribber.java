@@ -31,7 +31,7 @@ public class AutonMoveGribber extends AutonomousAction {
                 targetedTimeStamp = Timer.getFPGATimestamp() + 1;
             } else if (position == GribberState.CLOSING) {
                 System.out.println("Should be closing at " + Timer.getFPGATimestamp());
-                motors.getGribberMotor().set(-.6);
+                motors.getGribberMotor().set(-1);
                 targetedTimeStamp = Timer.getFPGATimestamp() + .8;
             } else {
                 System.out.println("ruh row " + position);

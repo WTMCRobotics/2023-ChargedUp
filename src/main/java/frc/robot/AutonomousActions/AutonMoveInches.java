@@ -1,5 +1,6 @@
 package frc.robot.AutonomousActions;
 
+import org.opencv.core.Mat;
 import frc.robot.AutonomousAction;
 import frc.robot.RobotMotors;
 
@@ -61,13 +62,13 @@ public class AutonMoveInches extends AutonomousAction {
             motors.getBackRightMotor().setDistance(strafingInches);
         }
 
-        if (getAverageTrajectoryVelocity() < 0.25) {
+        if (getMaxTrajectoryVelocity() < 0.05) {
             isDoneDebounceTime += 0.02;
         } else {
             isDoneDebounceTime = 0;
         }
 
-        if (isDoneDebounceTime > 0.4) {
+        if (isDoneDebounceTime > 0.6) {
             System.out.println("We moved the correct amount of inches!");
             return true;
         }
@@ -103,11 +104,18 @@ public class AutonMoveInches extends AutonomousAction {
     /**
      * @return The active trajectory velocity of all of the averaged motors
      */
-    private double getAverageTrajectoryVelocity() {
-        return (motors.getFrontLeftMotor().getActiveTrajectoryVelocity()
-                + motors.getFrontRightMotor().getActiveTrajectoryVelocity()
-                + motors.getBackLeftMotor().getActiveTrajectoryVelocity()
-                + motors.getBackRightMotor().getActiveTrajectoryVelocity()) / 4;
+    private double getMaxTrajectoryVelocity() {
+        double higherLeft =
+                Math.max(Math.abs(motors.getFrontLeftMotor().getActiveTrajectoryVelocity()),
+                        Math.abs(motors.getBackLeftMotor().getActiveTrajectoryVelocity()));
+        double higherRight =
+                Math.max(Math.abs(motors.getFrontRightMotor().getActiveTrajectoryVelocity()),
+                        Math.abs(motors.getBackRightMotor().getActiveTrajectoryVelocity()));
+        return Math.max(higherLeft, higherRight);
+        // return (Math.abs(motors.getFrontLeftMotor().getActiveTrajectoryVelocity())
+        // + Math.abs(motors.getFrontRightMotor().getActiveTrajectoryVelocity())
+        // + Math.abs(motors.getBackLeftMotor().getActiveTrajectoryVelocity())
+        // + Math.abs(motors.getBackRightMotor().getActiveTrajectoryVelocity())) / 4;
     }
 
     private void resetDriveTrainEncoders() {

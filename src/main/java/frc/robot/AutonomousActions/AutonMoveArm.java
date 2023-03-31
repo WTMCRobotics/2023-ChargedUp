@@ -65,12 +65,12 @@ public class AutonMoveArm extends AutonomousAction {
     public void AutoMoveArmPickingUp() {
         if (motors.getArmMotor()
                 .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)) {
-            motors.getArmMotor().set(0.8);
+            motors.getArmMotor().set(1);
         }
         if (motors.getArmMotor()
                 .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PICK_UP_POSITION)
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-            motors.getArmMotor().set(-0.8);
+            motors.getArmMotor().set(-1);
         }
         targetArmDegree = Constants.ARM_PICK_UP_POSITION;
     }
@@ -79,12 +79,12 @@ public class AutonMoveArm extends AutonomousAction {
     public void AutoIntake() {
         if (motors.getArmMotor()
                 .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_INTAKE_POSITION)) {
-            motors.getArmMotor().set(0.8);
+            motors.getArmMotor().set(1);
         }
         if (motors.getArmMotor()
                 .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_INTAKE_POSITION)
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-            motors.getArmMotor().set(-0.8);
+            motors.getArmMotor().set(-1);
         }
         targetArmDegree = Constants.ARM_INTAKE_POSITION;
     }
@@ -92,12 +92,12 @@ public class AutonMoveArm extends AutonomousAction {
     public void AutoMoveArmPlaceTop() {
         if (motors.getArmMotor()
                 .getEncoderPosition() < degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSITION)) {
-            motors.getArmMotor().set(0.8);
+            motors.getArmMotor().set(1);
         }
         if (motors.getArmMotor()
                 .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_TOP_POSITION)
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-            motors.getArmMotor().set(-0.8);
+            motors.getArmMotor().set(-1);
         }
         targetArmDegree = Constants.ARM_PLACE_TOP_POSITION;
     }
@@ -106,12 +106,12 @@ public class AutonMoveArm extends AutonomousAction {
         if (motors.getArmMotor().getEncoderPosition() <
 
                 degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSITION)) {
-            motors.getArmMotor().set(0.8);
+            motors.getArmMotor().set(1);
         }
         if (motors.getArmMotor()
                 .getEncoderPosition() > degreesToEncoderPostion(Constants.ARM_PLACE_MIDDLE_POSITION)
                         + degreesToEncoderPostion(Constants.ARM_POSITION_BUFFER_DEGREES)) {
-            motors.getArmMotor().set(-0.8);
+            motors.getArmMotor().set(-1);
         }
         targetArmDegree = Constants.ARM_PLACE_MIDDLE_POSITION;
     }
