@@ -1,6 +1,5 @@
 package frc.robot.motor;
 
-import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -166,7 +165,7 @@ public class TalonMotorController implements MotorController {
 
     @Override
     public void disable() {
-        // TODO: add motor disable for Talon
+        // 6eTODO: add motor disable for Talon
     }
 
 

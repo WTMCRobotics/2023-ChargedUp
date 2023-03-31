@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.motor.MotorController;
 
@@ -25,20 +24,20 @@ public class InputtedGuitarControls {
     private MotorController armController;
     private MotorController gribberController;
 
-    double timeSinceGribberStateChange = 0.0;
+    // double timeSinceGribberStateChange = 0.0;
 
     private void moveGribberController() {
-        if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
-            gribberController.set(-.10);
-            return;
-        }
+        // if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
+        // gribberController.set(-.10);
+        // return;
+        // }
         if (gribberState == GribberState.CLOSING) {
-            gribberController.set(-.90);
+            gribberController.set(-1);
 
         }
 
         if (gribberState == GribberState.OPENING) {
-            gribberController.set(.40);
+            gribberController.set(.60);
         }
     }
 
@@ -167,6 +166,9 @@ public class InputtedGuitarControls {
         if (pressedCount > 1) {
             position = storedArmPosition;
         }
+        if (position != ArmPosition.MANUAL) {
+            System.out.println("THe position is " + position);
+        }
         if (guitar.getLeftTriggerAxis() < 0.49) {
             lightColor = LightColor.CUBE;
         } else if (guitar.getLeftTriggerAxis() > 0.51) {
@@ -176,11 +178,11 @@ public class InputtedGuitarControls {
         }
         if (guitar.getStartButtonPressed()) {
             gribberState = GribberState.CLOSING;
-            timeSinceGribberStateChange = Timer.getFPGATimestamp();
+            // timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
         if (guitar.getBackButtonPressed()) {
             gribberState = GribberState.OPENING;
-            timeSinceGribberStateChange = Timer.getFPGATimestamp();
+            // timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
     }
 
