@@ -95,7 +95,10 @@ public class Robot extends TimedRobot {
     autonRouteChooser.addOption("Balance while facing field", "balanceWhileFacingField");
 
 
-    autonRouteChooser.addOption("Leave community", "LeaveCommunity");
+    autonRouteChooser.addOption("Leave community whilst facing driver wall",
+        "LeaveCommunityFaceWall");
+    autonRouteChooser.addOption("Leave community whilst facing enemy side",
+        "LeaveCommunityFaceEnemy");
     autonRouteChooser.addOption("Declare manually in code", "manualInCode");
     SmartDashboard.putData("Auton Routes", autonRouteChooser);
     SmartDashboard.putNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
@@ -124,7 +127,6 @@ public class Robot extends TimedRobot {
         MotorController.Type.Talon);
     backRight = MotorControllerFactory.create(this, Constants.BACK_RIGHT_MOTOR_ID,
         MotorController.Type.Talon);
-    xboxController = new XboxController(0);
 
     armController =
         MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
@@ -132,7 +134,14 @@ public class Robot extends TimedRobot {
     gribberController = MotorControllerFactory.create(this, Constants.GRIBBER_MOTOR_ID,
         MotorController.Type.SparkMax);
 
-    guitarXboxController = new XboxController(1);
+    // swap controllers if the main controller is a guitar
+    xboxController = new XboxController(0);
+    if (xboxController.getName().contains("Guitar")) {
+      guitarXboxController = xboxController;
+      xboxController = new XboxController(1);
+    } else {
+      guitarXboxController = new XboxController(1);
+    }
 
     frontLeft.setBrakeMode(true);
     frontRight.setBrakeMode(true);
@@ -301,8 +310,11 @@ public class Robot extends TimedRobot {
       case "PlaceStrafeRightLeaveCommunity":
         selectedRoute = autonRoutes.placeObjectStrafeRightLeaveCommunity();
         break;
-      case "LeaveCommunity":
+      case "LeaveCommunityFaceWall":
         selectedRoute = autonRoutes.leaveCommunityWhilstFacingWall();
+        break;
+      case "LeaveCommunityFaceEnemy":
+        selectedRoute = autonRoutes.leaveCommunityWhilstFacingEnemySide();
         break;
       case "justPlace":
         selectedRoute = autonRoutes.placeObject();
@@ -382,6 +394,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    // wtf???
+    if (xboxController.getName().contains("Guitar")) {
+      XboxController tmp = xboxController;
+      xboxController = guitarXboxController;
+      guitarXboxController = tmp;
+    }
+
     // Turn Purple if Cube
     guitarControls.doEveryFrame();
     /*

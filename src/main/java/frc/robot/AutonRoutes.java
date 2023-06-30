@@ -27,11 +27,11 @@ public class AutonRoutes {
     // TODO: remove the previous todo, as it is done
     public ArrayDeque<AutonomousAction> placeObjectStrafeLeftLeaveCommunity() {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<>();
-        actionQueue.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
-        actionQueue.add(new AutonMultiAction(
-                new AutonMoveInches(MoveInchesDirection.BACKWARD, 25, this.motors),
-                new AutonSequentialAction(new AutonWait(.5),
-                        new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors))));
+        actionQueue
+                .add(new AutonMultiAction(new AutonMoveGribber(GribberState.CLOSING, this.motors),
+                        new AutonMoveInches(MoveInchesDirection.BACKWARD, 25, this.motors),
+                        new AutonSequentialAction(new AutonWait(.5),
+                                new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors))));
         actionQueue.add(new AutonMoveInches(MoveInchesDirection.FORWARD, 25, this.motors));
         actionQueue.add(new AutonWait(0.5));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING, this.motors));
@@ -46,11 +46,11 @@ public class AutonRoutes {
 
     public ArrayDeque<AutonomousAction> placeObjectStrafeRightLeaveCommunity() {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<>();
-        actionQueue.add(new AutonMoveGribber(GribberState.CLOSING, this.motors));
-        actionQueue.add(new AutonMultiAction(
-                new AutonMoveInches(MoveInchesDirection.BACKWARD, 25, this.motors),
-                new AutonSequentialAction(new AutonWait(.5),
-                        new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors))));
+        actionQueue
+                .add(new AutonMultiAction(new AutonMoveGribber(GribberState.CLOSING, this.motors),
+                        new AutonMoveInches(MoveInchesDirection.BACKWARD, 25, this.motors),
+                        new AutonSequentialAction(new AutonWait(.5),
+                                new AutonMoveArm(ArmPosition.PLACING_TOP, this.motors))));
         actionQueue.add(new AutonMoveInches(MoveInchesDirection.FORWARD, 25, this.motors));
         actionQueue.add(new AutonWait(0.5));
         actionQueue.add(new AutonMoveGribber(GribberState.OPENING, this.motors));

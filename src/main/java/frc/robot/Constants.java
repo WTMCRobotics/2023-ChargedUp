@@ -29,7 +29,7 @@ public final class Constants {
         // zero through one
         public static final double ARM_MOVE_UP_SPEED = 1;
         // zero through one
-        public static final double ARM_MOVE_DOWN_SPEED = .6;
+        public static final double ARM_MOVE_DOWN_SPEED = .7;
         /** The speed in which to move the robot while balancing, in m/s */
         public static final double ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION = 0.55;
         public static final double ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION = .275;
