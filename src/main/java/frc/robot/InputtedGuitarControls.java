@@ -11,15 +11,14 @@ public class InputtedGuitarControls {
      */
     private XboxController guitar;
     /**
-     * The current position the arm should be moving to.
-     */
-    public ArmPosition position = ArmPosition.MANUAL;
-    /**
      * Holds if the gribber should be opening or closing
      */
     public GribberState gribberState;
 
-    public LightColor lightColor;
+    public boolean redLEDOn = false;
+    public boolean greenLEDOn = false;
+    public boolean blueLEDOn = false;
+
 
     int pressedCount;
     private MotorController armController;
@@ -49,89 +48,21 @@ public class InputtedGuitarControls {
     }
 
     public void moveArmController() {
-        if (guitar.getPOV() == 0) {
-            if (armController.getEncoderPosition() < degreesToEncoderPosition(
-                    Constants.MAX_ARM_UP_DEGREES)) {
-                armController.set(Constants.ARM_MOVE_UP_SPEED);
-            }
+        double armMoveSpeed = guitar.getRightY();
+        if (Math.abs(armMoveSpeed) > 0.08) {
+            armController.set(armMoveSpeed);
+
             if (armController.getEncoderPosition() > degreesToEncoderPosition(
                     Constants.MAX_ARM_UP_DEGREES)) {
                 armController.set(0);
             }
-            position = ArmPosition.MANUAL;
-            return;
-        } else if (guitar.getPOV() == 180) {
-            armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
             if (armController.getEncoderPosition() < 0) {
                 armController.set(0);
             }
-            position = ArmPosition.MANUAL;
+
             return;
         }
         armController.set(0);
-        // Manual adjust arm
-
-        double encoderBuffer = degreesToEncoderPosition(Constants.ARM_POSITION_BUFFER_DEGREES);
-        if (position == ArmPosition.MANUAL) {
-            return;
-        } else if (position == ArmPosition.PLACING_TOP) {
-            if (armController.getEncoderPosition() < degreesToEncoderPosition(
-                    Constants.ARM_PLACE_TOP_POSITION) - encoderBuffer) {
-                armController.set(Constants.ARM_MOVE_UP_SPEED);
-            }
-            if (armController.getEncoderPosition() > degreesToEncoderPosition(
-                    Constants.ARM_PLACE_TOP_POSITION) + encoderBuffer) {
-                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
-            }
-            return;
-        } else if (position == ArmPosition.PLACING_MIDDLE) {
-            if (armController.getEncoderPosition() < degreesToEncoderPosition(
-                    Constants.ARM_PLACE_MIDDLE_POSITION) - encoderBuffer) {
-                armController.set(Constants.ARM_MOVE_UP_SPEED);
-            }
-            if (armController.getEncoderPosition() > degreesToEncoderPosition(
-                    Constants.ARM_PLACE_MIDDLE_POSITION) + encoderBuffer) {
-
-                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
-            }
-            return;
-        } else if (position == ArmPosition.INTAKE) {
-            if (armController
-                    .getEncoderPosition() < degreesToEncoderPosition(Constants.ARM_INTAKE_POSITION)
-                            - encoderBuffer) {
-                armController.set(Constants.ARM_MOVE_UP_SPEED);
-            }
-            if (armController
-                    .getEncoderPosition() > degreesToEncoderPosition(Constants.ARM_INTAKE_POSITION)
-                            + encoderBuffer) {
-
-                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
-            }
-            return;
-
-        } else if (position == ArmPosition.FLIP_CONE) {
-            if (armController.getEncoderPosition() < degreesToEncoderPosition(
-                    Constants.ARM_FLIP_CONE_POSITION) - encoderBuffer) {
-                armController.set(Constants.ARM_MOVE_UP_SPEED);
-            }
-            if (armController.getEncoderPosition() > degreesToEncoderPosition(
-                    Constants.ARM_FLIP_CONE_POSITION) + encoderBuffer) {
-
-                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
-            }
-        } else if (position == ArmPosition.PICKING_UP) {
-            if (armController
-                    .getEncoderPosition() < degreesToEncoderPosition(Constants.ARM_PICK_UP_POSITION)
-                            - encoderBuffer) {
-                armController.set(Constants.ARM_MOVE_UP_SPEED);
-            }
-            if (armController
-                    .getEncoderPosition() > degreesToEncoderPosition(Constants.ARM_PICK_UP_POSITION)
-                            + encoderBuffer) {
-
-                armController.set(-Constants.ARM_MOVE_DOWN_SPEED);
-            }
-        }
 
     }
 
@@ -147,47 +78,23 @@ public class InputtedGuitarControls {
      * Updates the Enum values to the current Guitar values
      */
     public void updateLatestPostionPressed() {
-        ArmPosition storedArmPosition = position;
-        pressedCount = 0;
-        // probably not the best way to be doing things, but who knows
-        if (guitar.getAButtonPressed()) {
-            position = ArmPosition.PLACING_TOP;
-            pressedCount++;
-        }
 
+        if (guitar.getPOV() == 90) {
+            redLEDOn = !redLEDOn;
+        } else if (guitar.getPOV() == 180) {
+            greenLEDOn = !greenLEDOn;
+        } else if (guitar.getPOV() == 270) {
+            blueLEDOn = !blueLEDOn;
+        } else if (guitar.getPOV() == 0) {
+            redLEDOn = false;
+            greenLEDOn = false;
+            blueLEDOn = false;
+        }
         if (guitar.getBButtonPressed()) {
-            position = ArmPosition.PLACING_MIDDLE;
-            pressedCount++;
-        }
-        if (guitar.getYButtonPressed()) {
-            position = ArmPosition.INTAKE;
-        }
-        if (guitar.getXButton()) {
-            position = ArmPosition.FLIP_CONE;
-            pressedCount++;
-        }
-        if (guitar.getLeftBumperPressed()) {
-            position = ArmPosition.PICKING_UP;
-        }
-
-        if (pressedCount > 1) {
-            position = storedArmPosition;
-        }
-        if (position != ArmPosition.MANUAL) {
-            System.out.println("THe position is " + position);
-        }
-        if (guitar.getLeftTriggerAxis() < 0.49) {
-            lightColor = LightColor.CUBE;
-        } else if (guitar.getLeftTriggerAxis() > 0.51) {
-            lightColor = LightColor.CONE;
-        } else {
-            lightColor = LightColor.NONE;
-        }
-        if (guitar.getStartButtonPressed()) {
             gribberState = GribberState.CLOSING;
             timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
-        if (guitar.getBackButtonPressed()) {
+        if (guitar.getAButtonPressed()) {
             gribberState = GribberState.OPENING;
             timeSinceGribberStateChange = Timer.getFPGATimestamp();
         }
@@ -230,8 +137,5 @@ public class InputtedGuitarControls {
         PICKING_UP, FLIP_CONE, PLACING_TOP, PLACING_MIDDLE, INTAKE, MANUAL
     }
 
-    public static enum LightColor {
-        CONE, CUBE, NONE
-    }
 
 }
