@@ -10,9 +10,11 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -54,9 +56,9 @@ public class Robot extends TimedRobot {
 
   // private Vision robotVision;
 
-  public MecanumDrive mecanumDriveTrain;
+  public DifferentialDrive mecanumDriveTrain;
 
-  private XboxController guitarXboxController;
+
   private InputtedDriverControls inputtedControls;
   private InputtedGuitarControls guitarControls;
 
@@ -134,14 +136,7 @@ public class Robot extends TimedRobot {
     gribberController = MotorControllerFactory.create(this, Constants.GRIBBER_MOTOR_ID,
         MotorController.Type.SparkMax);
 
-    // swap controllers if the main controller is a guitar
     xboxController = new XboxController(0);
-    if (xboxController.getName().contains("Guitar")) {
-      guitarXboxController = xboxController;
-      xboxController = new XboxController(1);
-    } else {
-      guitarXboxController = new XboxController(1);
-    }
 
     frontLeft.setBrakeMode(true);
     frontRight.setBrakeMode(true);
@@ -162,14 +157,12 @@ public class Robot extends TimedRobot {
     // Constants.bottomArmLimitSwitch = new
     // DigitalInput(Constants.bottomArmLimitSwitchID);
 
-    mecanumDriveTrain = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
+    mecanumDriveTrain = new DifferentialDrive(frontLeft, frontRight);
+
 
     inputtedControls = new InputtedDriverControls(xboxController);
 
-    guitarControls =
-        new InputtedGuitarControls(guitarXboxController, armController, gribberController);
-    guitarControls =
-        new InputtedGuitarControls(guitarXboxController, armController, gribberController);
+    guitarControls = new InputtedGuitarControls(xboxController, armController, gribberController);
 
     // Deadzone
     mecanumDriveTrain.setDeadband(0.08);
@@ -187,8 +180,7 @@ public class Robot extends TimedRobot {
     // lidarSensor = new LidarProxy(SerialPort.Port.kMXP);
     // System.out.println("The disatnce is " + lidarSensor.get());
 
-    // hopefully after testing we can remove this
-    mecanumDriveTrain.setSafetyEnabled(false);
+    mecanumDriveTrain.setSafetyEnabled(true);
 
     UsbCamera frontFacingCamera = CameraServer.startAutomaticCapture("Front Camera", 1);
     UsbCamera armCamera = CameraServer.startAutomaticCapture("Arm Camera", 0);
@@ -337,7 +329,7 @@ public class Robot extends TimedRobot {
         ArrayDeque<AutonomousAction> manualActions = new ArrayDeque<>();
         // manualActions.add(new AutonMoveForward(6, 2));
         // manualActions.add(new AutonArmCalibrate(true));
-        // manualActions.add(new AutonMoveArm(ArmPosition.PLACING_MIDDLE));
+        // manualActions.add(new AutonMoveArm(ArmPosition.PLACING_MIDDLE));h
         // manualActions.add(new AutonMoveGribber(GribberState.OPENING));
         // manualActions.add(new AutonMultiAction(new
         // AutonMoveArm(ArmPosition.FLIP_CONE),
@@ -395,31 +387,23 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // wtf???
-    if (xboxController.getName().contains("Guitar")) {
-      XboxController tmp = xboxController;
-      xboxController = guitarXboxController;
-      guitarXboxController = tmp;
-    }
+
 
     // Turn Purple if Cube
     guitarControls.doEveryFrame();
-    /*
-     * if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CUBE) {
-     * Constants.LED_GREEN.set(true); Constants.LED_RED.set(true); Constants.LED_BLUE.set(false); //
-     * Turn Yellow-ish Green if Cone } else if (guitarControls.lightColor ==
-     * InputtedGuitarControls.LightColor.CONE) { Constants.LED_BLUE.set(true);
-     * Constants.LED_RED.set(true); Constants.LED_GREEN.set(false); } else {
-     * Constants.LED_BLUE.set(false); Constants.LED_RED.set(false); Constants.LED_GREEN.set(false);
-     * }
-     */
+    Constants.LED_RED.set(guitarControls.redLEDOn);
+    Constants.LED_GREEN.set(guitarControls.greenLEDOn);
+    Constants.LED_BLUE.set(guitarControls.blueLEDOn);
 
     /*
      * mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY() * -1,
      * inputtedControls.getLeftJoystickX() * -1, inputtedControls.getTurnAmount(),
      * robotGyroscope.getRotation2d());
      */
-    mecanumDriveTrain.driveCartesian(inputtedControls.getLeftJoystickY(),
-        inputtedControls.getLeftJoystickX(), inputtedControls.getTurnAmount());
+    mecanumDriveTrain.arcadeDrive(inputtedControls.getLeftJoystickX(),
+        inputtedControls.getLeftJoystickY());
+    // \.driveCartesian(inputtedControls.getLeftJoystickY(),
+    // inputtedControls.getLeftJoystickX(), inputtedControls.getTurnAmount());
 
   }
 

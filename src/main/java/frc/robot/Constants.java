@@ -8,6 +8,12 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 public final class Constants {
         private Constants() {}
 
+
+        public static final double MOVEMENT_SPEED_DIVISOR = 2.0;
+        public static final double ROTATION_SPEED_DIVISOR = 2.0;
+
+
+
         public static final double MAX_ARM_UP_DEGREES = 108;
 
         public static final int FRONT_LEFT_MOTOR_ID = 20;

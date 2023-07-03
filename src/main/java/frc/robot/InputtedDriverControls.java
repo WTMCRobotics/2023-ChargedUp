@@ -21,7 +21,7 @@ public class InputtedDriverControls {
      * @returns move amount on the x-axis within a range of -1 and 1
      */
     public double getLeftJoystickY() {
-        double controllerY = controller.getLeftY();
+        double controllerY = controller.getLeftY() / Constants.ROTATION_SPEED_DIVISOR;
         if (isSlowMode()) {
             controllerY /= SLOW_MODE_MULTIPLIER;
         }
@@ -37,7 +37,7 @@ public class InputtedDriverControls {
      * @returns strafe amount on the y-axis within a range of -1 and 1
      */
     public double getLeftJoystickX() {
-        double controllerX = controller.getLeftX();
+        double controllerX = controller.getLeftX() / Constants.MOVEMENT_SPEED_DIVISOR;
         if (isSlowMode()) {
             controllerX /= SLOW_MODE_MULTIPLIER;
         }
