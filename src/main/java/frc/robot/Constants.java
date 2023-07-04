@@ -9,8 +9,9 @@ public final class Constants {
         private Constants() {}
 
 
-        public static final double MOVEMENT_SPEED_DIVISOR = 2.0;
-        public static final double ROTATION_SPEED_DIVISOR = 2.0;
+        public static final double MOVEMENT_SPEED_DIVISOR = 1.8;
+        public static final double ROTATION_SPEED_DIVISOR = 1;
+        public static final double ARM_SPEED_DIVISOR = 1.3;
 
 
 
@@ -35,7 +36,7 @@ public final class Constants {
         // zero through one
         public static final double ARM_MOVE_UP_SPEED = 1;
         // zero through one
-        public static final double ARM_MOVE_DOWN_SPEED = .7;
+        public static final double ARM_MOVE_DOWN_SPEED = .55;
         /** The speed in which to move the robot while balancing, in m/s */
         public static final double ROBOT_SPEED_WHILE_BALANCING_BEFORE_CHARGE_STATION = 0.55;
         public static final double ROBOT_SPEED_WHILE_BALANCING_ON_CHARGE_STATION = .275;

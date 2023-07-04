@@ -144,14 +144,12 @@ public class Robot extends TimedRobot {
     backRight.setBrakeMode(true);
     gribberController.setBrakeMode(true);
 
-    frontRight.setInverted(true);
-    backRight.setInverted(true);
+    backRight.follow(frontRight);
+    backLeft.follow(frontLeft);
 
     gribberController.setInverted(true);
 
     System.out.println("Working");
-    // backLeft.setInverted(true);
-    // backRight.setInverted(true);
     motors = new RobotMotors(frontLeft, frontRight, backLeft, backRight, gribberController,
         armController);
     // Constants.bottomArmLimitSwitch = new
