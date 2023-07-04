@@ -32,23 +32,23 @@ public class InputtedGuitarControls {
                 gribberController.set(0);
                 // System.out.println("Set to 0");
             } else {
-                gribberController.set(-.70);
+                gribberController.set(-0);
                 // System.out.println("Set to -30");
             }
             return;
         }
         if (gribberState == GribberState.CLOSING) {
-            gribberController.set(-1);
+            gribberController.set(-0.5);
 
         }
 
         if (gribberState == GribberState.OPENING) {
-            gribberController.set(.60);
+            gribberController.set(.50);
         }
     }
 
     public void moveArmController() {
-        double armMoveSpeed = guitar.getRightY();
+        double armMoveSpeed = -guitar.getRightY() / Constants.ARM_SPEED_DIVISOR;
         if (Math.abs(armMoveSpeed) > 0.08) {
             armController.set(armMoveSpeed);
 
@@ -79,13 +79,16 @@ public class InputtedGuitarControls {
      */
     public void updateLatestPostionPressed() {
 
-        if (guitar.getPOV() == 90) {
-            redLEDOn = !redLEDOn;
-        } else if (guitar.getPOV() == 180) {
-            greenLEDOn = !greenLEDOn;
-        } else if (guitar.getPOV() == 270) {
-            blueLEDOn = !blueLEDOn;
+        if (guitar.getPOV() == 270) {
+            redLEDOn = true;
+            System.out.println("RED");
         } else if (guitar.getPOV() == 0) {
+            greenLEDOn = true;
+            System.out.println("GREEN");
+        } else if (guitar.getPOV() == 90) {
+            System.out.println("BLUE");
+            blueLEDOn = true;
+        } else if (guitar.getPOV() == 180) {
             redLEDOn = false;
             greenLEDOn = false;
             blueLEDOn = false;
