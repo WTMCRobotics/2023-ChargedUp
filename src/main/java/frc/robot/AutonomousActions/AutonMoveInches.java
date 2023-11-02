@@ -6,7 +6,6 @@ import frc.robot.RobotMotors;
 
 public class AutonMoveInches extends AutonomousAction {
 
-
     MoveInchesDirection direction;
     double inches;
     RobotMotors motors;
@@ -17,10 +16,12 @@ public class AutonMoveInches extends AutonomousAction {
     /**
      * move a distance in s straight line
      * 
-     * @param direction Specifies which direction to move to robot in. possible options are FORWARD,
-     *        BACKWARD, LEFT, and RIGHT
-     * @param inches the distance in inches to move forward (use negative number to go backward)
-     * @param motors the motors in which to move
+     * @param direction Specifies which direction to move to robot in. possible
+     *                  options are FORWARD,
+     *                  BACKWARD, LEFT, and RIGHT
+     * @param inches    the distance in inches to move forward (use negative number
+     *                  to go backward)
+     * @param motors    the motors in which to move
      * @return true when done
      */
 
@@ -32,22 +33,22 @@ public class AutonMoveInches extends AutonomousAction {
         this.isDoneDebounceTime = 0;
     }
 
-
     public boolean executeAndIsDone() {
         if (isFirstTimeRunning) {
             resetDriveTrainEncoders();
             isFirstTimeRunning = false;
         }
         if (direction == MoveInchesDirection.FORWARD) {
+            // motors.getFrontLeftMotor().set(0.25);
             motors.getFrontLeftMotor().setDistance(inches);
             motors.getBackLeftMotor().setDistance(inches);
-            motors.getFrontRightMotor().setDistance(inches);
-            motors.getBackRightMotor().setDistance(inches);
+            motors.getFrontRightMotor().setDistance(-inches);
+            motors.getBackRightMotor().setDistance(-inches);
         } else if (direction == MoveInchesDirection.BACKWARD) {
             motors.getFrontLeftMotor().setDistance(-inches);
             motors.getBackLeftMotor().setDistance(-inches);
-            motors.getFrontRightMotor().setDistance(-inches);
-            motors.getBackRightMotor().setDistance(-inches);
+            motors.getFrontRightMotor().setDistance(inches);
+            motors.getBackRightMotor().setDistance(inches);
         } else if (direction == MoveInchesDirection.LEFT) {
             final double strafingInches = inches * rootTwo;
             motors.getFrontLeftMotor().setDistance(-strafingInches);
@@ -68,7 +69,7 @@ public class AutonMoveInches extends AutonomousAction {
             isDoneDebounceTime = 0;
         }
 
-        if (isDoneDebounceTime > 0.6) {
+        if (isDoneDebounceTime > 2) {
             System.out.println("We moved the correct amount of inches!");
             return true;
         }
@@ -105,12 +106,10 @@ public class AutonMoveInches extends AutonomousAction {
      * @return The active trajectory velocity of all of the averaged motors
      */
     private double getMaxTrajectoryVelocity() {
-        double higherLeft =
-                Math.max(Math.abs(motors.getFrontLeftMotor().getActiveTrajectoryVelocity()),
-                        Math.abs(motors.getBackLeftMotor().getActiveTrajectoryVelocity()));
-        double higherRight =
-                Math.max(Math.abs(motors.getFrontRightMotor().getActiveTrajectoryVelocity()),
-                        Math.abs(motors.getBackRightMotor().getActiveTrajectoryVelocity()));
+        double higherLeft = Math.max(Math.abs(motors.getFrontLeftMotor().getActiveTrajectoryVelocity()),
+                Math.abs(motors.getBackLeftMotor().getActiveTrajectoryVelocity()));
+        double higherRight = Math.max(Math.abs(motors.getFrontRightMotor().getActiveTrajectoryVelocity()),
+                Math.abs(motors.getBackRightMotor().getActiveTrajectoryVelocity()));
         return Math.max(higherLeft, higherRight);
         // return (Math.abs(motors.getFrontLeftMotor().getActiveTrajectoryVelocity())
         // + Math.abs(motors.getFrontRightMotor().getActiveTrajectoryVelocity())
@@ -119,6 +118,7 @@ public class AutonMoveInches extends AutonomousAction {
     }
 
     private void resetDriveTrainEncoders() {
+        System.out.println("ENcoder position reste!");
         motors.getFrontLeftMotor().setEncoderPosition(0.0);
         motors.getFrontRightMotor().setEncoderPosition(0.0);
         motors.getBackRightMotor().setEncoderPosition(0.0);

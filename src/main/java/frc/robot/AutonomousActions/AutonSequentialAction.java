@@ -10,12 +10,8 @@ public class AutonSequentialAction extends AutonomousAction {
     private ArrayDeque<AutonomousAction> actionList;
 
     /**
-     * Makes multiple actions run at the exact same time, and will only be counted as completed
-     * after all queued actions are completed.
-     * <p>
-     * WARNING! Do NOT put in 2 or more of the same type of action, as it will more than likely run
-     * into an infinite loop. Ex. don't say for the arm to move to the top position, and picking up
-     * position in the same multiaction.
+     * Makes multiple actions run in sequence, and will only be counted as completed after all
+     * queued actions are completed.
      */
     public AutonSequentialAction(AutonomousAction... allActions) {
         this.actionList = new ArrayDeque<AutonomousAction>(List.of(allActions));

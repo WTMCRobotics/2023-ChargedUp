@@ -14,8 +14,9 @@ public class AutonMoveArm extends AutonomousAction {
     /**
      * Moves the arm to the specified position
      * 
-     * @param position The position to move the arm to. Either PICKING_UP, PICKING_MIDDLE,
-     *        PLACING_TOP
+     * @param position The position to move the arm to. Either PICKING_UP,
+     *                 PICKING_MIDDLE,
+     *                 PLACING_TOP
      */
     public AutonMoveArm(ArmPosition position, RobotMotors motors) {
         this.isFirstTimeRunning = true;

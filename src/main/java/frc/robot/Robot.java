@@ -31,12 +31,18 @@ import frc.robot.motor.MotorController;
 import frc.robot.motor.MotorControllerFactory;
 
 /**
- * The Virtual Machine(VM) is configured to automatically run this class, and to call the functions
- * corresponding to each mode, as described in the TimedRobot documentation. If you change the name
- * of this class or the package after creating this project, you must also update the build.gradle
- * file in the The VM is configured to automatically run this class, and to call the functions
- * corresponding to each mode, as described in the TimedRobot documentation. If you change the name
- * of this class or the package after creating this project, you must also update the build.gradle
+ * The Virtual Machine(VM) is configured to automatically run this class, and to
+ * call the functions
+ * corresponding to each mode, as described in the TimedRobot documentation. If
+ * you change the name
+ * of this class or the package after creating this project, you must also
+ * update the build.gradle
+ * file in the The VM is configured to automatically run this class, and to call
+ * the functions
+ * corresponding to each mode, as described in the TimedRobot documentation. If
+ * you change the name
+ * of this class or the package after creating this project, you must also
+ * update the build.gradle
  * file in the project.
  */
 public class Robot extends TimedRobot {
@@ -58,11 +64,10 @@ public class Robot extends TimedRobot {
 
   public DifferentialDrive mecanumDriveTrain;
 
-
   private InputtedDriverControls inputtedControls;
   private InputtedGuitarControls guitarControls;
 
-  private AHRS robotGyroscope;
+  public static AHRS robotGyroscope;
 
   private VideoSink videoArmServer;
   private VideoSink videoFrontServer;
@@ -72,11 +77,12 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> autonDirection = new SendableChooser<>();
   MoveInchesDirection autonMoveInchesDirection = MoveInchesDirection.FORWARD;
 
-
   double inches = 24;// TODO remove this later
   /*
-   * m This function is run when the robot is first started up and should be used for any m This
-   * function is run when the robot is first started up and should be used for any initialization
+   * m This function is run when the robot is first started up and should be used
+   * for any m This
+   * function is run when the robot is first started up and should be used for any
+   * initialization
    * code.
    */
 
@@ -84,6 +90,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     autonRouteChooser.setDefaultOption("Default Auto", kDefaultAuto);
+    autonRouteChooser.addOption("Script Defined Auton", "scriptAuton");
     autonRouteChooser.addOption("Place object, leave community, and balance",
         "PlaceLeaveCommunityBalance");
     autonRouteChooser.addOption("Place object and balance", "PlaceBalance");
@@ -95,7 +102,6 @@ public class Robot extends TimedRobot {
 
     autonRouteChooser.addOption("Balance while facing driver wall", "balanceWhileFacingWall");
     autonRouteChooser.addOption("Balance while facing field", "balanceWhileFacingField");
-
 
     autonRouteChooser.addOption("Leave community whilst facing driver wall",
         "LeaveCommunityFaceWall");
@@ -130,8 +136,7 @@ public class Robot extends TimedRobot {
     backRight = MotorControllerFactory.create(this, Constants.BACK_RIGHT_MOTOR_ID,
         MotorController.Type.Talon);
 
-    armController =
-        MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
+    armController = MotorControllerFactory.create(this, Constants.ARM_MOTOR_ID, MotorController.Type.SparkMax);
 
     gribberController = MotorControllerFactory.create(this, Constants.GRIBBER_MOTOR_ID,
         MotorController.Type.SparkMax);
@@ -157,7 +162,6 @@ public class Robot extends TimedRobot {
 
     mecanumDriveTrain = new DifferentialDrive(frontLeft, frontRight);
 
-
     inputtedControls = new InputtedDriverControls(xboxController);
 
     guitarControls = new InputtedGuitarControls(xboxController, armController, gribberController);
@@ -178,19 +182,20 @@ public class Robot extends TimedRobot {
     // lidarSensor = new LidarProxy(SerialPort.Port.kMXP);
     // System.out.println("The disatnce is " + lidarSensor.get());
 
-    mecanumDriveTrain.setSafetyEnabled(true);
+    mecanumDriveTrain.setSafetyEnabled(false);
 
-    UsbCamera frontFacingCamera = CameraServer.startAutomaticCapture("Front Camera", 1);
-    UsbCamera armCamera = CameraServer.startAutomaticCapture("Arm Camera", 0);
-    armCamera.setFPS(16);
-    frontFacingCamera.setFPS(16);
-    armCamera.setResolution(196, 108);
-    frontFacingCamera.setResolution(196, 108);
+    // UsbCamera frontFacingCamera = CameraServer.startAutomaticCapture("Front
+    // Camera", 1);
+    // UsbCamera armCamera = CameraServer.startAutomaticCapture("Arm Camera", 0);
+    // armCamera.setFPS(16);
+    // frontFacingCamera.setFPS(16);
+    // armCamera.setResolution(196, 108);
+    // frontFacingCamera.setResolution(196, 108);
 
-    videoArmServer = CameraServer.getServer();
-    videoArmServer.setSource(armCamera);
-    videoFrontServer = CameraServer.getServer();
-    videoFrontServer.setSource(frontFacingCamera);
+    // videoArmServer = CameraServer.getServer();
+    // videoArmServer.setSource(armCamera);
+    // videoFrontServer = CameraServer.getServer();
+    // videoFrontServer.setSource(frontFacingCamera);
 
     testOptions.setDefaultOption("Move arm to starting position", "armCalibrate");
     // testOptions.addOption("Calibrate Arm", "armCalibrate");
@@ -203,8 +208,6 @@ public class Robot extends TimedRobot {
     frontRight.setEncoderInverted(true);
     backLeft.setEncoderInverted(true);
     backRight.setEncoderInverted(true);
-
-
 
     initializeMotionMagicMaster(frontRight, Constants.BUMPERLESS_ROBOT_GAINS);
     initializeMotionMagicMaster(frontLeft, Constants.BUMPERLESS_ROBOT_GAINS);
@@ -232,13 +235,17 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+   * This function is called every 20 ms, no matter the mode. Use this for items
+   * like diagnostics
+   * This function is called every 20 ms, no matter the mode. Use this for items
+   * like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
    *
    * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard
-   * This runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard
    * integrated updating.
    */
   @Override
@@ -255,30 +262,44 @@ public class Robot extends TimedRobot {
       System.out.println("Gribber Limit switch reset!");
       // }S
       gribberController.setEncoderPosition(0.0);
-      // SmartDashboard.putNumber("Gribber encoder", gribberController.getEncoderPosition());
+      // SmartDashboard.putNumber("Gribber encoder",
+      // gribberController.getEncoderPosition());
       SmartDashboard.putNumber("Roll", robotGyroscope.getRoll());
     }
-    // SmartDashboard.putNumber("Arm Encoder Pos", armController.getEncoderPosition() * 360);
-    // SmartDashboard.putNumber("Wheel Encoder Pos", frontLeft.getEncoderPosition());
+    // SmartDashboard.putNumber("Arm Encoder Pos",
+    // armController.getEncoderPosition() * 360);
+    // SmartDashboard.putNumber("Wheel Encoder Pos",
+    // frontLeft.getEncoderPosition());
   }
 
   AutonMovement auton;
 
   /**
-   * This autonomous (along with the chooser code above) shows how to select between different
-   * autonomous modes using the dashboard. The sendable chooser code works with the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-   * uncomment the getString line to get the auto name from the text box below the Gyro This
-   * autonomous (along with the chooser code above) shows how to select between different autonomous
-   * modes using the dashboard. The sendable chooser code works with the Java SmartDashboard. If you
-   * prefer the LabVIEW Dashboard, remove all of the chooser code and uncomment the getString line
+   * This autonomous (along with the chooser code above) shows how to select
+   * between different
+   * autonomous modes using the dashboard. The sendable chooser code works with
+   * the Java
+   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the
+   * chooser code and
+   * uncomment the getString line to get the auto name from the text box below the
+   * Gyro This
+   * autonomous (along with the chooser code above) shows how to select between
+   * different autonomous
+   * modes using the dashboard. The sendable chooser code works with the Java
+   * SmartDashboard. If you
+   * prefer the LabVIEW Dashboard, remove all of the chooser code and uncomment
+   * the getString line
    * to get the auto name from the text box below the Gyro
    *
    * <p>
-   * You can add additional auto modes by adding additional comparisons to the switch structure
-   * below with additional strings. If using the SendableChooser make sure to add them to the You
-   * can add additional auto modes by adding additional comparisons to the switch structure below
-   * with additional strings. If using the SendableChooser make sure to add them to the chooser code
+   * You can add additional auto modes by adding additional comparisons to the
+   * switch structure
+   * below with additional strings. If using the SendableChooser make sure to add
+   * them to the You
+   * can add additional auto modes by adding additional comparisons to the switch
+   * structure below
+   * with additional strings. If using the SendableChooser make sure to add them
+   * to the chooser code
    * above as well.
    */
 
@@ -287,10 +308,16 @@ public class Robot extends TimedRobot {
     AutonRoutes autonRoutes = new AutonRoutes(robotGyroscope, this.motors);
     autoSelected = autonRouteChooser.getSelected();
     ArrayDeque<AutonomousAction> selectedRoute;
+    System.out.println("Auton starty sthingy on " + autoSelected);
     switch (autoSelected) {
       case "PlaceLeaveCommunityBalance":
         selectedRoute = autonRoutes.placeLeaveCommunityThenBalance(robotGyroscope);
         break;
+      case "scriptAuton":
+        System.out.println("script auton is roight!");
+        selectedRoute = ScriptAuton.getScriptActions(this.motors);
+        break;
+
       case "PlaceBalance":
         selectedRoute = autonRoutes.placeThenBalance();
         break;
@@ -336,7 +363,8 @@ public class Robot extends TimedRobot {
         // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS,
         // robotGyroscope));
 
-        // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS, robotGyroscope, motors));
+        // manualActions.add(new AutonBalance(MovementDirection.BACKWARDS,
+        // robotGyroscope, motors));
         manualActions.add(new AutonMoveInches(MoveInchesDirection.BACKWARD, 36, motors));
         selectedRoute = manualActions;
         break;
@@ -345,6 +373,7 @@ public class Robot extends TimedRobot {
         selectedRoute = autonRoutes.leaveCommunityWhilstFacingWall();
     }
     System.out.println("Auto selected: " + autoSelected);
+    System.out.println("selected route: " + selectedRoute);
 
     auton = new AutonMovement(motors, selectedRoute);
 
@@ -352,7 +381,10 @@ public class Robot extends TimedRobot {
 
   }
 
-  /** This function is called periodically during autonomous. Oliver doesnt know what it does */
+  /**
+   * This function is called periodically during autonomous. Oliver doesnt know
+   * what it does
+   */
   @Override
   public void autonomousPeriodic() {
     auton.autonomousEveryFrame();
@@ -379,13 +411,13 @@ public class Robot extends TimedRobot {
 
   @Override
 
-  public void teleopInit() {}
+  public void teleopInit() {
+  }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     // wtf???
-
 
     // Turn Purple if Cube
     guitarControls.doEveryFrame();
@@ -408,36 +440,27 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
 
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   /** This function is called periodically when disabled. */
 
   @Override
 
   public void disabledPeriodic() {
-    Constants.BALANCING_GAINS.P =
-        SmartDashboard.getNumber("Balance Proportion", Constants.BALANCING_GAINS.P);
-    Constants.BALANCING_GAINS.I =
-        SmartDashboard.getNumber("Balance Integral", Constants.BALANCING_GAINS.I);
-    Constants.BALANCING_GAINS.D =
-        SmartDashboard.getNumber("Balance Derivative", Constants.BALANCING_GAINS.D);
-    Constants.BALANCING_MAX_RPM =
-        SmartDashboard.getNumber("Max balancing RPM", Constants.BALANCING_MAX_RPM);
+    Constants.BALANCING_GAINS.P = SmartDashboard.getNumber("Balance Proportion", Constants.BALANCING_GAINS.P);
+    Constants.BALANCING_GAINS.I = SmartDashboard.getNumber("Balance Integral", Constants.BALANCING_GAINS.I);
+    Constants.BALANCING_GAINS.D = SmartDashboard.getNumber("Balance Derivative", Constants.BALANCING_GAINS.D);
+    Constants.BALANCING_MAX_RPM = SmartDashboard.getNumber("Max balancing RPM", Constants.BALANCING_MAX_RPM);
 
-
-    Constants.BUMPERLESS_ROBOT_GAINS.P =
-        SmartDashboard.getNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
-    Constants.BUMPERLESS_ROBOT_GAINS.I =
-        SmartDashboard.getNumber("Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
-    Constants.BUMPERLESS_ROBOT_GAINS.D =
-        SmartDashboard.getNumber("Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
+    Constants.BUMPERLESS_ROBOT_GAINS.P = SmartDashboard.getNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
+    Constants.BUMPERLESS_ROBOT_GAINS.I = SmartDashboard.getNumber("Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
+    Constants.BUMPERLESS_ROBOT_GAINS.D = SmartDashboard.getNumber("Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
     inches = SmartDashboard.getNumber("inches to move", inches);
-    Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT =
-        SmartDashboard.getNumber("Peak Output", Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT);
-    Constants.ACCELERATION =
-        SmartDashboard.getNumber("Max Auton Acceleration", Constants.ACCELERATION);
-    Constants.ACTIVATE_PID_DELAY =
-        SmartDashboard.getNumber("PID Starting Delay", Constants.ACTIVATE_PID_DELAY);
+    Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT = SmartDashboard.getNumber("Peak Output",
+        Constants.BUMPERLESS_ROBOT_GAINS.PEAK_OUTPUT);
+    Constants.ACCELERATION = SmartDashboard.getNumber("Max Auton Acceleration", Constants.ACCELERATION);
+    Constants.ACTIVATE_PID_DELAY = SmartDashboard.getNumber("PID Starting Delay", Constants.ACTIVATE_PID_DELAY);
   }
 
   AutonMovement resetMovement = null;
@@ -465,10 +488,10 @@ public class Robot extends TimedRobot {
       resetMovement = new AutonMovement(motors, resetQueue);
     }
     // P - Proportional - How fast it approaches the target
-    // I - Integral - Over time, how extra will it push based on how long it's been since we've been
+    // I - Integral - Over time, how extra will it push based on how long it's been
+    // since we've been
     // close to the target
     // D - Derivative - How quickly we will slow down after we hit the target
-
 
   }
 
@@ -481,8 +504,6 @@ public class Robot extends TimedRobot {
     // AutonMoveInches.moveInches(autonMoveInchesDirection, inches, motors);
   }
 
-
-
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
@@ -491,7 +512,8 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 
   public void initializeMotionMagicMaster(MotorController motorController, Gains gains) {
     /* Factory default hardware to prevent unexpected behavior */
@@ -506,8 +528,10 @@ public class Robot extends TimedRobot {
     motorController.setNeutralDeadband(0.001);
 
     /**
-     * Configure Talon SRX Output and Sensor direction accordingly Invert Motor to have green LEDs
-     * when driving Talon Forward / Requesting Positive Output Phase sensor to have positive
+     * Configure Talon SRX Output and Sensor direction accordingly Invert Motor to
+     * have green LEDs
+     * when driving Talon Forward / Requesting Positive Output Phase sensor to have
+     * positive
      * increment when driving Talon Forward (Green LED)
      */
 
@@ -526,6 +550,5 @@ public class Robot extends TimedRobot {
     /* Zero the sensor once on robot boot up */
     motorController.setEncoderPosition(0);
   }
-
 
 }
