@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.text.DecimalFormat;
 import java.util.ArrayDeque;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -12,6 +13,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -95,12 +97,12 @@ public class Robot extends TimedRobot {
     autonRouteChooser.addOption("Balance while facing field", "balanceWhileFacingField");
 
 
-    autonRouteChooser.addOption("Leave community whilst facing driver wall",
-        "LeaveCommunityFaceWall");
-    autonRouteChooser.addOption("Leave community whilst facing enemy side",
-        "LeaveCommunityFaceEnemy");
+    autonRouteChooser.addOption("Just Move Backwards", "LeaveCommunityFaceWall");
+    autonRouteChooser.addOption("Just Move Forward", "LeaveCommunityFaceEnemy");
+    autonRouteChooser.addOption("Move 4ft forward Test", "moveTest");
     autonRouteChooser.addOption("Declare manually in code", "manualInCode");
     SmartDashboard.putData("Auton Routes", autonRouteChooser);
+    SmartDashboard.putNumber("Time Left", -1);
     SmartDashboard.putNumber("Proportion", Constants.BUMPERLESS_ROBOT_GAINS.P);
     SmartDashboard.putNumber("Integral", Constants.BUMPERLESS_ROBOT_GAINS.I);
     SmartDashboard.putNumber("Derivative", Constants.BUMPERLESS_ROBOT_GAINS.D);
@@ -109,6 +111,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Balance Proportion", Constants.BALANCING_GAINS.P);
     SmartDashboard.putNumber("Balance Integral", Constants.BALANCING_GAINS.I);
     SmartDashboard.putNumber("Balance Derivative", Constants.BALANCING_GAINS.D);
+    SmartDashboard.putNumber("Arm Encoder", -1);
     autonDirection.setDefaultOption("Forward", "FORWARD");
     autonDirection.addOption("Forward", "FORWARD");
     autonDirection.addOption("Backward", "BACKWARD");
@@ -268,9 +271,12 @@ public class Robot extends TimedRobot {
       // SmartDashboard.putNumber("Gribber encoder", gribberController.getEncoderPosition());
       SmartDashboard.putNumber("Roll", robotGyroscope.getRoll());
     }
+    SmartDashboard.putNumber("Time Left", (int) Timer.getMatchTime());
     // SmartDashboard.putNumber("Arm Encoder Pos", armController.getEncoderPosition() * 360);
     // SmartDashboard.putNumber("Wheel Encoder Pos", frontLeft.getEncoderPosition());
   }
+
+  final DecimalFormat df = new DecimalFormat("#.#");
 
   AutonMovement auton;
 
@@ -315,6 +321,9 @@ public class Robot extends TimedRobot {
         break;
       case "LeaveCommunityFaceEnemy":
         selectedRoute = autonRoutes.leaveCommunityWhilstFacingEnemySide();
+        break;
+      case "moveTest":
+        selectedRoute = autonRoutes.MoveForwardSlightlyTest();
         break;
       case "justPlace":
         selectedRoute = autonRoutes.placeObject();
@@ -394,6 +403,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("Arm Encoder", armController.getEncoderPosition() * 360);
     // wtf???
     if (xboxController.getName().contains("Guitar")) {
       XboxController tmp = xboxController;
@@ -403,6 +413,7 @@ public class Robot extends TimedRobot {
 
     // Turn Purple if Cube
     guitarControls.doEveryFrame();
+
     /*
      * if (guitarControls.lightColor == InputtedGuitarControls.LightColor.CUBE) {
      * Constants.LED_GREEN.set(true); Constants.LED_RED.set(true); Constants.LED_BLUE.set(false); //

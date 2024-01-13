@@ -28,12 +28,16 @@ public class InputtedGuitarControls {
     double timeSinceGribberStateChange = 0.0;
 
     private void moveGribberController() {
+        if (Timer.getMatchTime() < 0.75 && Timer.getMatchTime() > 0) {
+            gribberController.set(-1);
+            return;
+        }
         if (Timer.getFPGATimestamp() > timeSinceGribberStateChange + 0.75) {
             if (gribberState == GribberState.OPENING) {
-                gribberController.set(0);
+                gribberController.set(.30);
                 // System.out.println("Set to 0");
             } else {
-                gribberController.set(-.70);
+                gribberController.set(0);
                 // System.out.println("Set to -30");
             }
             return;

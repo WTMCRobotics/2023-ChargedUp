@@ -125,9 +125,15 @@ public class AutonRoutes {
         return actionQueue;
     }
 
+    public ArrayDeque<AutonomousAction> MoveForwardSlightlyTest() {
+        ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<>();
+        actionQueue.add(new AutonMoveInches(MoveInchesDirection.FORWARD, 48, this.motors));
+        return actionQueue;
+    }
+
     public ArrayDeque<AutonomousAction> leaveCommunityWhilstFacingEnemySide() {
         ArrayDeque<AutonomousAction> actionQueue = new ArrayDeque<>();
-        actionQueue.add(new AutonMoveInches(MoveInchesDirection.FORWARD, 156, this.motors));
+        actionQueue.add(new AutonMoveInches(MoveInchesDirection.FORWARD, 168, this.motors));
         return actionQueue;
     }
 }

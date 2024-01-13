@@ -75,7 +75,7 @@ public final class Constants {
          * The postition in degrees from the starting position that the arm should go to for
          * flipping a cone over
          */
-        public static final double ARM_FLIP_CONE_POSITION = 10;
+        public static final double ARM_FLIP_CONE_POSITION = 26.6308;
         /**
          * The postition in degrees from the starting position that the arm should go to for picking
          * up objects
